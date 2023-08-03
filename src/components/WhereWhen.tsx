@@ -1,4 +1,4 @@
-import { Container, Row, Col, Card } from "react-bootstrap";
+import { Container, Row, Col, Table } from "react-bootstrap";
 
 import { MAPS_KEY } from "../global/apikeys";
 
@@ -7,13 +7,13 @@ const WhereWhen = () => {
     <Container>
       <h1 className="sectionTitle">Where & When</h1>
       <Row className="wwDesc">
-        <Col sm={{ span: 6, offset: 0 }}>
+        <Col md={{ span: 6, offset: 0 }}>
           <p>
             All main events are held in BU's College of Arts and Sciences (CAS)
-            at 725 Commonwealth Ave. Ultimate and Brawl events happen every
-            Saturday in CAS room 426, and Melee events happen every Friday in
-            CAS room 227. All events are open until their bracket has been
-            completed.
+            at 725 Commonwealth Ave. <i>Ultimate</i> and <i>Brawl</i> events
+            happen every Saturday in CAS room 426, and <i>Melee</i> events
+            happen every Friday in CAS room 227. All events are open until their
+            bracket has been completed.
           </p>
           <p>
             BU Bimonthly events are held on one or two Saturdays each semester
@@ -34,26 +34,83 @@ const WhereWhen = () => {
         </Col>
       </Row>
       <Row>
-        <Col sm={{ span: 4, offset: 0 }}>
+        <Col lg={{ span: 4, offset: 0 }}>
           <h3>Melee</h3>
           <p>Fridays, CAS Room 227</p>
-          <p>5:15 p.m. - Doors open</p>
-          <p>6:00 p.m. - Bracket starts</p>
+          <Table bordered size="md">
+            <thead>
+              <tr>
+                <th>Time</th>
+                <th>Event</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>5:15 p.m.</td>
+                <td>Doors open</td>
+              </tr>
+              <tr>
+                <td>6:00 p.m.</td>
+                <td>Bracket starts</td>
+              </tr>
+            </tbody>
+          </Table>
         </Col>
-        <Col sm={{ span: 4, offset: 0 }}>
+        <Col lg={{ span: 4, offset: 0 }}>
           <h3>Ultimate & Brawl</h3>
           <p>Saturdays, CAS Room 426</p>
-          <p>2:00 p.m. - Doors open</p>
-          <p>3:00 p.m. - Brawl bracket starts</p>
-          <p>4:30 p.m. - Ultimate bracket starts</p>
+          <Table bordered size="md">
+            <thead>
+              <tr>
+                <th>Time</th>
+                <th>Event</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>2:00 p.m.</td>
+                <td>Doors open</td>
+              </tr>
+              <tr>
+                <td>3:00 p.m.</td>
+                <td>Brawl bracket starts</td>
+              </tr>
+              <tr>
+                <td>4:30 p.m.</td>
+                <td>Ultimate bracket starts</td>
+              </tr>
+            </tbody>
+          </Table>
         </Col>
-        <Col sm={{ span: 4, offset: 0 }}>
+        <Col lg={{ span: 4, offset: 0 }}>
           <h3>Bimonthly</h3>
           <p>Date varies, PHO 9th Floor Colloquium Room</p>
-          <p>12:00 p.m. - Doors open</p>
-          <p>Varies - Brawl bracket starts</p>
-          <p>Varies - Side bracket starts</p>
-          <p>4:00 p.m. - Ultimate bracket starts</p>
+          <Table bordered size="md">
+            <thead>
+              <tr>
+                <th>Time</th>
+                <th>Event</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>12:00 p.m.</td>
+                <td>Doors open</td>
+              </tr>
+              <tr>
+                <td>Varies</td>
+                <td>Brawl bracket starts</td>
+              </tr>
+              <tr>
+                <td>Varies</td>
+                <td>Side bracket starts</td>
+              </tr>
+              <tr>
+                <td>4:00 p.m.</td>
+                <td>Ultimate bracket starts</td>
+              </tr>
+            </tbody>
+          </Table>
         </Col>
       </Row>
     </Container>

@@ -10,7 +10,7 @@ const AboutUs = () => {
     <Container>
       <h1 className="sectionTitle">About Us</h1>
       <Row>
-        <Col sm={{ span: 3, offset: 0 }}>
+        <Col md={{ span: 3, offset: 0 }}>
           <Card className="toCard">
             <Card.Body>
               <Card.Img
@@ -24,7 +24,7 @@ const AboutUs = () => {
             </Card.Body>
           </Card>
         </Col>
-        <Col sm={{ span: 3, offset: 0 }}>
+        <Col md={{ span: 3, offset: 0 }}>
           <Card className="toCard">
             <Card.Body>
               <Card.Img
@@ -40,7 +40,7 @@ const AboutUs = () => {
             </Card.Body>
           </Card>
         </Col>
-        <Col sm={{ span: 6, offset: 0 }}>
+        <Col md={{ span: 6, offset: 0 }}>
           <p>
             Boston University Smash Society (BUSS) is a club dedicated to
             hosting <i>Super Smash Bros.</i> gatherings for all to enjoy. No

@@ -47,7 +47,7 @@ function Footer() {
         </Row>
         <Row className="justify-content-center">
           <Col sm={{ span: 12, offset: 0 }} className="footerCopyright">
-            <small>Copyright &copy; Noah Barnes</small>
+            <small>Copyright &copy; 2023 Noah Barnes</small>
           </Col>
         </Row>
       </Container>
