@@ -1,0 +1,43 @@
+.footer {
+    background-color: #FF2400;
+    padding-top: "75px";
+}
+
+.footerLinks {
+    text-align: right;
+    padding-top: 30px;
+}
+
+.footerIcon {
+    color: white;
+    font-size: 50px;
+    padding: 10px;
+}
+
+.footerIcon:hover {
+    color: #CCC;
+    transition: all 0.2s linear;
+}
+
+.footerText {
+    color: white;
+    text-align: left;
+    padding-top: 30px;
+}
+
+.footerCopyright {
+    color: white;
+    padding-top: 10px;
+    text-align: center;
+    padding-bottom: 40px;
+}
+
+@media (max-width: 575px) {
+    .footerLinks {
+        text-align: center;
+    }
+    .footerText {
+        text-align: center;
+        padding-top: 0px;
+    }
+}
