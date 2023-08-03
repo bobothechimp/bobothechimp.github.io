@@ -1,4 +1,4 @@
-import Home from "./pages/home";
+import Home from "./pages/Home";
 import Button from "./components/Button";
 import Alert from "./components/Alert";
 import { useState } from "react";
