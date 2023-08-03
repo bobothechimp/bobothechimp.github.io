@@ -41,7 +41,7 @@ function Footer() {
           <Col sm={{ span: 6, offset: 0 }} className="footerText">
             <small>
               Room 426 & 227<br></br>College of Arts and Sciences<br></br>725
-              Commonwealth Ave Boston, MA
+              Commonwealth Ave, Boston, MA
             </small>
           </Col>
         </Row>
