@@ -11,3 +11,12 @@
     width: 30px;
     padding-bottom: 10px;
 }
+
+.wwDesc {
+    padding-bottom: 30px;
+}
+
+.mapsEmbed {
+    width: 600px;
+    height: 100%;
+}

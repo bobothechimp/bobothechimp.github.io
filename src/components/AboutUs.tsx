@@ -1,5 +1,4 @@
-import React from "react";
-import { Container, Row, Col, Image, Card } from "react-bootstrap";
+import { Container, Row, Col, Card } from "react-bootstrap";
 
 import thinking from "../assets/thinking.png";
 import newquake from "../assets/newquake.png";
@@ -52,7 +51,9 @@ const AboutUs = () => {
             Our events run weekly throughout every school semester, with{" "}
             <i>Melee</i> on Fridays and <i>Ultimate</i> and <i>Brawl</i> on
             Saturdays. Each event will have a free-to-enter bracket, but you're
-            more than welcome to come just for casual matches.
+            more than welcome to come just for casual matches. We also host one
+            or two larger scale "BU Bimonthly" events each semester with paid
+            entry and cash prizes.
           </p>
         </Col>
       </Row>
