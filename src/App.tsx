@@ -1,6 +1,4 @@
 import Home from "./pages/Home";
-import Button from "./components/Button";
-import Alert from "./components/Alert";
 import { useState } from "react";
 
 import { BrowserRouter, Link, Route, Routes } from "react-router-dom";

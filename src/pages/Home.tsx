@@ -11,8 +11,6 @@ import * as ROUTES from "../global/routes";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 
-import logo from "../assets/buss-logo.png";
-
 function Home() {
   return (
     <>
