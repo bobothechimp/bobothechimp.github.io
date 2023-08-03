@@ -6,6 +6,8 @@ import Navbar from "react-bootstrap/Navbar";
 import Nav from "react-bootstrap/Nav";
 import NavDropdown from "react-bootstrap/NavDropdown";
 
+import "../styles/header.css";
+
 import * as ROUTES from "../global/routes";
 
 import logo from "../assets/buss-logo.png";
@@ -15,7 +17,7 @@ function Header() {
     <Navbar expand="sm" className="bg-body-secondary">
       <Container>
         <Navbar.Brand href={ROUTES.HOME}>
-          <img src={logo} width="80px" />
+          <img src={logo} className="logo" />
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse className="justify-content-end" id="basic-navbar-nav">
