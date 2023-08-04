@@ -11,14 +11,12 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleQuestion } from "@fortawesome/free-regular-svg-icons";
 
-import BF from "../assets/stages/ultimate/battlefield.png";
-import SBF from "../assets/stages/ultimate/small-battlefield.png";
-import PS2 from "../assets/stages/ultimate/pokemon-stadium-2.png";
-import SV from "../assets/stages/ultimate/smashville.png";
-import TAC from "../assets/stages/ultimate/town-and-city.png";
-import FD from "../assets/stages/ultimate/final-destination.png";
-import KPL from "../assets/stages/ultimate/kalos-pokemon-league.png";
-import HB from "../assets/stages/ultimate/hollow-bastion.png";
+import BF from "../assets/stages/melee/battlefield.png";
+import YS from "../assets/stages/melee/yoshis-story.png";
+import FOD from "../assets/stages/melee/fountain-of-dreams.png";
+import DL from "../assets/stages/melee/dream-land.png";
+import FD from "../assets/stages/melee/final-destination.png";
+import PS from "../assets/stages/melee/pokemon-stadium.png";
 
 import "../styles/about.css";
 
@@ -58,7 +56,10 @@ const Rules = () => {
                 </tr>
                 <tr>
                   <th>Strikes</th>
-                  <td colSpan={2}>Winner strikes 1 stage</td>
+                  <td colSpan={2}>
+                    Winner strikes 1 stage for best-of-3 matches, 0 for
+                    best-of-5 matches
+                  </td>
                 </tr>
                 <tr>
                   <th>
@@ -85,32 +86,30 @@ const Rules = () => {
                         <Image src={BF} rounded /> Battlefield
                       </li>
                       <li>
-                        <Image src={SBF} rounded /> Small Battlefield
+                        <Image src={YS} rounded /> Yoshi's Story
                       </li>
                       <li>
-                        <Image src={PS2} rounded /> Pokemon Stadium 2
+                        <Image src={FOD} rounded /> Fountain of Dreams
                       </li>
                       <li>
-                        <Image src={SV} rounded /> Smashville
+                        <Image src={DL} rounded /> Dream Land 64
                       </li>
                       <li>
-                        <Image src={TAC} rounded /> Town and City
+                        <Image src={FD} rounded /> Final Destination
                       </li>
                     </ul>
                   </td>
                   <td>
                     <ul>
                       <li>
-                        <Image src={FD} rounded /> Final Destination
-                      </li>
-                      <li>
-                        <Image src={KPL} rounded /> Kalos Pokemon League
-                      </li>
-                      <li>
-                        <Image src={HB} rounded /> Hollow Bastion
+                        <Image src={PS} rounded /> Pokemon Stadium
                       </li>
                     </ul>
                   </td>
+                </tr>
+                <tr>
+                  <th>Other</th>
+                  <td colSpan={2}>60 ledge grab limit; wobbling is banned</td>
                 </tr>
               </tbody>
             </Table>
