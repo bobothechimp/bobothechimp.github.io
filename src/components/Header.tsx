@@ -10,7 +10,7 @@ import "../styles/header.css";
 
 import * as ROUTES from "../global/routes";
 
-import logo from "../assets/buss-logo.png";
+import logo from "../assets/logos/buss-logo.png";
 
 function Header() {
   return (

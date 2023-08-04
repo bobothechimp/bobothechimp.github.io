@@ -28,3 +28,12 @@
 h3 {
     font-family: myriad pro, sans-serif;
 }
+
+.stages img {
+    width: 50px;
+}
+
+.stages li {
+    list-style: none;
+    padding-top: 10px;
+}

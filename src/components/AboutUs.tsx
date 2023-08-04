@@ -1,7 +1,7 @@
 import { Container, Row, Col, Card } from "react-bootstrap";
 
-import thinking from "../assets/thinking.png";
-import newquake from "../assets/newquake.png";
+import thinking from "../assets/tos/thinking.png";
+import newquake from "../assets/tos/newquake.png";
 
 import "../styles/about.css";
 
