@@ -11,6 +11,7 @@ import {
   faTwitter,
   faDiscord,
   faGithub,
+  faYoutube,
 } from "@fortawesome/free-brands-svg-icons";
 
 import "../styles/footer.css";
@@ -30,6 +31,9 @@ function Footer() {
             </a>
             <a target="_blank" href="https://discord.gg/VNUuZNRR">
               <FontAwesomeIcon icon={faDiscord} className="footerIcon" />
+            </a>
+            <a target="_blank" href="https://www.youtube.com/@busmash9476">
+              <FontAwesomeIcon icon={faYoutube} className="footerIcon" />
             </a>
             <a
               target="_blank"
