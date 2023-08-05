@@ -13,12 +13,12 @@ import { renderDSRTooltip } from "../global/tooltips";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleQuestion } from "@fortawesome/free-regular-svg-icons";
 
-import BF from "../assets/stages/melee/battlefield.png";
-import YS from "../assets/stages/melee/yoshis-story.png";
-import FOD from "../assets/stages/melee/fountain-of-dreams.png";
-import DL from "../assets/stages/melee/dream-land.png";
-import FD from "../assets/stages/melee/final-destination.png";
-import PS from "../assets/stages/melee/pokemon-stadium.png";
+import BF from "../assets/stages/brawl/battlefield.png";
+import FD from "../assets/stages/brawl/final-destination.png";
+import LC from "../assets/stages/brawl/lylat-cruise.png";
+import SV from "../assets/stages/brawl/smashville.png";
+import YI from "../assets/stages/brawl/yoshis-island.png";
+import PS from "../assets/stages/brawl/pokemon-stadium.png";
 
 import "../styles/about.css";
 
@@ -30,7 +30,7 @@ const Rules = () => {
           <tbody>
             <tr>
               <th>Stocks</th>
-              <td colSpan={2}>4</td>
+              <td colSpan={2}>3</td>
             </tr>
             <tr>
               <th>Time Limit</th>
@@ -62,7 +62,7 @@ const Rules = () => {
                   <FontAwesomeIcon icon={faCircleQuestion} />
                 </OverlayTrigger>
               </th>
-              <td colSpan={2}>Full DSR</td>
+              <td colSpan={2}>Modified DSR</td>
             </tr>
             <tr>
               <th>Other</th>
@@ -80,16 +80,16 @@ const Rules = () => {
                     <Image src={BF} rounded /> Battlefield
                   </li>
                   <li>
-                    <Image src={YS} rounded /> Yoshi's Story
-                  </li>
-                  <li>
-                    <Image src={FOD} rounded /> Fountain of Dreams
-                  </li>
-                  <li>
-                    <Image src={DL} rounded /> Dream Land 64
-                  </li>
-                  <li>
                     <Image src={FD} rounded /> Final Destination
+                  </li>
+                  <li>
+                    <Image src={LC} rounded /> Lylat Cruise
+                  </li>
+                  <li>
+                    <Image src={SV} rounded /> Smashville
+                  </li>
+                  <li>
+                    <Image src={YI} rounded /> Yoshi's Island
                   </li>
                 </ul>
               </td>

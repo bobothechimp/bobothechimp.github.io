@@ -8,6 +8,8 @@ import {
   OverlayTrigger,
 } from "react-bootstrap";
 
+import { renderDSRTooltip } from "../global/tooltips";
+
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleQuestion } from "@fortawesome/free-regular-svg-icons";
 
@@ -23,99 +25,89 @@ import HB from "../assets/stages/ultimate/hollow-bastion.png";
 import "../styles/about.css";
 
 const Rules = () => {
-  const renderDSRTooltip = (props: any) => (
-    <Tooltip id="button-tooltip" {...props}>
-      Dave's Stupid Rule (DSR) is a rule where players cannot counterpick to a
-      stage on which they previously won.
-    </Tooltip>
-  );
   return (
     <>
       <Container>
-        <Row>
-          <Col lg={{ span: 8, offset: 2 }}>
-            <Table bordered size="md">
-              <tbody>
-                <tr>
-                  <th>Stocks</th>
-                  <td colSpan={2}>3</td>
-                </tr>
-                <tr>
-                  <th>Time Limit</th>
-                  <td colSpan={2}>7:00</td>
-                </tr>
-                <tr>
-                  <th>Items</th>
-                  <td colSpan={2}>None</td>
-                </tr>
-                <tr>
-                  <th>Stage Hazards</th>
-                  <td colSpan={2}>Off</td>
-                </tr>
-                <tr>
-                  <th>Pausing</th>
-                  <td colSpan={2}>Off</td>
-                </tr>
-                <tr>
-                  <th>Strikes</th>
-                  <td colSpan={2}>Winner strikes 3 stages</td>
-                </tr>
-                <tr>
-                  <th>
-                    DSR{" "}
-                    <OverlayTrigger
-                      placement="right"
-                      delay={{ show: 250, hide: 400 }}
-                      overlay={renderDSRTooltip}
-                    >
-                      <FontAwesomeIcon icon={faCircleQuestion} />
-                    </OverlayTrigger>
-                  </th>
-                  <td colSpan={2}>No DSR</td>
-                </tr>
-                <tr>
-                  <th rowSpan={2}>Stages</th>
-                  <td>Starters</td>
-                  <td>Counterpicks</td>
-                </tr>
-                <tr className="stages">
-                  <td>
-                    <ul>
-                      <li>
-                        <Image src={BF} rounded /> Battlefield
-                      </li>
-                      <li>
-                        <Image src={SBF} rounded /> Small Battlefield
-                      </li>
-                      <li>
-                        <Image src={PS2} rounded /> Pokemon Stadium 2
-                      </li>
-                      <li>
-                        <Image src={SV} rounded /> Smashville
-                      </li>
-                      <li>
-                        <Image src={TAC} rounded /> Town and City
-                      </li>
-                    </ul>
-                  </td>
-                  <td>
-                    <ul>
-                      <li>
-                        <Image src={FD} rounded /> Final Destination
-                      </li>
-                      <li>
-                        <Image src={KPL} rounded /> Kalos Pokemon League
-                      </li>
-                      <li>
-                        <Image src={HB} rounded /> Hollow Bastion
-                      </li>
-                    </ul>
-                  </td>
-                </tr>
-              </tbody>
-            </Table>
-          </Col>
-        </Row>
+        <Table borderless striped size="md">
+          <tbody>
+            <tr>
+              <th>Stocks</th>
+              <td colSpan={2}>3</td>
+            </tr>
+            <tr>
+              <th>Time Limit</th>
+              <td colSpan={2}>7:00</td>
+            </tr>
+            <tr>
+              <th>Items</th>
+              <td colSpan={2}>None</td>
+            </tr>
+            <tr>
+              <th>Stage Hazards</th>
+              <td colSpan={2}>Off</td>
+            </tr>
+            <tr>
+              <th>Pausing</th>
+              <td colSpan={2}>Off</td>
+            </tr>
+            <tr>
+              <th>Strikes</th>
+              <td colSpan={2}>Winner strikes 3 stages</td>
+            </tr>
+            <tr>
+              <th>
+                DSR{" "}
+                <OverlayTrigger
+                  placement="right"
+                  delay={{ show: 250, hide: 400 }}
+                  overlay={renderDSRTooltip}
+                >
+                  <FontAwesomeIcon icon={faCircleQuestion} />
+                </OverlayTrigger>
+              </th>
+              <td colSpan={2}>No DSR</td>
+            </tr>
+            <tr>
+              <th rowSpan={2}>Stages</th>
+              <td>Starters</td>
+              <td>Counterpicks</td>
+            </tr>
+            <tr className="stages">
+              <td>
+                <ul>
+                  <li>
+                    <Image src={BF} rounded /> Battlefield
+                  </li>
+                  <li>
+                    <Image src={SBF} rounded /> Small Battlefield
+                  </li>
+                  <li>
+                    <Image src={PS2} rounded /> Pokemon Stadium 2
+                  </li>
+                  <li>
+                    <Image src={SV} rounded /> Smashville
+                  </li>
+                  <li>
+                    <Image src={TAC} rounded /> Town and City
+                  </li>
+                </ul>
+              </td>
+              <td>
+                <ul>
+                  <li>
+                    <Image src={FD} rounded /> Final Destination
+                  </li>
+                  <li>
+                    <Image src={KPL} rounded /> Kalos Pokemon League
+                  </li>
+                  <li>
+                    <Image src={HB} rounded /> Hollow Bastion
+                  </li>
+                </ul>
+              </td>
+            </tr>
+          </tbody>
+        </Table>
       </Container>
     </>
   );
