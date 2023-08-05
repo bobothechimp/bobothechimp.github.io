@@ -103,6 +103,14 @@ const Rules = () => {
             </tr>
           </tbody>
         </Table>
+        A more comprehensive ruleset can be found{" "}
+        <a
+          target="_blank"
+          href="https://docs.google.com/document/u/2/d/e/2PACX-1vSrZTgM6woxibHCH1Iu6zEuwTgEOZmARngTGd2W3Mu12sQWmdVDkOCEPJ2w889CrGk8Y7JYz_G42n8g/pub?fbclid=IwAR2SkzT7NoYu2_eQppSyqdwUFSQZxJcWmmMF4gLjQLqSZ3EWpbmOStiRJts"
+        >
+          here
+        </a>
+        .
       </Container>
     </>
   );

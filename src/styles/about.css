@@ -29,6 +29,14 @@ h3 {
     font-family: myriad pro, sans-serif;
 }
 
+.rules {
+    padding-bottom: 300px;
+}
+
+.rulesets {
+    padding-bottom: 50px;
+}
+
 .stages img {
     width: 50px;
 }

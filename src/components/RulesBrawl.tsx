@@ -66,7 +66,7 @@ const Rules = () => {
             </tr>
             <tr>
               <th>Other</th>
-              <td colSpan={2}>60 ledge grab limit; wobbling is banned</td>
+              <td colSpan={2}>35 ledge grab limit; Meta Knight is banned</td>
             </tr>
             <tr>
               <th rowSpan={2}>Stages</th>
@@ -103,6 +103,14 @@ const Rules = () => {
             </tr>
           </tbody>
         </Table>
+        A more comprehensive ruleset can be found{" "}
+        <a
+          target="_blank"
+          href="https://docs.google.com/document/d/1kteJo_WWxPnAFHqeTB8Mhz2UGl3gKF7LGA4wCl_V9cI/edit?usp=sharing"
+        >
+          here
+        </a>
+        .
       </Container>
     </>
   );
