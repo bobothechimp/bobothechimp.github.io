@@ -1,3 +1,5 @@
+@import url("https://fonts.cdnfonts.com/css/myriad-pro");
+
 .footer {
     background-color: #FF2400;
     padding-top: "75px";
@@ -8,9 +10,17 @@
     padding-top: 30px;
 }
 
+.footerIconLabel {
+    font-family: myriad pro, 'sans-serif';
+    color: white;
+    text-align: right;
+    position: relative;
+    top: 10px;
+}
+
 .footerIcon {
     color: white;
-    font-size: 50px;
+    font-size: 30px;
     padding: 10px;
 }
 
@@ -22,7 +32,7 @@
 .footerText {
     color: white;
     text-align: left;
-    padding-top: 30px;
+    padding-top: 55px;
 }
 
 .footerCopyright {
@@ -30,6 +40,16 @@
     padding-top: 10px;
     text-align: center;
     padding-bottom: 40px;
+}
+
+@media (max-width: 1199px) {
+    .footerText {
+        padding-top: 100px;
+    }
+
+    .footerIconLabel {
+        text-align: center;
+    }
 }
 
 @media (max-width: 575px) {
