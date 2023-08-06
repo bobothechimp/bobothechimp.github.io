@@ -9,7 +9,9 @@ import "../styles/about.css";
 const Rules = () => {
   return (
     <>
-      <h1 className="sectionTitle">Rules & Policies</h1>
+      <h1 id="rules" className="sectionTitle">
+        Rules & Policies
+      </h1>
       <Container>
         <Row>
           <Col lg={{ span: 4, offset: 0 }} className="rules">

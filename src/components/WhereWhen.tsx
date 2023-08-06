@@ -5,7 +5,9 @@ import { MAPS_KEY } from "../global/apikeys";
 const WhereWhen = () => {
   return (
     <Container>
-      <h1 className="sectionTitle">Where & When</h1>
+      <h1 id="wherewhen" className="sectionTitle">
+        Where & When
+      </h1>
       <Row className="wwDesc">
         <Col md={{ span: 6, offset: 0 }}>
           <p>

@@ -25,7 +25,7 @@ function Header() {
             <Nav.Link href={ROUTES.HOME}>Home</Nav.Link>
             <NavDropdown title="About" id="basic-nav-dropdown">
               <NavDropdown.Item href={ROUTES.ABOUT}>About Us</NavDropdown.Item>
-              <NavDropdown.Item href={ROUTES.WHENWHERE}>
+              <NavDropdown.Item href={ROUTES.WHEREWHEN}>
                 Where & When
               </NavDropdown.Item>
               <NavDropdown.Item href={ROUTES.RULES}>

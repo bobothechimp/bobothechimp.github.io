@@ -33,6 +33,12 @@ h3 {
     padding-bottom: 300px;
 }
 
+@media (max-width: 1199px) {
+    .rules {
+        padding-bottom: 0px;
+    }
+}
+
 .rulesets {
     padding-bottom: 50px;
 }

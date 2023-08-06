@@ -8,7 +8,9 @@ import "../styles/about.css";
 const AboutUs = () => {
   return (
     <Container>
-      <h1 className="sectionTitle">About Us</h1>
+      <h1 id="about" className="sectionTitle">
+        About Us
+      </h1>
       <Row>
         <Col md={{ span: 3, offset: 0 }}>
           <Card className="toCard">
