@@ -1,0 +1,25 @@
+@import url("https://fonts.cdnfonts.com/css/myriad-pro");
+
+.sectionTitle {
+    padding: 20px;
+    padding-top: 40px;
+    font-family: myriad pro, sans-serif;
+    text-align: center;
+    color: #DD2400;
+}
+
+.stdButton {
+    background-color: #FF2400;
+    border-color: #EE1400;
+    margin-bottom: 30px;
+}
+
+.btn-primary:hover {
+    background-color: #ed2100;
+    border-color: #dd1300
+}
+
+.btn-primary:focus,
+.btn-primary.focus {
+    box-shadow: 0 0 0 .2rem rgba(91, 194, 194, 0.5)
+}
