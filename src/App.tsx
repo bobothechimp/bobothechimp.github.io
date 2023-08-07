@@ -1,5 +1,6 @@
 import Home from "./pages/Home";
 import About from "./pages/About";
+import Tournaments from "./pages/Tournaments";
 import { useState } from "react";
 
 import { BrowserRouter, Route, Routes } from "react-router-dom";
@@ -15,6 +16,7 @@ function App() {
         <Routes>
           <Route path={ROUTES.HOME} element={<Home />} />
           <Route path={ROUTES.ABOUT} element={<About />} />
+          <Route path={ROUTES.TOURNAMENTS} element={<Tournaments />} />
         </Routes>
       </div>
     </BrowserRouter>
