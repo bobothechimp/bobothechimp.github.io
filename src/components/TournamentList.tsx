@@ -1,46 +1,22 @@
-import fetch from "node-fetch";
-const startggURL = "https://api.start.gg/gql/alpha";
+import { useState } from "react";
+import { ListGroup } from "react-bootstrap";
 
-import { STARTGG_KEY } from "../global/apikeys";
+import getTournamentWinners from "../querying/TournamentQueries";
 
 const TournamentList = () => {
-  const eventSlug = "bu-smash-society-bimonthly-16";
-  const testQuery = `query TournamentQuery($slug: String) {
-        tournament(slug: $slug) {
-          id
-          name
-          events {
-            id
-            name
-          }
-        }
-      }
-      `;
-  let tournamentData;
-  fetch(startggURL, {
-    method: "POST",
-    headers: {
-      "content-type": "application/json",
-      Accept: "application/json",
-      Authentication: "Bearer " + { STARTGG_KEY },
-    },
-    body: JSON.stringify({
-      query: testQuery,
-      variables: {
-        slug: eventSlug,
-      },
-    }),
-  })
-    .then((r) => r.json())
-    .then((data) => {
-      console.log(data);
-      tournamentData = data;
-    });
+  const [winners, setWinners] = useState([[]]);
+  getTournamentWinners(12, 9, setWinners);
 
   return (
     <>
       <h1>Tournaments</h1>
-      <p>Test</p>
+      {winners.map((top3) => (
+        <ListGroup>
+          {top3.map((player) => (
+            <ListGroup.Item>{player}</ListGroup.Item>
+          ))}
+        </ListGroup>
+      ))}
     </>
   );
 };
