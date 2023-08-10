@@ -16,13 +16,17 @@
     "@fortawesome/free-regular-svg-icons": "^6.4.2",
     "@fortawesome/free-solid-svg-icons": "^6.4.2",
     "@fortawesome/react-fontawesome": "^0.2.0",
-    "axios": "^1.4.0",
+    "@mapbox/node-pre-gyp": "^1.0.11",
+    "aws-sdk": "^2.1433.0",
     "bootstrap": "^5.3.1",
+    "mock-aws-s3": "^4.0.2",
+    "nock": "^13.3.2",
     "react": "^18.2.0",
     "react-bootstrap": "^2.8.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.14.2",
-    "react-twitter-widgets": "^1.11.0"
+    "react-twitter-widgets": "^1.11.0",
+    "sqlite3": "^5.1.6"
   },
   "devDependencies": {
     "@types/react": "^18.0.27",
