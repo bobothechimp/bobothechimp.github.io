@@ -30,17 +30,12 @@ async function getEventID(tournamentName: string, eventName: string, setter) {
       });
     };
     fetchData();
-    //   .then((r) => r.json())
-    //   .then((data) => {
-    //     setter(data.data.event.id);
-    //   });
   }, []);
 }
 
 function getTournamentWinners(season: number, week: number, setter) {
   console.log("Running getTournamentWinners");
-  const tournamentName = `bu-smash-season-${season}-week-${week}`;
-  const [eventID, setEventID] = useState(0);
+  const tournamentName = `bu-smash-society-season-${season}-week-${week}`;
   const query = `query TournamentQuery($slug: String, $page: Int!, $perPage: Int!) {
     tournament(slug: $slug) {
       id
@@ -64,40 +59,38 @@ function getTournamentWinners(season: number, week: number, setter) {
     }
   }
   `;
-  useEffect(() => {
-    const fetchData = async () => {
-      const result = await fetch(startggURL, {
-        method: "POST",
-        headers: {
-          "content-type": "application/json",
-          Accept: "application/json",
-          Authorization: "Bearer " + STARTGG_KEY,
+  const fetchData = async () => {
+    const result = await fetch(startggURL, {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+        Accept: "application/json",
+        Authorization: "Bearer " + STARTGG_KEY,
+      },
+      body: JSON.stringify({
+        query: query,
+        variables: {
+          slug: tournamentName,
+          page: 1,
+          perPage: 3,
         },
-        body: JSON.stringify({
-          query: query,
-          variables: {
-            slug: tournamentName,
-            page: 1,
-            perPage: 3,
-          },
-        }),
-      });
-      result.json().then((json) => {
-        let allEventWinners: string[][] = [];
-        let events = json.data.tournament.events;
-        for (let e = 0; e < events.length; e++) {
-          let winners: string[] = [];
-          for (let p = 0; p < 3; p++) {
-            let name = events[e].standings.nodes[p].entrant.name;
-            winners.push(name);
-          }
-          allEventWinners.push(winners);
+      }),
+    });
+    result.json().then((json) => {
+      let allEventWinners: string[][] = [];
+      let events = json.data.tournament.events;
+      for (let e = 0; e < events.length; e++) {
+        let winners: string[] = [];
+        for (let p = 0; p < 3; p++) {
+          let name = events[e].standings.nodes[p].entrant.name;
+          winners.push(name);
         }
-        setter(allEventWinners);
-      });
-    };
-    fetchData();
-  }, []);
+        allEventWinners.push(winners);
+      }
+      setter(allEventWinners);
+    });
+  };
+  fetchData();
 }
 
 export default getTournamentWinners;
