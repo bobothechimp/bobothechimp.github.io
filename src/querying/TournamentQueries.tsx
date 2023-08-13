@@ -78,16 +78,20 @@ function getTournamentWinners(season: number, week: number, setter) {
     });
     result.json().then((json) => {
       let allEventWinners: string[][] = [];
-      let events = json.data.tournament.events;
-      for (let e = 0; e < events.length; e++) {
-        let winners: string[] = [];
-        for (let p = 0; p < 3; p++) {
-          let name = events[e].standings.nodes[p].entrant.name;
-          winners.push(name);
+      if (json.data.tournament === null) {
+        setter([]);
+      } else {
+        let events = json.data.tournament.events;
+        for (let e = 0; e < events.length; e++) {
+          let winners: string[] = [];
+          for (let p = 0; p < 3; p++) {
+            let name = events[e].standings.nodes[p].entrant.name;
+            winners.push(name);
+          }
+          allEventWinners.push(winners);
         }
-        allEventWinners.push(winners);
+        setter(allEventWinners);
       }
-      setter(allEventWinners);
     });
   };
   fetchData();
