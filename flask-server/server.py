@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, request
 import json
 import sqlite3
 from season import Season
@@ -7,10 +7,11 @@ from event import Event
 
 app = Flask(__name__)
 
-def getSeason(cursor, season):
-    sql = """SELECT * FROM seasons WHERE season = %d;""" %(season)
-    cursor.execute(sql)
-    return cursor.fetchall()
+# Create standard json response with provided data
+def jsonResponse(jsonData):
+    resp = Flask.response_class(json.dumps(jsonData, indent=2))
+    resp.headers['Access-Control-Allow-Origin'] = '*'
+    return resp
 
 # Return all seasons
 @app.route("/seasons")
@@ -18,42 +19,48 @@ def seasons():
     connection = sqlite3.connect("busmash.db")
     cursor = connection.cursor()
     Season.makeSeasonsTable(cursor)
-
-    s9 = Season()
-    if not s9.load_season(9):
-        s9 = Season(9, "Ultimate", 9, 8, [10, 11], "2021 Fall")
-        s9.insert_season()
-    s10 = Season()
-    if not s10.load_season(10):
-        s10 = Season(10, "Ultimate", 10, 7, [12], "2022 Spring")
-        s10.insert_season()
-    s11 = Season()
-    if not s11.load_season(11):
-        s11 = Season(11, "Ultimate", 11, 10, [13, 14], "2022 Fall")
-        s11.insert_season()
-    s12 = Season()
-    if not s12.load_season(12):
-        s12 = Season(12, "Ultimate", 12, 8, [15, 16], "2023 Spring")
-        s12.insert_season()
-    jsonData = [s9.toJSON(), s10.toJSON(), s11.toJSON(), s12.toJSON()]
+    
+    cursor.execute("SELECT id FROM seasons")
+    rows = cursor.fetchall()
+    jsonData = []
+    for row in rows:
+        season = Season()
+        season.load_season(row[0])
+        jsonData += [season.toJSON()]
 
     connection.commit()
     connection.close()
     
-    resp = Flask.response_class(json.dumps(jsonData, indent=2))
-    resp.headers['Access-Control-Allow-Origin'] = '*'
-    return resp
+    return jsonResponse(jsonData)
 
 # Get particular season
-@app.route("/seasons/<int:season_num>")
-def getSeason(season_num):
+@app.route("/seasons/<int:season_id>")
+def getSeason(season_id):
     season = Season()
-    season.load_season(season_num)
+    season.load_season(season_id)
     jsonData = season.toJSON()
 
-    resp = Flask.response_class(json.dumps(jsonData, indent=2))
-    resp.headers['Access-Control-Allow-Origin'] = '*'
-    return resp
+    return jsonResponse(jsonData)
+
+# Add a new season
+@app.route("/seasons/add", methods=["POST"])
+def addSeason():
+    print("Test==============")
+    game = request.form.get("game")
+    season_num = request.form.get("season_num")
+    num_weeks = request.form.get("num_weeks")
+    fallOrSpring = request.form.get("fallOrSpring")
+    year = request.form.get("year")
+    semester = "{} {}".format(year, fallOrSpring)
+
+    season = Season(game, season_num, num_weeks, [], semester)
+    season.insert_season()
+    jsonData = {
+        "OK": True,
+        "id": season.id
+    }
+
+    return jsonResponse(jsonData)
 
 # Get particular tournament
 @app.route("/tournaments/<int:tournament_id>")
@@ -62,9 +69,7 @@ def getTournament(tournament_id):
     tournament.load_tournament(tournament_id)
     jsonData = tournament.toJSON()
 
-    resp = Flask.response_class(json.dumps(jsonData, indent=2))
-    resp.headers['Access-Control-Allow-Origin'] = '*'
-    return resp
+    return jsonResponse(jsonData)
 
 @app.route("/events/<int:event_id>")
 def getEvent(event_id):
@@ -72,9 +77,7 @@ def getEvent(event_id):
     event.load_event(event_id)
     jsonData = event.toJSON()
 
-    resp = Flask.response_class(json.dumps(jsonData, indent=2))
-    resp.headers['Access-Control-Allow-Origin'] = '*'
-    return resp
+    return jsonResponse(jsonData)
 
 if __name__ == "__main__":
     app.run(debug = True)

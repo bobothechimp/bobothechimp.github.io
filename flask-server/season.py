@@ -1,9 +1,9 @@
 import sqlite3
 
 class Season:
-    def __init__(self, id = -1, game = "None", season_num = -1, num_weeks = 0,
-                 bimonthlies = [None, None], semester = "None"):
-        self.id = id
+    def __init__(self, game = "None", season_num = -1, num_weeks = 0,
+                 bimonthlies = [], semester = "None"):
+        self.id = -1
         self.game = game
         self.season_num = season_num
         self.num_weeks = num_weeks
@@ -12,11 +12,11 @@ class Season:
         self.connection = sqlite3.connect("busmash.db")
         self.cursor = self.connection.cursor()
     
-    def load_season(self, season_num):
+    def load_season(self, id):
         self.cursor.execute("""
         SELECT * FROM seasons
-        WHERE season = {}
-        """.format(season_num))
+        WHERE id = {}
+        """.format(id))
 
         row = self.cursor.fetchone()
         if row is None:
@@ -37,6 +37,13 @@ class Season:
             bmStrings[0] += "bimonthly{}, ".format(i + 1)
             bmStrings[1] += "{}, ".format(bm)
         
+        print("""
+        INSERT INTO seasons
+        (game, season, num_weeks, {}semester)
+        VALUES
+        (\"{}\", {}, {}, {}\"{}\")
+        """.format(bmStrings[0], self.game, self.season_num,
+                   self.num_weeks, bmStrings[1], self.semester))
         self.cursor.execute("""
         INSERT INTO seasons
         (game, season, num_weeks, {}semester)

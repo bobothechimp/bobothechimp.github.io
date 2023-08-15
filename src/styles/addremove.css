@@ -1,0 +1,59 @@
+.game {
+    margin-bottom: 20px;
+}
+
+.game select {
+    width: 100%;
+}
+
+.seasonNumber {
+    display: table;
+    margin-bottom: 20px;
+}
+
+.seasonNumber [type="text"] {
+    display: table-cell;
+    width: 50px;
+    float: right;
+}
+
+.numWeeks {
+    display: table;
+    margin-bottom: 20px;
+}
+
+.numWeeks [type="text"] {
+    float: right;
+    display: table-cell;
+    width: 50px;
+}
+
+.semester {
+    margin-bottom: 20px;
+}
+
+.semester label {
+    padding-right: 50%;
+}
+
+.semesterBoxes {
+    display: table;
+}
+
+.semester select {
+    display: table-cell;
+    width: 50%;
+}
+
+@media (max-width: 991px) {
+    table {
+        font-size: 11px;
+    }
+}
+
+
+@media (max-width: 767px) {
+    table {
+        font-size: x-small;
+    }
+}
