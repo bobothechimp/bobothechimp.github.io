@@ -8,19 +8,19 @@ import {
   OverlayTrigger,
 } from "react-bootstrap";
 
-import { renderDSRTooltip } from "../global/tooltips";
+import { renderDSRTooltip } from "../../global/tooltips";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleQuestion } from "@fortawesome/free-regular-svg-icons";
 
-import BF from "../assets/stages/melee/battlefield.png";
-import YS from "../assets/stages/melee/yoshis-story.png";
-import FOD from "../assets/stages/melee/fountain-of-dreams.png";
-import DL from "../assets/stages/melee/dream-land.png";
-import FD from "../assets/stages/melee/final-destination.png";
-import PS from "../assets/stages/melee/pokemon-stadium.png";
+import BF from "../../assets/stages/brawl/battlefield.png";
+import FD from "../../assets/stages/brawl/final-destination.png";
+import LC from "../../assets/stages/brawl/lylat-cruise.png";
+import SV from "../../assets/stages/brawl/smashville.png";
+import YI from "../../assets/stages/brawl/yoshis-island.png";
+import PS from "../../assets/stages/brawl/pokemon-stadium.png";
 
-import "../styles/about.css";
+import "../../styles/about.css";
 
 const Rules = () => {
   return (
@@ -30,7 +30,7 @@ const Rules = () => {
           <tbody>
             <tr>
               <th>Stocks</th>
-              <td colSpan={2}>4</td>
+              <td colSpan={2}>3</td>
             </tr>
             <tr>
               <th>Time Limit</th>
@@ -62,11 +62,11 @@ const Rules = () => {
                   <FontAwesomeIcon icon={faCircleQuestion} />
                 </OverlayTrigger>
               </th>
-              <td colSpan={2}>Full DSR</td>
+              <td colSpan={2}>Modified DSR</td>
             </tr>
             <tr>
               <th>Other</th>
-              <td colSpan={2}>60 ledge grab limit; wobbling is banned</td>
+              <td colSpan={2}>35 ledge grab limit; Meta Knight is banned</td>
             </tr>
             <tr>
               <th rowSpan={2}>Stages</th>
@@ -80,16 +80,16 @@ const Rules = () => {
                     <Image src={BF} rounded /> Battlefield
                   </li>
                   <li>
-                    <Image src={YS} rounded /> Yoshi's Story
-                  </li>
-                  <li>
-                    <Image src={FOD} rounded /> Fountain of Dreams
-                  </li>
-                  <li>
-                    <Image src={DL} rounded /> Dream Land 64
-                  </li>
-                  <li>
                     <Image src={FD} rounded /> Final Destination
+                  </li>
+                  <li>
+                    <Image src={LC} rounded /> Lylat Cruise
+                  </li>
+                  <li>
+                    <Image src={SV} rounded /> Smashville
+                  </li>
+                  <li>
+                    <Image src={YI} rounded /> Yoshi's Island
                   </li>
                 </ul>
               </td>
@@ -106,7 +106,7 @@ const Rules = () => {
         A more comprehensive ruleset can be found{" "}
         <a
           target="_blank"
-          href="https://docs.google.com/document/u/2/d/e/2PACX-1vSrZTgM6woxibHCH1Iu6zEuwTgEOZmARngTGd2W3Mu12sQWmdVDkOCEPJ2w889CrGk8Y7JYz_G42n8g/pub?fbclid=IwAR2SkzT7NoYu2_eQppSyqdwUFSQZxJcWmmMF4gLjQLqSZ3EWpbmOStiRJts"
+          href="https://docs.google.com/document/d/1kteJo_WWxPnAFHqeTB8Mhz2UGl3gKF7LGA4wCl_V9cI/edit?usp=sharing"
         >
           here
         </a>

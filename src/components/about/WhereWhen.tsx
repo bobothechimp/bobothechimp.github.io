@@ -1,6 +1,8 @@
 import { Container, Row, Col, Table } from "react-bootstrap";
 
-import { MAPS_KEY } from "../global/apikeys";
+import { MAPS_KEY } from "../../global/apikeys";
+
+import "../../styles/about.css";
 
 const WhereWhen = () => {
   return (

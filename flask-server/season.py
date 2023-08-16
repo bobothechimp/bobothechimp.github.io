@@ -63,6 +63,12 @@ class Season:
             "bimonthly2": self.bimonthlies[1],
             "semester": self.semester
         }
+    
+    @staticmethod
+    def deleteSeason(cursor, season_id):
+        sql = """DELETE FROM seasons
+        WHERE id = {} ;""".format(season_id)
+        cursor.execute(sql)
 
     @staticmethod
     def makeSeasonsTable(cursor):

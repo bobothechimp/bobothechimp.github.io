@@ -1,6 +1,6 @@
 import Header from "../components/Header";
 import Footer from "../components/Footer";
-import TournamentList from "../components/TournamentList";
+import TournamentList from "../components/tournaments/TournamentList";
 
 const Tournaments = () => {
   return (

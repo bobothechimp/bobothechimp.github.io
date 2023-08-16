@@ -2,9 +2,9 @@ import React from "react";
 
 import Header from "../components/Header";
 import Footer from "../components/Footer";
-import AboutUs from "../components/AboutUs";
-import WhereWhen from "../components/WhereWhen";
-import Rules from "../components/Rules";
+import AboutUs from "../components/about/AboutUs";
+import WhereWhen from "../components/about/WhereWhen";
+import Rules from "../components/about/Rules";
 
 const About = () => {
   return (

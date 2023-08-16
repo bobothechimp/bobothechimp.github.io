@@ -4,7 +4,7 @@ import RulesUltimate from "./RulesUltimate";
 import RulesMelee from "./RulesMelee";
 import RulesBrawl from "./RulesBrawl";
 
-import "../styles/about.css";
+import "../../styles/about.css";
 
 const Rules = () => {
   return (

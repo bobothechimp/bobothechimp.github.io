@@ -1,7 +1,7 @@
 import React, { ReactNode } from "react";
 import { Container, Row, Col } from "react-bootstrap";
 
-import "../styles/tournaments.css";
+import "../../styles/tournaments.css";
 
 interface Props {
   children: ReactNode;

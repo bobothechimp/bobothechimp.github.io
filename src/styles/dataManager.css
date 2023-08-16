@@ -45,15 +45,38 @@
     width: 50%;
 }
 
-@media (max-width: 991px) {
-    table {
-        font-size: 11px;
+.addDataForm {
+    width: 80%;
+    float: right;
+    padding: 20px;
+    border-radius: 10px;
+    background-color: lightgray;
+}
+
+@media (max-width: 1399px) {
+    .addDataForm {
+        width: 100%;
     }
 }
 
+@media (max-width: 1199px) {
+    .addDataForm {
+        width: 80%;
+    }
+}
 
-@media (max-width: 767px) {
+@media (max-width: 991px) {
     table {
-        font-size: x-small;
+        font-size: 12px;
+    }
+
+    .addDataForm {
+        width: 100%;
+    }
+}
+
+@media (max-width: 575px) {
+    table {
+        font-size: 9px;
     }
 }

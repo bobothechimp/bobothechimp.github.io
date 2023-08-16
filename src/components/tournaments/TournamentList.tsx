@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { ListGroup, Form } from "react-bootstrap";
 
-import getTournamentWinners from "../querying/TournamentQueries";
+import getTournamentWinners from "../../querying/TournamentQueries";
 import EventCard from "./EventCard";
 
 const TournamentList = () => {
