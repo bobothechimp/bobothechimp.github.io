@@ -17,7 +17,7 @@ const AddSeason = ({ handleSubmit }: Props) => {
   return (
     <Form onSubmit={handleSubmit} method="POST">
       <Row>
-        <Form.Group className="game" controlId="game">
+        <Form.Group className="fullSelect" controlId="game">
           <Form.Label>Select a game</Form.Label>
           <Form.Select name="game" aria-label="Select game">
             <option value="Ultimate/Brawl">Ultimate/Brawl</option>
@@ -26,7 +26,7 @@ const AddSeason = ({ handleSubmit }: Props) => {
         </Form.Group>
       </Row>
       <Row>
-        <Form.Group className="semester" controlId="semester">
+        <Form.Group className="halfSelect" controlId="semester">
           <Form.Label>Semester</Form.Label>
           <Form.Select name="fallOrSpring" aria-label="Fall or spring">
             <option value="Fall">Fall</option>
@@ -42,13 +42,13 @@ const AddSeason = ({ handleSubmit }: Props) => {
         </Form.Group>
       </Row>
       <Row>
-        <Form.Group className="seasonNumber" controlId="season">
+        <Form.Group className="shortText" controlId="season">
           <Form.Label>Season number</Form.Label>
           <Form.Control name="season_num" type="text" />
         </Form.Group>
       </Row>
       <Row>
-        <Form.Group className="numWeeks" controlId="num_weeks">
+        <Form.Group className="shortText" controlId="num_weeks">
           <Form.Label>Number of Weeks</Form.Label>
           <Form.Control name="num_weeks" type="text" />
         </Form.Group>

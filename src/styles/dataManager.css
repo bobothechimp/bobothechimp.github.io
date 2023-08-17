@@ -1,54 +1,58 @@
-.game {
+.fullSelect {
     margin-bottom: 20px;
 }
 
-.game select {
+.fullSelect select {
     width: 100%;
 }
 
-.seasonNumber {
-    display: table;
+.halfSelect {
     margin-bottom: 20px;
 }
 
-.seasonNumber [type="text"] {
-    display: table-cell;
-    width: 50px;
-    float: right;
-}
-
-.numWeeks {
-    display: table;
-    margin-bottom: 20px;
-}
-
-.numWeeks [type="text"] {
-    float: right;
-    display: table-cell;
-    width: 50px;
-}
-
-.semester {
-    margin-bottom: 20px;
-}
-
-.semester label {
+.halfSelect label {
     padding-right: 50%;
 }
 
-.semesterBoxes {
+.halfSelectBoxes {
     display: table;
 }
 
-.semester select {
+.halfSelect select {
     display: table-cell;
     width: 50%;
+}
+
+.shortText {
+    width: 100%;
+    display: table;
+    margin-bottom: 20px;
+}
+
+.shortText [type="text"] {
+    display: table-cell;
+    width: 50px;
+    float: right;
+}
+
+.longText {
+    margin-bottom: 20px;
+}
+
+.longText [type="text"] {
+    width: 100%;
+}
+
+.checkBox {
+    margin-bottom: 20px;
 }
 
 .addDataForm {
     width: 80%;
     float: right;
     padding: 20px;
+    margin-top: 20px;
+    margin-bottom: 20px;
     border-radius: 10px;
     background-color: lightgray;
 }

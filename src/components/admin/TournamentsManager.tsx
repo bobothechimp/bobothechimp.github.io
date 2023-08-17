@@ -54,14 +54,14 @@ const TournamentsManager = ({ tournaments, seasons, getData }: Props) => {
     <>
       <Container>
         <Row>
-          <Col lg={{ span: 6 }} xl={{ span: 7 }}>
+          <Col md={{ span: 7 }} lg={{ span: 6 }} xl={{ span: 7 }}>
             <DataTable
               rows={tournaments}
               titles={["ID", "Season ID", "Week", "Date"]}
               handleDeleteButton={handleDeleteButton}
             />
           </Col>
-          <Col lg={{ span: 6 }} xl={{ span: 5 }}>
+          <Col md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 4, offset: 1 }}>
             <div className="addDataForm">
               <AddTournament seasons={seasons} handleSubmit={handleSubmit} />
             </div>

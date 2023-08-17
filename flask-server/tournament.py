@@ -46,7 +46,15 @@ class Tournament:
         }
     
     @staticmethod
-    def makeTournamentsTable(cursor):
+    def deleteTournament(cursor, tournament_id):
+        sql = """DELETE FROM tournaments
+        WHERE id = {} ;""".format(tournament_id)
+        cursor.execute(sql)
+    
+    @staticmethod
+    def makeTournamentsTable():
+        connection = sqlite3.connect("busmash.db")
+        cursor = connection.cursor()
         sql = """CREATE TABLE IF NOT EXISTS tournaments (
             id INTEGER PRIMARY KEY,
             season_id INTEGER NOT NULL,
@@ -54,3 +62,5 @@ class Tournament:
             date INTEGER NOT NULL
         );"""
         cursor.execute(sql)
+        connection.commit()
+        connection.close()

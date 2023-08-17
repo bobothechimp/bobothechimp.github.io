@@ -71,7 +71,9 @@ class Season:
         cursor.execute(sql)
 
     @staticmethod
-    def makeSeasonsTable(cursor):
+    def makeSeasonsTable():
+        connection = sqlite3.connect("busmash.db")
+        cursor = connection.cursor()
         sql = """CREATE TABLE IF NOT EXISTS seasons (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             game TEXT NOT NULL,
@@ -82,3 +84,5 @@ class Season:
             semester TEXT NOT NULL
         );"""
         cursor.execute(sql)
+        connection.commit()
+        connection.close()

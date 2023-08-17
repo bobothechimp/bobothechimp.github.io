@@ -7,3 +7,9 @@ export const renderDSRTooltip = (props: any) => (
     (Modified DSR).
   </Tooltip>
 );
+
+export const renderAddEventsTooltip = (props: any) => (
+  <Tooltip id="button-tooltip" {...props}>
+    Add all events from this tournament to the events table.
+  </Tooltip>
+);

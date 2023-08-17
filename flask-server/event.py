@@ -68,7 +68,9 @@ class Event:
         }
     
     @staticmethod
-    def makeTournamentsTable(cursor):
+    def makeEventsTable():
+        connection = sqlite3.connect("busmash.db")
+        cursor = connection.cursor()
         sql = """CREATE TABLE IF NOT EXISTS events (
             id INTEGER PRIMARY KEY,
             tournament_id INTEGER NOT NULL,
@@ -79,3 +81,5 @@ class Event:
             spr TEXT NOT NULL
         );"""
         cursor.execute(sql)
+        connection.commit()
+        connection.close()
