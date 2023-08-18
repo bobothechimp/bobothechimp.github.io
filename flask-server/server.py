@@ -167,7 +167,6 @@ def addTournament():
         events = tournamentData["tournament"]["events"]
         for event in events:
             event_id = event["id"]
-            print("Event ID: ", event_id)
             createEvent(id, event_id)
 
     tournament = Tournament(id, season_id, week_num, date)

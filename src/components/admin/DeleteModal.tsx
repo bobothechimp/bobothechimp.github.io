@@ -41,7 +41,7 @@ const DeleteModal = ({ data, show, handleClose, handleDelete }: Props) => {
       </Modal.Body>
       <Modal.Footer>
         <Button variant="secondary" onClick={handleClose}>
-          Close
+          Cancel
         </Button>
         <Button variant="danger" onClick={handleDelete}>
           Delete

@@ -106,7 +106,7 @@ const DataManager = () => {
   return (
     <>
       <Header />
-      <Container>
+      <Container className="dataTabs">
         <Nav
           variant="tabs"
           defaultActiveKey={SEASONS_KEY}

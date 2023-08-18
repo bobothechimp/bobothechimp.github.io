@@ -57,9 +57,19 @@ class Event:
         self.connection.commit()
     
     def toJSON(self):
+        self.cursor.execute("""
+        SELECT semester, game, week
+        FROM seasons JOIN tournaments
+        ON seasons.id = tournaments.season_id
+        WHERE tournaments.id = {};
+        """.format(self.tournament_id))
+        tournament = self.cursor.fetchone()
+        tournamentName = "{} {} Week {}".format(tournament[0], tournament[1], tournament[2])
+
         return {
             "id": self.id,
             "tournament_id": self.tournament_id,
+            "tournamentName": tournamentName,
             "title": self.title,
             "entrants": self.entrants,
             "top3": self.top3,

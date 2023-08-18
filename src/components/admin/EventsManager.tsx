@@ -2,8 +2,9 @@ import React from "react";
 import { useState, useEffect } from "react";
 import { Container, Row, Col } from "react-bootstrap";
 import DataTable from "./DataTable";
-import AddEvent from "./AddEvent";
 import DeleteModal from "./DeleteModal";
+import AddDataForm from "./AddDataForm";
+import { Input } from "./AddDataForm";
 
 import * as ROUTES from "../../global/routes";
 
@@ -50,6 +51,17 @@ const EventsManager = ({ events, tournaments, getData }: Props) => {
     xhr.send(info);
   };
 
+  let inputs: Input[] = [
+    {
+      id: 1,
+      name: "event_url_id",
+      cssClass: "longText",
+      type: "text",
+      label: "Event ID/URL",
+      note: "Event will be attached to its tournament automatically.",
+    },
+  ];
+
   return (
     <>
       <Container>
@@ -60,6 +72,7 @@ const EventsManager = ({ events, tournaments, getData }: Props) => {
               titles={[
                 "ID",
                 "Tournament ID",
+                "Tournament Name",
                 "Title",
                 "Entrants",
                 "Top 3 (1st, 2nd, 3rd)",
@@ -70,9 +83,13 @@ const EventsManager = ({ events, tournaments, getData }: Props) => {
               handleDeleteButton={handleDeleteButton}
             />
           </Col>
-          <Col md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 3, offset: 1 }}>
+          <Col md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 4 }}>
             <div className="addDataForm">
-              <AddEvent tournaments={tournaments} handleSubmit={handleSubmit} />
+              <AddDataForm
+                handleSubmit={handleSubmit}
+                inputs={inputs}
+                objectName="Event"
+              />
             </div>
           </Col>
         </Row>

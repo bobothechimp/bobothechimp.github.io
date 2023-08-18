@@ -2,8 +2,9 @@ import React from "react";
 import { useState, useEffect } from "react";
 import { Container, Row, Col } from "react-bootstrap";
 import DataTable from "./DataTable";
-import AddSeason from "./AddSeason";
 import DeleteModal from "./DeleteModal";
+import AddDataForm from "./AddDataForm";
+import { Input } from "./AddDataForm";
 
 import * as ROUTES from "../../global/routes";
 
@@ -49,6 +50,49 @@ const SeasonsManager = ({ seasons, getData }: Props) => {
     xhr.send(info);
   };
 
+  // Create list of years for semester dropdown
+  const date = new Date();
+  const curYear = date.getFullYear();
+  let years: number[] = [];
+  for (let y = 2010; y <= curYear + 10; y++) {
+    years.push(y);
+  }
+
+  const inputs: Input[] = [
+    {
+      id: 1,
+      name: "game",
+      cssClass: "fullSelect",
+      type: "select",
+      options: [["Ultimate/Brawl", "Melee"]],
+      defaultValues: [["Ultimate/Brawl"]],
+      label: "Select a game",
+    },
+    {
+      id: 2,
+      name: "fallOrSpring,year",
+      cssClass: "halfSelect",
+      type: "doubleSelect",
+      options: [["Fall", "Spring"], years],
+      defaultValues: ["Fall", curYear],
+      label: "Semester",
+    },
+    {
+      id: 3,
+      name: "season_num",
+      cssClass: "shortText",
+      type: "text",
+      label: "Season Number",
+    },
+    {
+      id: 4,
+      name: "num_weeks",
+      cssClass: "shortText",
+      type: "text",
+      label: "Number of weeks",
+    },
+  ];
+
   return (
     <>
       <Container>
@@ -71,7 +115,11 @@ const SeasonsManager = ({ seasons, getData }: Props) => {
           </Col>
           <Col lg={{ span: 4 }} xl={{ span: 3 }}>
             <div className="addDataForm">
-              <AddSeason handleSubmit={handleSubmit} />
+              <AddDataForm
+                handleSubmit={handleSubmit}
+                inputs={inputs}
+                objectName="Season"
+              />
             </div>
           </Col>
         </Row>

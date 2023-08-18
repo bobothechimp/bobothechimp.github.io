@@ -1,3 +1,7 @@
+.dataTabs {
+    padding: 20px;
+}
+
 .longTable {
     white-space: nowrap;
     overflow: hidden;

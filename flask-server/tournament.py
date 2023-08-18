@@ -38,9 +38,17 @@ class Tournament:
     
     def toJSON(self):
         date = datetime.utcfromtimestamp(self.date).strftime('%B %d, %Y')
+        self.cursor.execute("""
+        SELECT semester, game FROM seasons
+        WHERE id = {}
+        """.format(self.season_id))
+        season = self.cursor.fetchone()
+        seasonName = "{} {}".format(season[0], season[1])
+
         return {
             "id": self.id,
             "season_id": self.season_id,
+            "seasonName": seasonName,
             "week": self.week,
             "date": date
         }

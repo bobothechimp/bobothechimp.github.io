@@ -37,13 +37,6 @@ class Season:
             bmStrings[0] += "bimonthly{}, ".format(i + 1)
             bmStrings[1] += "{}, ".format(bm)
         
-        print("""
-        INSERT INTO seasons
-        (game, season, num_weeks, {}semester)
-        VALUES
-        (\"{}\", {}, {}, {}\"{}\")
-        """.format(bmStrings[0], self.game, self.season_num,
-                   self.num_weeks, bmStrings[1], self.semester))
         self.cursor.execute("""
         INSERT INTO seasons
         (game, season, num_weeks, {}semester)
