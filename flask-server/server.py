@@ -81,7 +81,7 @@ def deleteSeason():
 
     jsonData = {
         "OK": True,
-        "id": 11
+        "id": season_id
     }
 
     return jsonResponse(jsonData)
@@ -193,7 +193,7 @@ def deleteTournament():
 
     jsonData = {
         "OK": True,
-        "id": 11
+        "id": tournament_id
     }
 
     return jsonResponse(jsonData)
@@ -231,8 +231,62 @@ def getEvent(event_id):
 # Add a new event
 @app.route("/events/add", methods=["POST"])
 def addEvent():
-    tournament_id = request.form.get("tournament_id")
-    event_id = request.form.get("event_id")
+    url_id = request.form.get("event_url_id")
+    # url or id of event, don't know which one yet
+
+    try:
+        # First check if url_id is a number
+        # If this runs without error, we can assume url_id is the id
+        int(url_id)
+        event_id = url_id
+        data = {
+            "query": """
+            query EventQuery($eventId: ID!) {
+                event(id: $eventId) {
+                    id
+                    tournament {
+                        id
+                    }
+                }
+            }""",
+            "variables": {
+                "eventId": event_id
+            }
+        }
+    except:
+        # An error in the try block means url_id is not an id, so it's a url
+        # Find start and end of event slug
+        start = url_id.index("tournament/")
+        eventIndex = url_id[start:].index("/event/") + 7
+        try:
+            end = url_id[start+eventIndex:].index("/")
+        except:
+            end = len(url_id[start+eventIndex:])
+        slug = url_id[start:start+eventIndex+end]
+
+        data = {
+            "query": """
+            query EventQuery($slug: String!) {
+                event(slug: $slug) {
+                    id
+                    tournament {
+                        id
+                    }
+                }
+            }
+            """,
+            "variables": {
+                "slug": slug
+            }
+        }
+    
+    headers = {"Authorization": "Bearer {}".format(apikeys.STARTGG_KEY)}
+    sggResponse = requests.post("https://api.start.gg/gql/alpha",
+                               headers=headers, json=data)
+    eventData = (sggResponse.json())["data"]
+    event_id = eventData["event"]["id"] #In case url_id was the url
+    tournament_id = eventData["event"]["tournament"]["id"]
+
     createEvent(tournament_id, event_id)
 
     jsonData = {
@@ -242,6 +296,8 @@ def addEvent():
 
     return jsonResponse(jsonData)
 
+# Helper function to allow both addEvent() and
+# add(Tournament) to insert events
 def createEvent(tournament_id, event_id):
     Event.makeEventsTable()
     headers = {"Authorization": "Bearer {}".format(apikeys.STARTGG_KEY)}
@@ -327,6 +383,25 @@ def createEvent(tournament_id, event_id):
                   [upsetScore, upsetterSeed, upsetteeSeed, maxUF],
                   [sprPlayer, sprSeed, sprPlacing, maxSPR])
     event.insert_event()
+
+# Delete an existing event
+@app.route("/events/delete", methods=["POST"])
+def deleteEvent():
+    Event.makeEventsTable()
+    event_id = request.form.get("event_id")
+    connection = sqlite3.connect("busmash.db")
+    cursor = connection.cursor()
+
+    Event.deleteEvent(cursor, event_id)
+    connection.commit()
+    connection.close()
+
+    jsonData = {
+        "OK": True,
+        "id": event_id
+    }
+
+    return jsonResponse(jsonData)
 
 if __name__ == "__main__":
     app.run(debug = True)

@@ -37,7 +37,7 @@ const AddTournament = ({ handleSubmit, seasons }: Props) => {
         </Form.Group>
       </Row>
       <Row>
-        <Form.Group className="checkBox" controlId="tournament_url">
+        <Form.Group className="checkBox" controlId="auto_add_events">
           <Form.Check
             name="auto_add_events"
             type={"checkbox"}

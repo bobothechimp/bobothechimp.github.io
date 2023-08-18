@@ -68,6 +68,12 @@ class Event:
         }
     
     @staticmethod
+    def deleteEvent(cursor, event_id):
+        sql = """DELETE FROM events
+        WHERE id = {} ;""".format(event_id)
+        cursor.execute(sql)
+    
+    @staticmethod
     def makeEventsTable():
         connection = sqlite3.connect("busmash.db")
         cursor = connection.cursor()

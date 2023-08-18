@@ -19,12 +19,23 @@ const DeleteModal = ({ data, show, handleClose, handleDelete }: Props) => {
         Are you sure you want to delete the following object?
         <table cellPadding={6}>
           <tbody>
-            {Object.keys(data).map((key) => (
-              <tr key={key}>
-                <th>{key}</th>
-                <td>{data[key]}</td>
-              </tr>
-            ))}
+            {Object.keys(data).map((key) => {
+              if (data[key] != null && typeof data[key] === "object") {
+                return (
+                  <tr key={key}>
+                    <th>{key}</th>
+                    <td>{data[key].join(", ")}</td>
+                  </tr>
+                );
+              } else {
+                return (
+                  <tr key={key}>
+                    <th>{key}</th>
+                    <td>{data[key]}</td>
+                  </tr>
+                );
+              }
+            })}
           </tbody>
         </table>
       </Modal.Body>

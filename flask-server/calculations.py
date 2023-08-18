@@ -65,7 +65,7 @@ def createScoreHeadline(displayScore, winner_id, loser_id, entrantsIdTable):
 # Calculate the number of losers rounds a
 # seed/placing is away from first place
 def calculateSetsFromWinning(position):
-    placings = [1, 2, 3, 4, 5, 7, 9, 13, 17, 25, 33, 49, 65]
+    placings = [1, 2, 3, 4, 6, 8, 12, 16, 24, 32, 48, 64, 96]
     for i in range(len(placings)):
         if(position <= placings[i]):
             return i

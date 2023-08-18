@@ -2,19 +2,19 @@ import React from "react";
 import { useState, useEffect } from "react";
 import { Container, Row, Col } from "react-bootstrap";
 import DataTable from "./DataTable";
-import AddTournament from "./AddTournament";
+import AddEvent from "./AddEvent";
 import DeleteModal from "./DeleteModal";
 
 import * as ROUTES from "../../global/routes";
 
 interface Props {
+  events: object[];
   tournaments: object[];
-  seasons: object[];
   getData: () => void;
 }
 
-const TournamentsManager = ({ tournaments, seasons, getData }: Props) => {
-  const [tournamentToDelete, setTournamentToDelete] = useState({});
+const EventsManager = ({ events, tournaments, getData }: Props) => {
+  const [eventToDelete, setEventToDelete] = useState({});
   const [showDeleteModal, setShowDeleteModal] = useState(false);
 
   // Posting entered data for new tournament to backend
@@ -23,30 +23,30 @@ const TournamentsManager = ({ tournaments, seasons, getData }: Props) => {
     const xhr = new XMLHttpRequest();
     const info = new FormData(e.target);
     xhr.addEventListener("load", (event) => {
-      console.log("Successfully added tournament.");
+      console.log("Successfully added event.");
       getData();
     });
-    xhr.open("POST", ROUTES.SERVER_ADD_TOURNAMENT);
+    xhr.open("POST", ROUTES.SERVER_ADD_EVENT);
     xhr.send(info);
   };
 
   // Making delete modal appear and display the tournament to delete
-  const handleDeleteButton = (tournament) => {
-    setTournamentToDelete(tournament);
+  const handleDeleteButton = (event) => {
+    setEventToDelete(event);
     setShowDeleteModal(true);
   };
 
   // Posting ID for deleted tournament to backend
-  const handleDelete = (tournament) => {
+  const handleDelete = (event) => {
     const xhr = new XMLHttpRequest();
     const info = new FormData();
-    info.append("tournament_id", tournament["id"]);
+    info.append("event_id", event["id"]);
     xhr.addEventListener("load", (event) => {
-      console.log("Successfully deleted tournament.");
+      console.log("Successfully deleted event.");
       setShowDeleteModal(false);
       getData();
     });
-    xhr.open("POST", ROUTES.SERVER_DELETE_TOURNAMENT);
+    xhr.open("POST", ROUTES.SERVER_DELETE_EVENT);
     xhr.send(info);
   };
 
@@ -54,29 +54,37 @@ const TournamentsManager = ({ tournaments, seasons, getData }: Props) => {
     <>
       <Container>
         <Row>
-          <Col md={{ span: 7 }} lg={{ span: 6 }} xl={{ span: 7 }}>
+          <Col md={{ span: 7 }} lg={{ span: 6 }} xl={{ span: 8 }}>
             <DataTable
-              rows={tournaments}
-              titles={["ID", "Season ID", "Week", "Date"]}
-              responsive={false}
+              rows={events}
+              titles={[
+                "ID",
+                "Tournament ID",
+                "Title",
+                "Entrants",
+                "Top 3 (1st, 2nd, 3rd)",
+                "Biggest Upset (set, upsetter seed, upsettee seed, UF)",
+                "Highest SPR (player, seed, placing, SPR)",
+              ]}
+              responsive={true}
               handleDeleteButton={handleDeleteButton}
             />
           </Col>
-          <Col md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 4, offset: 1 }}>
+          <Col md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 3, offset: 1 }}>
             <div className="addDataForm">
-              <AddTournament seasons={seasons} handleSubmit={handleSubmit} />
+              <AddEvent tournaments={tournaments} handleSubmit={handleSubmit} />
             </div>
           </Col>
         </Row>
       </Container>
       <DeleteModal
-        data={tournamentToDelete}
+        data={eventToDelete}
         show={showDeleteModal}
         handleClose={() => setShowDeleteModal(false)}
-        handleDelete={() => handleDelete(tournamentToDelete)}
+        handleDelete={() => handleDelete(eventToDelete)}
       />
     </>
   );
 };
 
-export default TournamentsManager;
+export default EventsManager;

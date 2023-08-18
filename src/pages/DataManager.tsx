@@ -4,6 +4,7 @@ import Header from "../components/Header";
 import Footer from "../components/Footer";
 import SeasonsManager from "../components/admin/SeasonsManager";
 import TournamentsManager from "../components/admin/TournamentsManager";
+import EventsManager from "../components/admin/EventsManager";
 
 import "../styles/dataManager.css";
 
@@ -45,6 +46,22 @@ const DataManager = () => {
           );
         }
       });
+    fetch("http://localhost:5000/events")
+      .then((res) => res.json())
+      .then((data) => {
+        setEvents(data);
+
+        //Reloading component with new data
+        if (curTable === EVENTS_KEY) {
+          setActiveTable(
+            <EventsManager
+              tournaments={tournaments}
+              events={data}
+              getData={() => getData(EVENTS_KEY)}
+            />
+          );
+        }
+      });
   };
 
   const [activeTable, setActiveTable] = useState(
@@ -76,10 +93,10 @@ const DataManager = () => {
         break;
       case EVENTS_KEY:
         setActiveTable(
-          <TournamentsManager
-            seasons={seasons}
+          <EventsManager
             tournaments={tournaments}
-            getData={() => getData(TOURNAMENTS_KEY)}
+            events={events}
+            getData={() => getData(EVENTS_KEY)}
           />
         );
         break;

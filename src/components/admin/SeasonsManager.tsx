@@ -65,6 +65,7 @@ const SeasonsManager = ({ seasons, getData }: Props) => {
                 "Second Bimonthly",
                 "Semester",
               ]}
+              responsive={false}
               handleDeleteButton={handleDeleteButton}
             />
           </Col>
