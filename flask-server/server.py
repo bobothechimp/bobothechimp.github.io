@@ -183,10 +183,13 @@ def addTournament():
 def deleteTournament():
     Tournament.makeTournamentsTable()
     tournament_id = request.form.get("tournament_id")
+    delete_all_events = request.form.get("delete_all_events")
     connection = sqlite3.connect("busmash.db")
     cursor = connection.cursor()
 
     Tournament.deleteTournament(cursor, tournament_id)
+    if delete_all_events:
+        Event.deleteFromTournament(cursor, tournament_id)
     connection.commit()
     connection.close()
 

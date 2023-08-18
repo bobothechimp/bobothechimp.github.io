@@ -64,7 +64,10 @@ class Event:
         WHERE tournaments.id = {};
         """.format(self.tournament_id))
         tournament = self.cursor.fetchone()
-        tournamentName = "{} {} Week {}".format(tournament[0], tournament[1], tournament[2])
+        if tournament is None:
+            tournamentName = "Tournament not in database"
+        else:
+            tournamentName = "{} {} Week {}".format(tournament[0], tournament[1], tournament[2])
 
         return {
             "id": self.id,
@@ -81,6 +84,13 @@ class Event:
     def deleteEvent(cursor, event_id):
         sql = """DELETE FROM events
         WHERE id = {} ;""".format(event_id)
+        cursor.execute(sql)
+
+    @staticmethod
+    def deleteFromTournament(cursor, tournament_id):
+        # Delete every event from a tournament
+        sql = """DELETE FROM events
+        WHERE tournament_id = {} ;""".format(tournament_id)
         cursor.execute(sql)
     
     @staticmethod

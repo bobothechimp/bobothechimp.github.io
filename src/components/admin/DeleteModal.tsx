@@ -1,15 +1,24 @@
 import React from "react";
 import { useState } from "react";
-import { Modal, Button } from "react-bootstrap";
+import { Modal, Button, Form } from "react-bootstrap";
 
 interface Props {
   data: object;
   show: boolean;
   handleClose: () => void;
   handleDelete: () => void;
+  deleteEventsPrompt?: boolean;
+  handleCheckboxChange?: () => void;
 }
 
-const DeleteModal = ({ data, show, handleClose, handleDelete }: Props) => {
+const DeleteModal = ({
+  data,
+  show,
+  handleClose,
+  handleDelete,
+  deleteEventsPrompt,
+  handleCheckboxChange,
+}: Props) => {
   return (
     <Modal show={show} onHide={handleClose}>
       <Modal.Header closeButton>
@@ -38,6 +47,17 @@ const DeleteModal = ({ data, show, handleClose, handleDelete }: Props) => {
             })}
           </tbody>
         </table>
+        {deleteEventsPrompt && handleCheckboxChange && (
+          <Form className="deleteAllEvents">
+            <Form.Check
+              name="delete_events"
+              type="checkbox"
+              id="delete_events"
+              label="Delete all events from this tournament"
+              onChange={handleCheckboxChange}
+            />
+          </Form>
+        )}
       </Modal.Body>
       <Modal.Footer>
         <Button variant="secondary" onClick={handleClose}>

@@ -1,5 +1,5 @@
 import React from "react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Container, Row, Col } from "react-bootstrap";
 import DataTable from "./DataTable";
 import DeleteModal from "./DeleteModal";
@@ -17,6 +17,7 @@ interface Props {
 const TournamentsManager = ({ tournaments, seasons, getData }: Props) => {
   const [tournamentToDelete, setTournamentToDelete] = useState({});
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const deleteEvents = useRef(false);
 
   // Posting entered data for new tournament to backend
   const handleSubmit = (e) => {
@@ -42,6 +43,7 @@ const TournamentsManager = ({ tournaments, seasons, getData }: Props) => {
     const xhr = new XMLHttpRequest();
     const info = new FormData();
     info.append("tournament_id", tournament["id"]);
+    info.append("delete_all_events", "" + deleteEvents.current);
     xhr.addEventListener("load", (event) => {
       console.log("Successfully deleted tournament.");
       setShowDeleteModal(false);
@@ -49,6 +51,12 @@ const TournamentsManager = ({ tournaments, seasons, getData }: Props) => {
     });
     xhr.open("POST", ROUTES.SERVER_DELETE_TOURNAMENT);
     xhr.send(info);
+    deleteEvents.current = false;
+  };
+
+  const handleDeleteEvents = () => {
+    deleteEvents.current = !deleteEvents.current;
+    console.log(deleteEvents.current);
   };
 
   const seasonsOptions = seasons.map((season) => (
@@ -111,7 +119,6 @@ const TournamentsManager = ({ tournaments, seasons, getData }: Props) => {
                 inputs={inputs}
                 objectName="Tournament"
               />
-              {/* <AddTournament seasons={seasons} handleSubmit={handleSubmit} /> */}
             </div>
           </Col>
         </Row>
@@ -119,8 +126,13 @@ const TournamentsManager = ({ tournaments, seasons, getData }: Props) => {
       <DeleteModal
         data={tournamentToDelete}
         show={showDeleteModal}
-        handleClose={() => setShowDeleteModal(false)}
+        handleClose={() => {
+          setShowDeleteModal(false);
+          deleteEvents.current = false;
+        }}
         handleDelete={() => handleDelete(tournamentToDelete)}
+        deleteEventsPrompt={true}
+        handleCheckboxChange={handleDeleteEvents}
       />
     </>
   );

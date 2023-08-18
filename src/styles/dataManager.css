@@ -66,6 +66,10 @@
     background-color: lightgray;
 }
 
+.deleteAllEvents {
+    padding-top: 20px;
+}
+
 @media (max-width: 1399px) {
     .addDataForm {
         width: 100%;
