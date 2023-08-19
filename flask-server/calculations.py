@@ -8,10 +8,10 @@ def highestSPR(entrants):
         spr = calculateSPR(entrant)
         if spr > maxSPR:
             maxSPR = spr
-            player_id = entrant["name"]
+            player = entrant["name"]
             seed = entrant["initialSeedNum"]
             placing = entrant["standing"]["placement"]
-    return maxSPR, player_id, seed, placing
+    return maxSPR, player, seed, placing
 
 # Calculate the SPR of a single entrant
 def calculateSPR(entrant):

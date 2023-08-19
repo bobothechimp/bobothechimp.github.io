@@ -356,6 +356,9 @@ def createEvent(tournament_id, event_id):
     sggResponse = requests.post("https://api.start.gg/gql/alpha",
                                headers=headers, json=data)
     eventData = (sggResponse.json())["data"]
+    if(eventData["event"]["sets"]["pageInfo"]["total"] == 0):
+        #Some events were never published, so they won't be inserted
+        return
     title = eventData["event"]["name"]
 
     entrantsCount = eventData["event"]["entrants"]["pageInfo"]["total"]
