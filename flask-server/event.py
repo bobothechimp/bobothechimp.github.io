@@ -72,12 +72,18 @@ class Event:
         if tournament is None:
             tournamentName = "Tournament not in database"
         else:
-            tournamentName = "{} {} Week {}".format(tournament[0], tournament[1], tournament[2])
+            if(tournament[2] < 0):
+                week = "BM" + str(-1 * tournament[2])
+            else:
+                week = tournament[2]
+            tournamentName = "{} {} Week {}".format(tournament[0], tournament[1], week)
         if self.topUpset[3] == 0:
+            #0 UF means no upsets
             tu = "No upsets"
         else:
             tu = self.topUpset
         if self.topSPR[3] == 0:
+            #0 SPR means no overperformers
             tspr = "No overperformers"
         else:
             tspr = self.topSPR

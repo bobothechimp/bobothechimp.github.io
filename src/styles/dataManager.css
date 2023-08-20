@@ -42,6 +42,11 @@
     display: table-cell;
     width: 50px;
     float: right;
+    padding: 3px;
+}
+
+.text-muted {
+    display: block;
 }
 
 .longText {

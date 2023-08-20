@@ -6,7 +6,8 @@ class Tournament:
     def __init__(self, id = -1, season_id = -1, week = -1, date=0):
         self.id = id
         self.season_id = season_id
-        self.week = week
+        self.week = week #Positive if a normal week number, negative if bimonthly
+        #e.g. -10 indicates that this tournament is the 10th bimonthly
         self.date = date #UNIX representation of date
         self.connection = sqlite3.connect("busmash.db")
         self.cursor = self.connection.cursor()
@@ -49,12 +50,16 @@ class Tournament:
         """.format(self.season_id))
         season = self.cursor.fetchone()
         seasonName = "{} {}".format(season[0], season[1])
+        if(self.week < 0):
+            week = "BM" + str(-1 * self.week)
+        else:
+            week = self.week
 
         return {
             "id": self.id,
             "season_id": self.season_id,
             "seasonName": seasonName,
-            "week": self.week,
+            "week": week,
             "date": date
         }
     

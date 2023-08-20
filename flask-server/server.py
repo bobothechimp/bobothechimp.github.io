@@ -151,6 +151,7 @@ def addTournament():
         end = len(url[start:])
     slug = url[start:start+end]
 
+    # Calling start.gg API
     headers = {"Authorization": "Bearer {}".format(apikeys.STARTGG_KEY)}
     data = {
         "query": """
@@ -177,6 +178,7 @@ def addTournament():
         }
         return jsonResponse(jsonData)
 
+    # Grabbing tournament info
     id = tournamentData["tournament"]["id"]
     date = tournamentData["tournament"]["startAt"]
     failures = False
@@ -186,9 +188,15 @@ def addTournament():
             status_code = createEvent(id, event["id"])
             failures = failures or status_code > 0
 
-    tournament = Tournament(id, season_id, week_num, date)
+    # Checking if inserting a bimonthly
+    if(week_num[0:2].lower() == "bm"):
+        inserted_wn = -1 * int(week_num[2:])
+    else:
+        inserted_wn = week_num
+    tournament = Tournament(id, season_id, inserted_wn, date)
     inserted = tournament.insert_tournament()
 
+    # Determining success of operation
     if(inserted and not failures):
         jsonData = {
             "status_code": CODES["SUCCESS"],
@@ -226,7 +234,7 @@ def deleteTournament():
     cursor = connection.cursor()
 
     Tournament.deleteTournament(cursor, tournament_id)
-    if delete_all_events:
+    if delete_all_events == "true":
         Event.deleteFromTournament(cursor, tournament_id)
     connection.commit()
     connection.close()
@@ -321,6 +329,7 @@ def addEvent():
             }
         }
     
+    # Call start.gg API
     headers = {"Authorization": "Bearer {}".format(apikeys.STARTGG_KEY)}
     sggResponse = requests.post("https://api.start.gg/gql/alpha",
                                headers=headers, json=data)
@@ -334,6 +343,7 @@ def addEvent():
 
         return jsonResponse(jsonData)
 
+    # Get basic tournament info
     event_id = eventData["event"]["id"] #In case url_id was the url
     tournament_id = eventData["event"]["tournament"]["id"]
 
@@ -354,7 +364,7 @@ def addEvent():
     return jsonResponse(jsonData)
 
 # Helper function to allow both addEvent() and
-# add(Tournament) to insert events
+# addTournament() to insert events
 def createEvent(tournament_id, event_id):
     Event.makeEventsTable()
     headers = {"Authorization": "Bearer {}".format(apikeys.STARTGG_KEY)}

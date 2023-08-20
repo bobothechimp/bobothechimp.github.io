@@ -55,6 +55,7 @@ const TournamentsManager = ({ tournaments, seasons, getData }: Props) => {
       cssClass: "shortText",
       type: "text",
       label: "Week number",
+      note: 'Add "BM" for bimonthly (eg BM10)',
     },
     {
       id: 3,
@@ -82,7 +83,12 @@ const TournamentsManager = ({ tournaments, seasons, getData }: Props) => {
     }
 
     try {
-      let wnInt = Number(values.week_num);
+      let wnInt;
+      if (values.week_num.substring(0, 2).toLowerCase() === "bm") {
+        wnInt = Number(values.week_num.substring(2));
+      } else {
+        wnInt = Number(values.week_num);
+      }
       if (!(wnInt % 1 === 0 && wnInt > 0)) {
         return false;
       }
