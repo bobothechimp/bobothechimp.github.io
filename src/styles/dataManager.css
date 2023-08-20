@@ -40,9 +40,9 @@
 
 .shortText [type="text"] {
     display: table-cell;
-    width: 50px;
+    width: 60px;
     float: right;
-    padding: 3px;
+    padding: 5px;
 }
 
 .text-muted {
@@ -62,11 +62,14 @@
 }
 
 .addDataForm {
-    width: 80%;
+    width: 100%;
     float: right;
-    padding: 20px;
     margin-top: 20px;
     margin-bottom: 20px;
+}
+
+.addDataForm form {
+    padding: 20px;
     border-radius: 10px;
     background-color: lightgray;
 }
@@ -78,7 +81,7 @@
 }
 
 .alert {
-    width: 80%;
+    width: 100%;
     margin-top: 20px;
     float: right;
 }
@@ -91,38 +94,18 @@
     padding-top: 20px;
 }
 
-@media (max-width: 1399px) {
-    .addDataForm {
-        width: 100%;
-    }
-    .alert {
-        width: 100%;
-    }
-}
+/* xl */
+@media (max-width: 1399px) {}
 
-@media (max-width: 1199px) {
-    .addDataForm {
-        width: 80%;
-    }
-    .alert {
-        width: 80%;
-    }
-}
+/* lg */
+@media (max-width: 1199px) {}
 
+/* sm, md */
 @media (max-width: 991px) {
     table {
-        font-size: 12px;
-    }
-    .addDataForm {
-        width: 100%;
-    }
-    .alert {
-        width: 100%;
+        font-size: small;
     }
 }
 
-@media (max-width: 575px) {
-    table {
-        font-size: 9px;
-    }
-}
+/* xs */
+@media (max-width: 575px) {}

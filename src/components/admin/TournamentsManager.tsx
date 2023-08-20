@@ -34,7 +34,7 @@ const TournamentsManager = ({ tournaments, seasons, getData }: Props) => {
   const [values, setValues] = useState({
     season_id: seasons[0]["id"],
     week_num: "",
-    tournament_url: "",
+    tournament_url_id: "",
     auto_add_events: "off",
   });
 
@@ -55,14 +55,14 @@ const TournamentsManager = ({ tournaments, seasons, getData }: Props) => {
       cssClass: "shortText",
       type: "text",
       label: "Week number",
-      note: 'Add "BM" for bimonthly (eg BM10)',
+      note: 'Add "BM" for bimonthly (e.g. "BM10")',
     },
     {
       id: 3,
-      name: "tournament_url",
+      name: "tournament_url_id",
       cssClass: "longText",
       type: "text",
-      label: "Tournament URL",
+      label: "Tournament ID/URL",
     },
     {
       id: 4,
@@ -78,7 +78,7 @@ const TournamentsManager = ({ tournaments, seasons, getData }: Props) => {
   };
 
   const validInputs = () => {
-    if (values.week_num === "" || values.tournament_url === "") {
+    if (values.week_num === "" || values.tournament_url_id === "") {
       return false;
     }
 
@@ -181,16 +181,6 @@ const TournamentsManager = ({ tournaments, seasons, getData }: Props) => {
             />
           </Col>
           <Col md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 4, offset: 1 }}>
-            {statusMessage.show && (
-              <Alert
-                onClose={() =>
-                  setStatusMessage({ ...statusMessage, show: false })
-                }
-                color={statusMessage.color}
-              >
-                {statusMessage.message}
-              </Alert>
-            )}
             <div className="addDataForm">
               <AddDataForm
                 handleSubmit={handleSubmit}
@@ -198,6 +188,16 @@ const TournamentsManager = ({ tournaments, seasons, getData }: Props) => {
                 inputs={inputs}
                 objectName="Tournament"
               />
+              {statusMessage.show && (
+                <Alert
+                  onClose={() =>
+                    setStatusMessage({ ...statusMessage, show: false })
+                  }
+                  color={statusMessage.color}
+                >
+                  {statusMessage.message}
+                </Alert>
+              )}
             </div>
           </Col>
         </Row>

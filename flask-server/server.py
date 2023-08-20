@@ -60,12 +60,11 @@ def addSeason():
     Season.makeSeasonsTable()
     game = request.form.get("game")
     season_num = request.form.get("season_num")
-    num_weeks = request.form.get("num_weeks")
     fallOrSpring = request.form.get("fallOrSpring")
     year = request.form.get("year")
     semester = "{} {}".format(year, fallOrSpring)
 
-    season = Season(game, season_num, num_weeks, [], semester)
+    season = Season(game, season_num, semester)
     season.insert_season()
     jsonData = {
         "status_code": CODES["SUCCESS"],
@@ -129,7 +128,8 @@ def getTournament(tournament_id):
 def addTournament():
     Tournament.makeTournamentsTable()
     season_id = request.form.get("season_id")
-    url = request.form.get("tournament_url")
+    url_id = request.form.get("tournament_url_id")
+    # url or id of tournament, don't know which one yet
     week_num = request.form.get("week_num")
     auto_add_events = request.form.get("auto_add_events")
     if(auto_add_events == "on"):
@@ -140,23 +140,48 @@ def addTournament():
     else:
         eventsQuery = """"""
 
-    # Find start and end of tournamnt slug
     try:
-        start = url.index("tournament/") + 11
+        # First check if url_id is a number
+        # If this runs without error, we can assume url_id is the id
+        int(url_id)
+        tournament_id = url_id
     except:
-        start = 0
-    try:
-        end = url[start:].index("/")
-    except:
-        end = len(url[start:])
-    slug = url[start:start+end]
+        # An error in the try block means url_id is not an id, so it's a url
+        # Find start and end of tournament slug
+        try:
+            start = url_id.index("tournament/") + 11
+        except:
+            start = 0
+        try:
+            end = url_id[start:].index("/")
+        except:
+            end = len(url_id[start:])
+        slug = url_id[start:start+end]
+
+        headers = {"Authorization": "Bearer {}".format(apikeys.STARTGG_KEY)}
+        data = {
+            "query": """
+            query TournamentQuery($slug: String!) {
+                tournament(slug: $slug) {
+                    id
+                }
+            }
+            """,
+            "variables": {
+                "slug": slug
+            }
+        }
+        sggResponse = requests.post("https://api.start.gg/gql/alpha",
+                               headers=headers, json=data)
+        tournament_id = sggResponse["data"]["tournament"]["id"]
+    
 
     # Calling start.gg API
     headers = {"Authorization": "Bearer {}".format(apikeys.STARTGG_KEY)}
     data = {
         "query": """
-        query TournamentQuery($slug: String) {{
-            tournament(slug: $slug) {{
+        query TournamentQuery($id: ID!) {{
+            tournament(id: $id) {{
                 id
                 name
                 startAt
@@ -164,7 +189,7 @@ def addTournament():
             }}
         }}""".format(eventsQuery),
         "variables": {
-            "slug": slug
+            "id": tournament_id
         }
     }
     sggResponse = requests.post("https://api.start.gg/gql/alpha",
@@ -179,13 +204,12 @@ def addTournament():
         return jsonResponse(jsonData)
 
     # Grabbing tournament info
-    id = tournamentData["tournament"]["id"]
     date = tournamentData["tournament"]["startAt"]
     failures = False
     if(auto_add_events == "on"):
         events = tournamentData["tournament"]["events"]
         for event in events:
-            status_code = createEvent(id, event["id"])
+            status_code = createEvent(tournament_id, event["id"])
             failures = failures or status_code > 0
 
     # Checking if inserting a bimonthly
@@ -193,7 +217,7 @@ def addTournament():
         inserted_wn = -1 * int(week_num[2:])
     else:
         inserted_wn = week_num
-    tournament = Tournament(id, season_id, inserted_wn, date)
+    tournament = Tournament(tournament_id, season_id, inserted_wn, date)
     inserted = tournament.insert_tournament()
 
     # Determining success of operation
@@ -201,25 +225,25 @@ def addTournament():
         jsonData = {
             "status_code": CODES["SUCCESS"],
             "message": "Successfully added tournament.",
-            "id": id
+            "id": tournament_id
         }
     elif(inserted and failures):
         jsonData = {
             "status_code": CODES["COULDNT_COMPLETE"],
             "message": "One or more events couldn't be added.",
-            "id": id
+            "id": tournament_id
         }
     elif(not inserted and not failures and auto_add_events):
         jsonData = {
             "status_code": CODES["ALREADY_EXISTS"],
             "message": "Tournament already exists in database. Tournament events successfully added.",
-            "id": id
+            "id": tournament_id
         }
     else:
         jsonData = {
             "status_code": CODES["ALREADY_EXISTS"],
             "message": "Tournament already exists in database.",
-            "id": id
+            "id": tournament_id
         }
 
     return jsonResponse(jsonData)

@@ -34,7 +34,6 @@ const SeasonsManager = ({ seasons, getData }: Props) => {
     fallOrSpring: "Fall",
     year: "" + curYear,
     season_num: "",
-    num_weeks: "",
   });
 
   const inputs: Input[] = [
@@ -63,13 +62,6 @@ const SeasonsManager = ({ seasons, getData }: Props) => {
       type: "text",
       label: "Season Number",
     },
-    {
-      id: 4,
-      name: "num_weeks",
-      cssClass: "shortText",
-      type: "text",
-      label: "Number of weeks",
-    },
   ];
 
   const onChange = (event) => {
@@ -77,7 +69,7 @@ const SeasonsManager = ({ seasons, getData }: Props) => {
   };
 
   const validInputs = () => {
-    if (values.season_num === "" || values.num_weeks === "") {
+    if (values.season_num === "") {
       return false;
     }
 
@@ -88,15 +80,6 @@ const SeasonsManager = ({ seasons, getData }: Props) => {
       }
     } catch (error) {
       //Catch an error if sn cannot be parsed to int
-      return false;
-    }
-    try {
-      let nwInt = Number(values.num_weeks);
-      if (!(nwInt % 1 === 0 && nwInt >= 1 && nwInt <= 15)) {
-        return false;
-      }
-    } catch (error) {
-      //Catch an error if nw cannot be parsed to int
       return false;
     }
 
@@ -145,27 +128,21 @@ const SeasonsManager = ({ seasons, getData }: Props) => {
     xhr.send(info);
   };
 
+  console.log(seasons);
+
   return (
     <>
       <Container>
         <Row>
-          <Col lg={{ span: 8 }} xl={{ span: 9 }}>
+          <Col md={{ span: 7 }} lg={{ span: 6 }} xl={{ span: 7 }}>
             <DataTable
               rows={seasons}
-              titles={[
-                "ID",
-                "Game",
-                "Season",
-                "Weeks",
-                "First Bimonthly",
-                "Second Bimonthly",
-                "Semester",
-              ]}
+              titles={["ID", "Game", "Season", "Weeks", "Semester"]}
               responsive={false}
               handleDeleteButton={handleDeleteButton}
             />
           </Col>
-          <Col lg={{ span: 4 }} xl={{ span: 3 }}>
+          <Col md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 4, offset: 1 }}>
             {errorMessage.show && (
               <Alert
                 onClose={() =>
