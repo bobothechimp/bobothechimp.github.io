@@ -66,6 +66,22 @@
     background-color: lightgray;
 }
 
+.errorMessage {
+    font-size: 10px;
+    padding: 3px;
+    color: red;
+}
+
+.alert {
+    width: 80%;
+    margin-top: 20px;
+    float: right;
+}
+
+.input:invalid ~ .errorMessage {
+    display: block;
+}
+
 .deleteAllEvents {
     padding-top: 20px;
 }
@@ -74,10 +90,16 @@
     .addDataForm {
         width: 100%;
     }
+    .alert {
+        width: 100%;
+    }
 }
 
 @media (max-width: 1199px) {
     .addDataForm {
+        width: 80%;
+    }
+    .alert {
         width: 80%;
     }
 }
@@ -86,8 +108,10 @@
     table {
         font-size: 12px;
     }
-
     .addDataForm {
+        width: 100%;
+    }
+    .alert {
         width: 100%;
     }
 }

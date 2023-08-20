@@ -42,6 +42,10 @@ class Event:
         return True
     
     def insert_event(self):
+        self.cursor.execute("""SELECT * FROM events WHERE id = {}""".format(self.id))
+        if(self.cursor.fetchone() is not None):
+            return False
+
         top3 = "{},{},{}".format(self.top3[0], self.top3[1], self.top3[2])
         upsetInfo = "{},{},{},{}".format(self.topUpset[0], self.topUpset[1], 
                                          self.topUpset[2], self.topUpset[3])
@@ -55,6 +59,7 @@ class Event:
         """.format(self.id, self.tournament_id, self.title, self.entrants,
                    top3, upsetInfo, sprInfo))
         self.connection.commit()
+        return True
     
     def toJSON(self):
         self.cursor.execute("""
@@ -68,6 +73,14 @@ class Event:
             tournamentName = "Tournament not in database"
         else:
             tournamentName = "{} {} Week {}".format(tournament[0], tournament[1], tournament[2])
+        if self.topUpset[3] == 0:
+            tu = "No upsets"
+        else:
+            tu = self.topUpset
+        if self.topSPR[3] == 0:
+            tspr = "No overperformers"
+        else:
+            tspr = self.topSPR
 
         return {
             "id": self.id,
@@ -76,8 +89,8 @@ class Event:
             "title": self.title,
             "entrants": self.entrants,
             "top3": self.top3,
-            "topUpset": self.topUpset,
-            "topSPR": self.topSPR
+            "topUpset": tu,
+            "topSPR": tspr
         }
     
     @staticmethod

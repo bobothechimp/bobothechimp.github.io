@@ -5,6 +5,8 @@ import getTournamentWinners from "../../querying/TournamentQueries";
 import EventCard from "./EventCard";
 
 const TournamentList = () => {
+  const [seasons, setSeasons] = useState([]);
+
   const [data, setData] = useState([{}]);
   const [season, setSeason] = useState(-1);
   const [week, setWeek] = useState(-1);
@@ -16,18 +18,17 @@ const TournamentList = () => {
   const [winners, setWinners] = useState([[]]);
 
   useEffect(() => {
-    fetch("http://localhost:5000/seasons/" + season)
+    fetch("http://localhost:5000/seasons")
       .then((res) => res.json())
       .then((data) => {
-        setData(data);
-        updateWeekList(data.num_weeks);
+        setSeasons(data);
         console.log(data);
       });
-  }, [season]);
+  }, []);
 
-  useEffect(() => {
-    getTournamentWinners(season, week, setWinners);
-  }, [season, week]);
+  // useEffect(() => {
+  //   getTournamentWinners(season, week, setWinners);
+  // }, [season, week]);
 
   const updateSeason = (selectedSeason) => {
     setSeason(selectedSeason.target.value);
@@ -35,21 +36,21 @@ const TournamentList = () => {
   const updateWeek = (selectedWeek) => {
     setWeek(selectedWeek.target.value);
   };
-  const updateWeekList = (numWeeks) => {
-    let wl = [
-      <option key={0} value={-1}>
-        Week
-      </option>,
-    ];
-    for (let i = 0; i < numWeeks; i++) {
-      wl.push(
-        <option key={i + 1} value={i + 1}>
-          {i + 1}
-        </option>
-      );
-    }
-    setWeekList(wl);
-  };
+  // const updateWeekList = (numWeeks) => {
+  //   let wl = [
+  //     <option key={0} value={-1}>
+  //       Week
+  //     </option>,
+  //   ];
+  //   for (let i = 0; i < numWeeks; i++) {
+  //     wl.push(
+  //       <option key={i + 1} value={i + 1}>
+  //         {i + 1}
+  //       </option>
+  //     );
+  //   }
+  //   setWeekList(wl);
+  // };
 
   return (
     <>

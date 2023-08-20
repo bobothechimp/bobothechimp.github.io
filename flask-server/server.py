@@ -11,6 +11,13 @@ import calculations
 app = Flask(__name__)
 app.config["SERVER_NAME"] = "localhost:5000" # Change when deploying
 
+CODES = {
+    "SUCCESS": 0,
+    "ALREADY_EXISTS": 1,
+    "COULDNT_COMPLETE": 2,
+    "ERROR": 3,
+}
+
 # Create standard json response with provided data
 def jsonResponse(jsonData):
     resp = Flask.response_class(json.dumps(jsonData, indent=2))
@@ -61,7 +68,8 @@ def addSeason():
     season = Season(game, season_num, num_weeks, [], semester)
     season.insert_season()
     jsonData = {
-        "OK": True,
+        "status_code": CODES["SUCCESS"],
+        "message": "Successfully added season.",
         "id": season.id
     }
 
@@ -80,7 +88,7 @@ def deleteSeason():
     connection.close()
 
     jsonData = {
-        "OK": True,
+        "status_code": CODES["SUCCESS"],
         "id": season_id
     }
 
@@ -161,20 +169,50 @@ def addTournament():
     sggResponse = requests.post("https://api.start.gg/gql/alpha",
                                headers=headers, json=data)
     tournamentData = (sggResponse.json())["data"]
+    if(tournamentData["tournament"] is None):
+        jsonData = {
+            "status_code": CODES["ERROR"],
+            "message": "Tournament does not exist.",
+            "id": -1
+        }
+        return jsonResponse(jsonData)
+
     id = tournamentData["tournament"]["id"]
     date = tournamentData["tournament"]["startAt"]
+    failures = False
     if(auto_add_events == "on"):
         events = tournamentData["tournament"]["events"]
         for event in events:
-            event_id = event["id"]
-            createEvent(id, event_id)
+            status_code = createEvent(id, event["id"])
+            failures = failures or status_code > 0
 
     tournament = Tournament(id, season_id, week_num, date)
-    tournament.insert_tournament()
-    jsonData = {
-        "OK": True,
-        "id": id
-    }
+    inserted = tournament.insert_tournament()
+
+    if(inserted and not failures):
+        jsonData = {
+            "status_code": CODES["SUCCESS"],
+            "message": "Successfully added tournament.",
+            "id": id
+        }
+    elif(inserted and failures):
+        jsonData = {
+            "status_code": CODES["COULDNT_COMPLETE"],
+            "message": "One or more events couldn't be added.",
+            "id": id
+        }
+    elif(not inserted and not failures and auto_add_events):
+        jsonData = {
+            "status_code": CODES["ALREADY_EXISTS"],
+            "message": "Tournament already exists in database. Tournament events successfully added.",
+            "id": id
+        }
+    else:
+        jsonData = {
+            "status_code": CODES["ALREADY_EXISTS"],
+            "message": "Tournament already exists in database.",
+            "id": id
+        }
 
     return jsonResponse(jsonData)
 
@@ -194,7 +232,8 @@ def deleteTournament():
     connection.close()
 
     jsonData = {
-        "OK": True,
+        "status_code": CODES["SUCCESS"],
+        "message": "Successfully deleted tournament.",
         "id": tournament_id
     }
 
@@ -286,15 +325,31 @@ def addEvent():
     sggResponse = requests.post("https://api.start.gg/gql/alpha",
                                headers=headers, json=data)
     eventData = (sggResponse.json())["data"]
+    if(eventData["event"] is None):
+        jsonData = {
+            "status_code": CODES["ERROR"],
+            "message": "Event does not exist.",
+            "id": -1
+        }
+
+        return jsonResponse(jsonData)
+
     event_id = eventData["event"]["id"] #In case url_id was the url
     tournament_id = eventData["event"]["tournament"]["id"]
 
-    createEvent(tournament_id, event_id)
+    status_code = createEvent(tournament_id, event_id)
 
     jsonData = {
-        "OK": True,
+        "status_code": status_code,
         "id": event_id
     }
+
+    if(status_code == CODES["ALREADY_EXISTS"]):
+        jsonData["message"] = "Event already exists in database."
+    if(status_code == CODES["COULDNT_COMPLETE"]):
+        jsonData["message"] = "Event could not be added."
+    if(status_code == CODES["ERROR"]):
+        jsonData["message"] = "Event does not exist."
 
     return jsonResponse(jsonData)
 
@@ -356,9 +411,13 @@ def createEvent(tournament_id, event_id):
     sggResponse = requests.post("https://api.start.gg/gql/alpha",
                                headers=headers, json=data)
     eventData = (sggResponse.json())["data"]
+
     if(eventData["event"]["sets"]["pageInfo"]["total"] == 0):
         #Some events were never published, so they won't be inserted
-        return
+        return CODES["COULDNT_COMPLETE"]
+    if(eventData["event"] is None):
+        return CODES["ERROR"]
+    
     title = eventData["event"]["name"]
 
     entrantsCount = eventData["event"]["entrants"]["pageInfo"]["total"]
@@ -387,7 +446,10 @@ def createEvent(tournament_id, event_id):
     event = Event(event_id, tournament_id, title, entrantsCount, top3,
                   [upsetScore, upsetterSeed, upsetteeSeed, maxUF],
                   [sprPlayer, sprSeed, sprPlacing, maxSPR])
-    event.insert_event()
+    if(event.insert_event()):
+        return CODES["SUCCESS"]
+    else:
+        return CODES["ALREADY_EXISTS"]
 
 # Delete an existing event
 @app.route("/events/delete", methods=["POST"])
@@ -402,7 +464,8 @@ def deleteEvent():
     connection.close()
 
     jsonData = {
-        "OK": True,
+        "status_code": CODES["SUCCESS"],
+        "message": "Successfully deleted event.",
         "id": event_id
     }
 

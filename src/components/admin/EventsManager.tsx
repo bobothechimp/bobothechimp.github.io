@@ -5,6 +5,7 @@ import DataTable from "./DataTable";
 import DeleteModal from "./DeleteModal";
 import AddDataForm from "./AddDataForm";
 import { Input } from "./AddDataForm";
+import Alert from "../Alert";
 
 import * as ROUTES from "../../global/routes";
 
@@ -17,6 +18,30 @@ interface Props {
 const EventsManager = ({ events, tournaments, getData }: Props) => {
   const [eventToDelete, setEventToDelete] = useState({});
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [statusMessage, setStatusMessage] = useState({
+    show: false,
+    color: "danger",
+    message: "",
+  });
+
+  const [values, setValues] = useState({
+    event_url_id: "",
+  });
+
+  let inputs: Input[] = [
+    {
+      id: 1,
+      name: "event_url_id",
+      cssClass: "longText",
+      type: "text",
+      label: "Event ID/URL",
+      note: "Event will be attached to its tournament automatically.",
+    },
+  ];
+
+  const onChange = (event) => {
+    setValues({ ...values, [event.target.name]: event.target.value });
+  };
 
   // Posting entered data for new tournament to backend
   const handleSubmit = (e) => {
@@ -24,7 +49,27 @@ const EventsManager = ({ events, tournaments, getData }: Props) => {
     const xhr = new XMLHttpRequest();
     const info = new FormData(e.target);
     xhr.addEventListener("load", (event) => {
-      console.log("Successfully added event.");
+      const response = JSON.parse(xhr.response);
+      let color;
+      switch (response["status_code"]) {
+        case 0:
+          color = "success";
+          break;
+        case 1:
+          color = "warning";
+          break;
+        case 2:
+          color = "warning";
+          break;
+        case 3:
+          color = "danger";
+          break;
+      }
+      setStatusMessage({
+        show: true,
+        color: color,
+        message: response["message"],
+      });
       getData();
     });
     xhr.open("POST", ROUTES.SERVER_ADD_EVENT);
@@ -51,17 +96,6 @@ const EventsManager = ({ events, tournaments, getData }: Props) => {
     xhr.send(info);
   };
 
-  let inputs: Input[] = [
-    {
-      id: 1,
-      name: "event_url_id",
-      cssClass: "longText",
-      type: "text",
-      label: "Event ID/URL",
-      note: "Event will be attached to its tournament automatically.",
-    },
-  ];
-
   return (
     <>
       <Container>
@@ -84,9 +118,20 @@ const EventsManager = ({ events, tournaments, getData }: Props) => {
             />
           </Col>
           <Col md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 4 }}>
+            {statusMessage.show && (
+              <Alert
+                onClose={() =>
+                  setStatusMessage({ ...statusMessage, show: false })
+                }
+                color={statusMessage.color}
+              >
+                {statusMessage.message}
+              </Alert>
+            )}
             <div className="addDataForm">
               <AddDataForm
                 handleSubmit={handleSubmit}
+                onChange={onChange}
                 inputs={inputs}
                 objectName="Event"
               />

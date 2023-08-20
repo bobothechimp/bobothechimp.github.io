@@ -28,6 +28,10 @@ class Tournament:
         return True
     
     def insert_tournament(self):
+        self.cursor.execute("""SELECT * FROM tournaments WHERE id = {}""".format(self.id))
+        if(self.cursor.fetchone() is not None):
+            return False
+        
         self.cursor.execute("""
         INSERT INTO tournaments
         (id, season_id, week, date)
@@ -35,6 +39,7 @@ class Tournament:
         ({}, {}, {}, {})
         """.format(self.id, self.season_id, self.week, self.date))
         self.connection.commit()
+        return True
     
     def toJSON(self):
         date = datetime.utcfromtimestamp(self.date).strftime('%B %d, %Y')

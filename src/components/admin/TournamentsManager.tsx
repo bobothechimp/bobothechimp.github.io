@@ -5,6 +5,7 @@ import DataTable from "./DataTable";
 import DeleteModal from "./DeleteModal";
 import AddDataForm from "./AddDataForm";
 import { Input } from "./AddDataForm";
+import Alert from "../Alert";
 
 import * as ROUTES from "../../global/routes";
 
@@ -17,15 +18,118 @@ interface Props {
 const TournamentsManager = ({ tournaments, seasons, getData }: Props) => {
   const [tournamentToDelete, setTournamentToDelete] = useState({});
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [statusMessage, setStatusMessage] = useState({
+    show: false,
+    color: "danger",
+    message: "",
+  });
   const deleteEvents = useRef(false);
+
+  const seasonsOptions = seasons.map((season) => (
+    <option value={season["id"]} key={season["id"]}>
+      {season["semester"]} {season["game"]} (ID: {season["id"]})
+    </option>
+  ));
+
+  const [values, setValues] = useState({
+    season_id: seasons[0]["id"],
+    week_num: "",
+    tournament_url: "",
+    auto_add_events: "off",
+  });
+
+  const inputs: Input[] = [
+    {
+      id: 1,
+      name: "season_id",
+      cssClass: "fullSelect",
+      type: "select",
+      options: [seasonsOptions],
+      defaultValues: [seasonsOptions[0]],
+      preBuiltOptions: [true],
+      label: "Select a season",
+    },
+    {
+      id: 2,
+      name: "week_num",
+      cssClass: "shortText",
+      type: "text",
+      label: "Week number",
+    },
+    {
+      id: 3,
+      name: "tournament_url",
+      cssClass: "longText",
+      type: "text",
+      label: "Tournament URL",
+    },
+    {
+      id: 4,
+      name: "auto_add_events",
+      cssClass: "checkBox",
+      type: "eventsCheckbox",
+      label: "",
+    },
+  ];
+
+  const onChange = (event) => {
+    setValues({ ...values, [event.target.name]: event.target.value });
+  };
+
+  const validInputs = () => {
+    if (values.week_num === "" || values.tournament_url === "") {
+      return false;
+    }
+
+    try {
+      let wnInt = Number(values.week_num);
+      if (!(wnInt % 1 === 0 && wnInt > 0)) {
+        return false;
+      }
+    } catch (error) {
+      //Catch an error if wn cannot be parsed to int
+      return false;
+    }
+
+    //Passed all tests, return true
+    return true;
+  };
 
   // Posting entered data for new tournament to backend
   const handleSubmit = (e) => {
     e.preventDefault();
+    if (!validInputs()) {
+      setStatusMessage({
+        show: true,
+        color: "danger",
+        message: "Week number must be a positive integer.",
+      });
+      return;
+    }
     const xhr = new XMLHttpRequest();
     const info = new FormData(e.target);
     xhr.addEventListener("load", (event) => {
-      console.log("Successfully added tournament.");
+      const response = JSON.parse(xhr.response);
+      let color;
+      switch (response["status_code"]) {
+        case 0:
+          color = "success";
+          break;
+        case 1:
+          color = "warning";
+          break;
+        case 2:
+          color = "warning";
+          break;
+        case 3:
+          color = "danger";
+          break;
+      }
+      setStatusMessage({
+        show: true,
+        color: color,
+        message: response["message"],
+      });
       getData();
     });
     xhr.open("POST", ROUTES.SERVER_ADD_TOURNAMENT);
@@ -56,49 +160,7 @@ const TournamentsManager = ({ tournaments, seasons, getData }: Props) => {
 
   const handleDeleteEvents = () => {
     deleteEvents.current = !deleteEvents.current;
-    console.log(deleteEvents.current);
   };
-
-  const seasonsOptions = seasons.map((season) => (
-    <option value={season["id"]} key={season["id"]}>
-      {season["semester"]} {season["game"]} (ID: {season["id"]})
-    </option>
-  ));
-
-  const inputs: Input[] = [
-    {
-      id: 1,
-      name: "season_id",
-      cssClass: "fullSelect",
-      type: "select",
-      options: [seasonsOptions],
-      defaultValues: [seasonsOptions[0]],
-      label: "Select a season",
-    },
-    {
-      id: 2,
-      name: "week_num",
-      cssClass: "shortText",
-      type: "text",
-      label: "Week number",
-    },
-    {
-      id: 3,
-      name: "tournament_url",
-      cssClass: "longText",
-      type: "text",
-      label: "Tournament URL",
-    },
-    {
-      id: 4,
-      name: "auto_add_events",
-      cssClass: "checkBox",
-      type: "eventsCheckbox",
-      options: [],
-      defaultValues: [],
-      label: "",
-    },
-  ];
 
   return (
     <>
@@ -113,9 +175,20 @@ const TournamentsManager = ({ tournaments, seasons, getData }: Props) => {
             />
           </Col>
           <Col md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 4, offset: 1 }}>
+            {statusMessage.show && (
+              <Alert
+                onClose={() =>
+                  setStatusMessage({ ...statusMessage, show: false })
+                }
+                color={statusMessage.color}
+              >
+                {statusMessage.message}
+              </Alert>
+            )}
             <div className="addDataForm">
               <AddDataForm
                 handleSubmit={handleSubmit}
+                onChange={onChange}
                 inputs={inputs}
                 objectName="Tournament"
               />

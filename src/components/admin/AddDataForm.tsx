@@ -1,67 +1,99 @@
 import React from "react";
-import { Form, FormGroup, Button, Row, OverlayTrigger } from "react-bootstrap";
+import {
+  Form,
+  FormGroup,
+  Button,
+  Row,
+  OverlayTrigger,
+  InputGroup,
+} from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleQuestion } from "@fortawesome/free-regular-svg-icons";
 import { renderAddEventsTooltip } from "../../global/tooltips";
 
 export interface Input {
-  id: number;
-  name: string;
-  cssClass: string;
-  type: string;
-  options?: any[][];
-  defaultValues?: any[];
-  label: string;
-  note?: string;
+  id: number; //ID of input field
+  name: string; //Name of input for form
+  cssClass: string; //Name of desired CSS class
+  type: string; //Type of input field
+  options?: any[][]; //For select fields, each element is a list of all options
+  //for one of the dropdowns
+  defaultValues?: any[]; //For select fields, each element is the default value
+  //for the corresponding list in options
+  preBuiltOptions?: boolean[]; //For select fields, each element is true if its
+  //corresponding list of options is prebuilt
+  //(i.e. needed to be generated in a special way)
+  label: string; //Input label
+  note?: string; //Note to appear below field
 }
 
 interface Props {
   handleSubmit: (any) => void;
+  onChange: (any) => void;
   inputs: Input[];
   objectName: string;
 }
 
-const AddDataForm = ({ handleSubmit, inputs, objectName }: Props) => {
+const AddDataForm = ({ handleSubmit, onChange, inputs, objectName }: Props) => {
   return (
     <Form onSubmit={handleSubmit} method="POST">
       {inputs.map((input) => {
         let field;
         if (input.type === "select" && input.options && input.defaultValues) {
-          field = (
-            <Form.Select
-              name={input.name}
-              defaultValue={input.defaultValues[0]}
-            >
-              {input.options[0].map((option) => (
-                <option value={option}>{option}</option>
-              ))}
-            </Form.Select>
-          );
+          if (input.preBuiltOptions) {
+            field = (
+              <Form.Select
+                name={input.name}
+                defaultValue={input.defaultValues[0]}
+                onChange={onChange}
+              >
+                {input.options}
+              </Form.Select>
+            );
+          } else {
+            field = (
+              <Form.Select
+                name={input.name}
+                defaultValue={input.defaultValues[0]}
+                onChange={onChange}
+              >
+                {input.options[0].map((option) => (
+                  <option key={option} value={option}>
+                    {option}
+                  </option>
+                ))}
+              </Form.Select>
+            );
+          }
         } else if (
           input.type === "doubleSelect" &&
           input.options &&
           input.defaultValues
         ) {
           let names = input.name.split(",");
+          // Only way for IDE to stop complaining about input.defaultValues
+          // and input.options possibly being undefined, even though I already
+          // confirmed their existence in the else-if
+          let dvs, ops;
+          if (input.defaultValues) dvs = input.defaultValues;
+          if (input.options) ops = input.options;
           field = (
-            <>
-              <Form.Select
-                name={names[0]}
-                defaultValue={input.defaultValues[0]}
-              >
-                {input.options[0].map((option) => (
-                  <option value={option}>{option}</option>
-                ))}
-              </Form.Select>
-              <Form.Select
-                name={names[1]}
-                defaultValue={input.defaultValues[1]}
-              >
-                {input.options[1].map((option) => (
-                  <option value={option}>{option}</option>
-                ))}
-              </Form.Select>
-            </>
+            <InputGroup>
+              {[0, 1].map((i) => (
+                <Form.Select
+                  key={i}
+                  name={names[i]}
+                  defaultValue={dvs[i]}
+                  onChange={onChange}
+                >
+                  {ops[i].map((option) => (
+                    <option key={option} value={option}>
+                      {option}
+                    </option>
+                  ))}
+                </Form.Select>
+              ))}
+            </InputGroup>
           );
         } else if (input.type === "eventsCheckbox") {
           field = (
@@ -69,6 +101,7 @@ const AddDataForm = ({ handleSubmit, inputs, objectName }: Props) => {
               name={input.name}
               type={"checkbox"}
               id={"" + input.id}
+              onChange={onChange}
               label={
                 <>
                   Auto add events{" "}
@@ -84,10 +117,19 @@ const AddDataForm = ({ handleSubmit, inputs, objectName }: Props) => {
             />
           );
         } else {
-          field = <Form.Control name={input.name} type={input.type} />;
+          field = (
+            <>
+              <Form.Control
+                required
+                name={input.name}
+                type={input.type}
+                onChange={onChange}
+              />
+            </>
+          );
         }
         return (
-          <Row>
+          <Row key={input.id}>
             <FormGroup className={input.cssClass} controlId={"" + input.id}>
               {input.label != "" && <Form.Label>{input.label}</Form.Label>}
               {field}
