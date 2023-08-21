@@ -42,8 +42,21 @@ const EventCard = ({ children, winners, upset, spr }: Props) => {
 
     top3.push(
       <Row key={i}>
-        <Col sm={{ span: 2 }}>{placing}</Col>
-        <Col sm={{ span: 10 }}>{winners[i]}</Col>
+        <Col
+          xs={{ span: 1, offset: 4 }}
+          md={{ span: 2, offset: 0 }}
+          xl={{ span: 2, offset: 0 }}
+        >
+          {placing}
+        </Col>
+        <Col
+          xs={{ span: 6, offset: 1 }}
+          md={{ span: 9, offset: 1 }}
+          xl={{ span: 9, offset: 1 }}
+          className="winnerName"
+        >
+          {winners[i]}
+        </Col>
       </Row>
     );
   }
@@ -78,19 +91,19 @@ const EventCard = ({ children, winners, upset, spr }: Props) => {
 
   return (
     <>
-      <h2 className="eventTitle">{children}</h2>
       <Container className="eventCard">
+        <h2 className="eventTitle">{children}</h2>
         <Row>
-          <Col lg={{ span: 3 }}>
-            <h4>Podium</h4>
+          <Col md={{ span: 4 }} className="eventItem">
+            <h4 className="eventItemTitle">Podium</h4>
             <Container>{top3}</Container>
           </Col>
-          <Col lg={{ span: 3 }}>
-            <h4>Biggest Upset</h4>
+          <Col md={{ span: 4 }} className="eventItem">
+            <h4 className="eventItemTitle">Biggest Upset</h4>
             {upsetText}
           </Col>
-          <Col lg={{ span: 3 }}>
-            <h4>Highest SPR</h4>
+          <Col md={{ span: 4 }} className="eventItem">
+            <h4 className="eventItemTitle">Highest SPR</h4>
             {sprText}
           </Col>
         </Row>

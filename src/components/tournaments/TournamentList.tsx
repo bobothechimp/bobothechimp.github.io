@@ -1,5 +1,13 @@
 import { useState, useEffect } from "react";
-import { ListGroup, Form, Container, FormGroup } from "react-bootstrap";
+import {
+  ListGroup,
+  Form,
+  Container,
+  Row,
+  Col,
+  FormGroup,
+  FormLabel,
+} from "react-bootstrap";
 
 import EventCard from "./EventCard";
 
@@ -23,7 +31,11 @@ const TournamentList = () => {
   useEffect(() => {
     if (season === "-1") {
       resetTournaments();
-      return;
+      fetch("http://localhost:5000/events")
+        .then((res) => res.json())
+        .then((data) => {
+          setEvents(data);
+        });
     }
     fetch("http://localhost:5000/seasons/" + season + "/tournaments")
       .then((res) => res.json())
@@ -61,56 +73,67 @@ const TournamentList = () => {
 
   return (
     <Container>
-      <h1>Tournaments</h1>
-      <FormGroup className="seasonSelect">
-        <Form.Select size="sm" defaultValue={-1} onChange={updateSeason}>
-          <option key={-1} value={-1}>
-            Season
-          </option>
-          {seasons.map((season) => (
-            <option key={season["id"]} value={season["id"]}>
-              {season["game"]} Season {season["season"]}
-            </option>
+      <h1 className="sectionTitle">Tournaments</h1>
+      <Row>
+        <Col lg={{ span: 4 }} className="dataSelectForm">
+          <Form>
+            <FormGroup className="seasonSelect">
+              <FormLabel>Select a season</FormLabel>
+              <Form.Select size="sm" defaultValue={-1} onChange={updateSeason}>
+                <option key={-1} value={-1}>
+                  Season
+                </option>
+                {seasons.map((season) => (
+                  <option key={season["id"]} value={season["id"]}>
+                    {season["game"]} Season {season["season"]}
+                  </option>
+                ))}
+              </Form.Select>
+            </FormGroup>
+            <FormGroup className="tournamentSelect">
+              <FormLabel>Select a tournament</FormLabel>
+              <Form.Select
+                disabled={disableTournaments}
+                size="sm"
+                defaultValue={-1}
+                onChange={updateTournament}
+              >
+                <option key={-1} value={-1}>
+                  Tournament
+                </option>
+                {tournaments.map((tournament) => {
+                  let tournamentName;
+                  let twString = "" + tournament["week"];
+                  if (twString.substring(0, 2) === "BM") {
+                    tournamentName = "Bimonthly " + twString.substring(2);
+                  } else {
+                    tournamentName = "Week " + twString;
+                  }
+                  return (
+                    <option key={tournament["id"]} value={tournament["id"]}>
+                      {tournamentName}
+                    </option>
+                  );
+                })}
+              </Form.Select>
+            </FormGroup>
+          </Form>
+        </Col>
+        <Col lg={{ span: 8 }}>
+          {events.map((event) => (
+            <Row>
+              <EventCard
+                key={event["id"]}
+                winners={event["top3"]}
+                upset={event["topUpset"]}
+                spr={event["topSPR"]}
+              >
+                {event["title"]}
+              </EventCard>
+            </Row>
           ))}
-        </Form.Select>
-      </FormGroup>
-      <FormGroup className="tournamentSelect">
-        <Form.Select
-          disabled={disableTournaments}
-          size="sm"
-          defaultValue={-1}
-          onChange={updateTournament}
-        >
-          <option key={-1} value={-1}>
-            Tournament
-          </option>
-          {tournaments.map((tournament) => {
-            let tournamentName;
-            let twString = "" + tournament["week"];
-            if (twString.substring(0, 2) === "BM") {
-              tournamentName = "Bimonthly " + twString.substring(2);
-            } else {
-              tournamentName = "Week " + twString;
-            }
-            return (
-              <option key={tournament["id"]} value={tournament["id"]}>
-                {tournamentName}
-              </option>
-            );
-          })}
-        </Form.Select>
-      </FormGroup>
-
-      {events.map((event) => (
-        <EventCard
-          key={event["id"]}
-          winners={event["top3"]}
-          upset={event["topUpset"]}
-          spr={event["topSPR"]}
-        >
-          {event["title"]}
-        </EventCard>
-      ))}
+        </Col>
+      </Row>
     </Container>
   );
 };
