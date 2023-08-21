@@ -70,6 +70,12 @@ class Tournament:
         cursor.execute(sql)
     
     @staticmethod
+    def ofSeason(cursor, season_id):
+        sql = """SELECT id FROM tournaments WHERE season_id = {}""".format(season_id)
+        cursor.execute(sql)
+        return cursor.fetchall()
+
+    @staticmethod
     def makeTournamentsTable():
         connection = sqlite3.connect("busmash.db")
         cursor = connection.cursor()

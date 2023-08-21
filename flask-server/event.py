@@ -113,6 +113,12 @@ class Event:
         cursor.execute(sql)
     
     @staticmethod
+    def ofTournament(cursor, tournament_id):
+        sql = """SELECT id FROM events WHERE tournament_id = {}""".format(tournament_id)
+        cursor.execute(sql)
+        return cursor.fetchall()
+    
+    @staticmethod
     def makeEventsTable():
         connection = sqlite3.connect("busmash.db")
         cursor = connection.cursor()

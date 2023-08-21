@@ -54,6 +54,25 @@ def getSeason(season_id):
 
     return jsonResponse(jsonData)
 
+# Get particular season's tournaments
+@app.route("/seasons/<int:season_id>/tournaments")
+def getSeasonTournaments(season_id):
+    Tournament.makeTournamentsTable()
+    connection = sqlite3.connect("busmash.db")
+    cursor = connection.cursor()
+
+    tournament_ids = Tournament.ofSeason(cursor, season_id)
+    jsonData = []
+    for id in tournament_ids:
+        tournament = Tournament()
+        tournament.load_tournament(id[0])
+        jsonData += [tournament.toJSON()]
+    
+    connection.commit()
+    connection.close()
+
+    return jsonResponse(jsonData)
+
 # Add a new season
 @app.route("/seasons/add", methods=["POST"])
 def addSeason():
@@ -120,6 +139,25 @@ def getTournament(tournament_id):
     tournament = Tournament()
     tournament.load_tournament(tournament_id)
     jsonData = tournament.toJSON()
+
+    return jsonResponse(jsonData)
+
+# Get particular season's tournaments
+@app.route("/tournaments/<int:tournament_id>/events")
+def getTournamentEvents(tournament_id):
+    Event.makeEventsTable()
+    connection = sqlite3.connect("busmash.db")
+    cursor = connection.cursor()
+
+    event_ids = Event.ofTournament(cursor, tournament_id)
+    jsonData = []
+    for id in event_ids:
+        event = Event()
+        event.load_event(id[0])
+        jsonData += [event.toJSON()]
+    
+    connection.commit()
+    connection.close()
 
     return jsonResponse(jsonData)
 
