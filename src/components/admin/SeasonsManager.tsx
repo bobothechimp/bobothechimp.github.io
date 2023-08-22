@@ -128,8 +128,6 @@ const SeasonsManager = ({ seasons, getData }: Props) => {
     xhr.send(info);
   };
 
-  console.log(seasons);
-
   return (
     <>
       <Container>

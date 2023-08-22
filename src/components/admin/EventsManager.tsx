@@ -108,10 +108,12 @@ const EventsManager = ({ events, tournaments, getData }: Props) => {
                 "Tournament ID",
                 "Tournament Name",
                 "Title",
+                "Date",
                 "Entrants",
                 "Top 3 (1st, 2nd, 3rd)",
                 "Biggest Upset (set, upsetter seed, upsettee seed, UF)",
                 "Highest SPR (player, seed, placing, SPR)",
+                "Start.gg Link",
               ]}
               responsive={true}
               handleDeleteButton={handleDeleteButton}

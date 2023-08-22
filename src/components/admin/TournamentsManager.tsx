@@ -175,7 +175,14 @@ const TournamentsManager = ({ tournaments, seasons, getData }: Props) => {
           <Col md={{ span: 7 }} lg={{ span: 6 }} xl={{ span: 7 }}>
             <DataTable
               rows={tournaments}
-              titles={["ID", "Season ID", "Season Name", "Week", "Date"]}
+              titles={[
+                "ID",
+                "Season ID",
+                "Season Name",
+                "Week",
+                "Date",
+                "Start.gg Link",
+              ]}
               responsive={false}
               handleDeleteButton={handleDeleteButton}
             />

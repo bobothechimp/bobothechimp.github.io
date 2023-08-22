@@ -223,6 +223,7 @@ def addTournament():
                 id
                 name
                 startAt
+                slug
                 {}
             }}
         }}""".format(eventsQuery),
@@ -243,6 +244,7 @@ def addTournament():
 
     # Grabbing tournament info
     date = tournamentData["tournament"]["startAt"]
+    slug = tournamentData["tournament"]["slug"]
     failures = False
     if(auto_add_events == "on"):
         events = tournamentData["tournament"]["events"]
@@ -255,7 +257,7 @@ def addTournament():
         inserted_wn = -1 * int(week_num[2:])
     else:
         inserted_wn = week_num
-    tournament = Tournament(tournament_id, season_id, inserted_wn, date)
+    tournament = Tournament(tournament_id, season_id, inserted_wn, date, slug)
     inserted = tournament.insert_tournament()
 
     # Determining success of operation
@@ -435,6 +437,7 @@ def createEvent(tournament_id, event_id):
         query EventEntrants($eventId: ID!) {
             event(id: $eventId) {
                 name
+                slug
                 entrants(query: {perPage: 60, page: 1}) {
                     pageInfo {
                         total
@@ -491,6 +494,7 @@ def createEvent(tournament_id, event_id):
         return CODES["ERROR"]
     
     title = eventData["event"]["name"]
+    slug = eventData["event"]["slug"]
 
     entrantsCount = eventData["event"]["entrants"]["pageInfo"]["total"]
     entrants = eventData["event"]["entrants"]["nodes"]
@@ -514,10 +518,9 @@ def createEvent(tournament_id, event_id):
     for player in podium:
         top3 += [player["entrant"]["name"]]
     
-    Event.makeEventsTable()
     event = Event(event_id, tournament_id, title, entrantsCount, top3,
                   [upsetScore, upsetterSeed, upsetteeSeed, maxUF],
-                  [sprPlayer, sprSeed, sprPlacing, maxSPR])
+                  [sprPlayer, sprSeed, sprPlacing, maxSPR], slug)
     if(event.insert_event()):
         return CODES["SUCCESS"]
     else:

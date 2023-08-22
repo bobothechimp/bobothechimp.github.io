@@ -31,6 +31,15 @@ const DataTable = ({ rows, titles, handleDeleteButton, responsive }: Props) => {
             {Object.keys(row).map((key) => {
               if (row[key] != null && typeof row[key] === "object") {
                 return <td key={key}>{row[key].join(", ")}</td>;
+              } else if (
+                typeof row[key] === "string" &&
+                row[key].substring(0, 21) === "https://www.start.gg/"
+              ) {
+                return (
+                  <td key={key}>
+                    <a href={row[key]}>Link</a>
+                  </td>
+                );
               } else {
                 return <td key={key}>{row[key]}</td>;
               }

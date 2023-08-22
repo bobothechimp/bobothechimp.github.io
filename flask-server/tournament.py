@@ -3,12 +3,13 @@ from datetime import datetime
 
 class Tournament:
 
-    def __init__(self, id = -1, season_id = -1, week = -1, date=0):
+    def __init__(self, id = -1, season_id = -1, week = -1, date = 0, slug = ""):
         self.id = id
         self.season_id = season_id
         self.week = week #Positive if a normal week number, negative if bimonthly
         #e.g. -10 indicates that this tournament is the 10th bimonthly
         self.date = date #UNIX representation of date
+        self.slug = slug
         self.connection = sqlite3.connect("busmash.db")
         self.cursor = self.connection.cursor()
     
@@ -26,6 +27,7 @@ class Tournament:
         self.season_id = row[1]
         self.week = row[2]
         self.date = row[3]
+        self.slug = row[4]
         return True
     
     def insert_tournament(self):
@@ -35,10 +37,10 @@ class Tournament:
         
         self.cursor.execute("""
         INSERT INTO tournaments
-        (id, season_id, week, date)
+        (id, season_id, week, date, slug)
         VALUES
-        ({}, {}, {}, {})
-        """.format(self.id, self.season_id, self.week, self.date))
+        ({}, {}, {}, {}, \"{}\")
+        """.format(self.id, self.season_id, self.week, self.date, self.slug))
         self.connection.commit()
         return True
     
@@ -60,7 +62,8 @@ class Tournament:
             "season_id": self.season_id,
             "seasonName": seasonName,
             "week": week,
-            "date": date
+            "date": date,
+            "link": "https://www.start.gg/" + self.slug
         }
     
     @staticmethod
@@ -83,7 +86,8 @@ class Tournament:
             id INTEGER PRIMARY KEY,
             season_id INTEGER NOT NULL,
             week INTEGER NOT NULL,
-            date INTEGER NOT NULL
+            date INTEGER NOT NULL,
+            slug TEXT NOT NULL
         );"""
         cursor.execute(sql)
         connection.commit()

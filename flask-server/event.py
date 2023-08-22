@@ -1,9 +1,11 @@
 import sqlite3
+from datetime import datetime
 
 class Event:
 
     def __init__(self, id = -1, tournament_id = -1, title = "", entrants = 0,
-                 top3 = [], topUpset = ["", 0, 0, 0], topSPR = ["", 0, 0, 0]):
+                 top3 = [], topUpset = ["", 0, 0, 0], topSPR = ["", 0, 0, 0],
+                 slug = ""):
         self.id = id
         self.tournament_id = tournament_id
         self.title = title
@@ -15,6 +17,7 @@ class Event:
         self.topSPR = topSPR
         #[player name, seeded placement, final placement, SPR]
         #ex: ["John", 25, 3, 7]
+        self.slug = slug
         self.connection = sqlite3.connect("busmash.db")
         self.cursor = self.connection.cursor()
     
@@ -39,6 +42,7 @@ class Event:
         sprInfo = str(row[6]).split(",")
         self.topSPR = [sprInfo[0], int(sprInfo[1]),
                        int(sprInfo[2]), int(sprInfo[3])]
+        self.slug = row[7]
         return True
     
     def insert_event(self):
@@ -53,17 +57,17 @@ class Event:
                                          self.topSPR[2], self.topSPR[3])
         self.cursor.execute("""
         INSERT INTO events
-        (id, tournament_id, title, entrants, top3, upset, spr)
+        (id, tournament_id, title, entrants, top3, upset, spr, slug)
         VALUES
-        ({}, {}, \"{}\", {}, \"{}\", \"{}\", \"{}\")
+        ({}, {}, \"{}\", {}, \"{}\", \"{}\", \"{}\", \"{}\")
         """.format(self.id, self.tournament_id, self.title, self.entrants,
-                   top3, upsetInfo, sprInfo))
+                   top3, upsetInfo, sprInfo, self.slug))
         self.connection.commit()
         return True
     
     def toJSON(self):
         self.cursor.execute("""
-        SELECT semester, game, week
+        SELECT semester, game, week, date
         FROM seasons JOIN tournaments
         ON seasons.id = tournaments.season_id
         WHERE tournaments.id = {};
@@ -87,16 +91,19 @@ class Event:
             tspr = "No overperformers"
         else:
             tspr = self.topSPR
+        date = datetime.utcfromtimestamp(tournament[3]).strftime('%B %d, %Y')
 
         return {
             "id": self.id,
             "tournament_id": self.tournament_id,
             "tournamentName": tournamentName,
             "title": self.title,
+            "date": date,
             "entrants": self.entrants,
             "top3": self.top3,
             "topUpset": tu,
-            "topSPR": tspr
+            "topSPR": tspr,
+            "link": "https://www.start.gg/" + self.slug
         }
     
     @staticmethod
@@ -129,7 +136,8 @@ class Event:
             entrants INTEGER NOT NULL,
             top3 TEXT NOT NULL,
             upset TEXT NOT NULL,
-            spr TEXT NOT NULL
+            spr TEXT NOT NULL,
+            slug TEXT NOT NULL
         );"""
         cursor.execute(sql)
         connection.commit()
