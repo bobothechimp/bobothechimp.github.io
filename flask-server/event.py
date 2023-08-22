@@ -120,6 +120,14 @@ class Event:
         cursor.execute(sql)
     
     @staticmethod
+    def ofSeason(cursor, season_id):
+        sql = """SELECT events.id FROM
+        events JOIN tournaments ON events.tournament_id = tournaments.id
+        WHERE tournaments.season_id = {};""".format(season_id)
+        cursor.execute(sql)
+        return cursor.fetchall()
+
+    @staticmethod
     def ofTournament(cursor, tournament_id):
         sql = """SELECT id FROM events WHERE tournament_id = {}""".format(tournament_id)
         cursor.execute(sql)

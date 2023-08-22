@@ -36,19 +36,25 @@ const TournamentList = () => {
         .then((data) => {
           setEvents(data);
         });
+    } else {
+      fetch("http://localhost:5000/seasons/" + season + "/tournaments")
+        .then((res) => res.json())
+        .then((data) => {
+          setTournaments(data);
+          setTournament("-1");
+          setDisableTournaments(false);
+        });
+      fetch("http://localhost:5000/seasons/" + season + "/events")
+        .then((res) => res.json())
+        .then((data) => {
+          setEvents(data);
+        });
     }
-    fetch("http://localhost:5000/seasons/" + season + "/tournaments")
-      .then((res) => res.json())
-      .then((data) => {
-        setTournaments(data);
-        setTournament("-1");
-        setDisableTournaments(false);
-      });
   }, [season]);
 
   useEffect(() => {
     if (tournament === "-1") {
-      setEvents([]);
+      // setEvents([]);
       return;
     }
     fetch("http://localhost:5000/tournaments/" + tournament + "/events")
@@ -121,15 +127,17 @@ const TournamentList = () => {
         </Col>
         <Col lg={{ span: 8 }}>
           {events.map((event) => (
-            <Row>
+            <Row key={event["id"]}>
               <EventCard
-                key={event["id"]}
+                title={event["title"]}
+                date={event["date"]}
+                tournamentName={event["tournamentName"]}
+                entrants={event["entrants"]}
+                link={event["link"]}
                 winners={event["top3"]}
                 upset={event["topUpset"]}
                 spr={event["topSPR"]}
-              >
-                {event["title"]}
-              </EventCard>
+              />
             </Row>
           ))}
         </Col>

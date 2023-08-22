@@ -6,13 +6,27 @@ import { createOrdinalIndicator as createOI } from "../../global/tools";
 import "../../styles/tournaments.css";
 
 interface Props {
-  children: ReactNode;
+  title: string;
+  date: string;
+  tournamentName: string;
+  entrants: number;
+  link: string;
   winners: string[];
   upset: any[] | string;
   spr: any[] | string;
 }
 
-const EventCard = ({ children, winners, upset, spr }: Props) => {
+const EventCard = ({
+  title,
+  date,
+  tournamentName,
+  entrants,
+  link,
+  winners,
+  upset,
+  spr,
+}: Props) => {
+  // Create podium block
   let top3: JSX.Element[] = [];
   for (let i = 0; i < winners.length; i++) {
     let placing;
@@ -61,6 +75,7 @@ const EventCard = ({ children, winners, upset, spr }: Props) => {
     );
   }
 
+  // Create upset block
   let upsetText: JSX.Element[] = [];
   if (typeof upset === "string") {
     upsetText = [<p key={"headline"}>{upset}</p>];
@@ -75,6 +90,7 @@ const EventCard = ({ children, winners, upset, spr }: Props) => {
     ];
   }
 
+  // Create SPR block
   let sprText: JSX.Element[] = [];
   if (typeof spr === "string") {
     sprText = [<p key={"headline"}>{spr}</p>];
@@ -92,7 +108,21 @@ const EventCard = ({ children, winners, upset, spr }: Props) => {
   return (
     <>
       <Container className="eventCard">
-        <h2 className="eventTitle">{children}</h2>
+        <Row className="eventHeader">
+          <Col xs={{ span: 6, offset: 3 }} className="eventTitle">
+            <h2>{title}</h2>
+            <h5>@ {tournamentName}</h5>
+          </Col>
+          <Col xs={{ span: 3 }} className="eventBasicInfo">
+            <p className="text-muted">
+              {date} <br />
+              {entrants} Entrants <br />
+              <a href={link} target="_blank">
+                Start.gg Link
+              </a>
+            </p>
+          </Col>
+        </Row>
         <Row>
           <Col md={{ span: 4 }} className="eventItem">
             <h4 className="eventItemTitle">Podium</h4>

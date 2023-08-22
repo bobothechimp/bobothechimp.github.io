@@ -11,6 +11,10 @@ import calculations
 app = Flask(__name__)
 app.config["SERVER_NAME"] = "localhost:5000" # Change when deploying
 
+Season.makeSeasonsTable()
+Tournament.makeTournamentsTable()
+Event.makeEventsTable()
+
 CODES = {
     "SUCCESS": 0,
     "ALREADY_EXISTS": 1,
@@ -27,7 +31,6 @@ def jsonResponse(jsonData):
 # Return all seasons
 @app.route("/seasons")
 def seasons():
-    Season.makeSeasonsTable()
     connection = sqlite3.connect("busmash.db")
     cursor = connection.cursor()
     
@@ -47,7 +50,6 @@ def seasons():
 # Get particular season
 @app.route("/seasons/<int:season_id>")
 def getSeason(season_id):
-    Season.makeSeasonsTable()
     season = Season()
     season.load_season(season_id)
     jsonData = season.toJSON()
@@ -57,7 +59,6 @@ def getSeason(season_id):
 # Get particular season's tournaments
 @app.route("/seasons/<int:season_id>/tournaments")
 def getSeasonTournaments(season_id):
-    Tournament.makeTournamentsTable()
     connection = sqlite3.connect("busmash.db")
     cursor = connection.cursor()
 
@@ -73,10 +74,27 @@ def getSeasonTournaments(season_id):
 
     return jsonResponse(jsonData)
 
+# Get particular season's events
+@app.route("/seasons/<int:season_id>/events")
+def getSeasonEvents(season_id):
+    connection = sqlite3.connect("busmash.db")
+    cursor = connection.cursor()
+
+    event_ids = Event.ofSeason(cursor, season_id)
+    jsonData = []
+    for id in event_ids:
+        event = Event()
+        event.load_event(id[0])
+        jsonData += [event.toJSON()]
+    
+    connection.commit()
+    connection.close()
+
+    return jsonResponse(jsonData)
+
 # Add a new season
 @app.route("/seasons/add", methods=["POST"])
 def addSeason():
-    Season.makeSeasonsTable()
     game = request.form.get("game")
     season_num = request.form.get("season_num")
     fallOrSpring = request.form.get("fallOrSpring")
@@ -96,7 +114,6 @@ def addSeason():
 # Delete an existing season
 @app.route("/seasons/delete", methods=["POST"])
 def deleteSeason():
-    Season.makeSeasonsTable()
     season_id = request.form.get("season_id")
     connection = sqlite3.connect("busmash.db")
     cursor = connection.cursor()
@@ -115,7 +132,6 @@ def deleteSeason():
 # Get all tournaments
 @app.route("/tournaments")
 def tournaments():
-    Tournament.makeTournamentsTable()
     connection = sqlite3.connect("busmash.db")
     cursor = connection.cursor()
     
@@ -135,17 +151,15 @@ def tournaments():
 # Get particular tournament
 @app.route("/tournaments/<int:tournament_id>")
 def getTournament(tournament_id):
-    Tournament.makeTournamentsTable()
     tournament = Tournament()
     tournament.load_tournament(tournament_id)
     jsonData = tournament.toJSON()
 
     return jsonResponse(jsonData)
 
-# Get particular season's tournaments
+# Get particular tournament's events
 @app.route("/tournaments/<int:tournament_id>/events")
 def getTournamentEvents(tournament_id):
-    Event.makeEventsTable()
     connection = sqlite3.connect("busmash.db")
     cursor = connection.cursor()
 
@@ -164,7 +178,6 @@ def getTournamentEvents(tournament_id):
 # Add a new tournament
 @app.route("/tournaments/add", methods=["POST"])
 def addTournament():
-    Tournament.makeTournamentsTable()
     season_id = request.form.get("season_id")
     url_id = request.form.get("tournament_url_id")
     # url or id of tournament, don't know which one yet
@@ -211,7 +224,7 @@ def addTournament():
         }
         sggResponse = requests.post("https://api.start.gg/gql/alpha",
                                headers=headers, json=data)
-        tournament_id = sggResponse["data"]["tournament"]["id"]
+        tournament_id = (sggResponse.json())["data"]["tournament"]["id"]
     
 
     # Calling start.gg API
@@ -291,7 +304,6 @@ def addTournament():
 # Delete an existing tournament
 @app.route("/tournaments/delete", methods=["POST"])
 def deleteTournament():
-    Tournament.makeTournamentsTable()
     tournament_id = request.form.get("tournament_id")
     delete_all_events = request.form.get("delete_all_events")
     connection = sqlite3.connect("busmash.db")
@@ -314,7 +326,6 @@ def deleteTournament():
 # Get all events
 @app.route("/events")
 def events():
-    Event.makeEventsTable()
     connection = sqlite3.connect("busmash.db")
     cursor = connection.cursor()
     
@@ -334,7 +345,6 @@ def events():
 # Get a particular event
 @app.route("/events/<int:event_id>")
 def getEvent(event_id):
-    Event.makeEventsTable()
     event = Event()
     event.load_event(event_id)
     jsonData = event.toJSON()
@@ -430,7 +440,6 @@ def addEvent():
 # Helper function to allow both addEvent() and
 # addTournament() to insert events
 def createEvent(tournament_id, event_id):
-    Event.makeEventsTable()
     headers = {"Authorization": "Bearer {}".format(apikeys.STARTGG_KEY)}
     data = {
         "query": ("""
@@ -529,7 +538,6 @@ def createEvent(tournament_id, event_id):
 # Delete an existing event
 @app.route("/events/delete", methods=["POST"])
 def deleteEvent():
-    Event.makeEventsTable()
     event_id = request.form.get("event_id")
     connection = sqlite3.connect("busmash.db")
     cursor = connection.cursor()

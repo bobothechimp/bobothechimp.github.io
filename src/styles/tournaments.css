@@ -26,11 +26,19 @@
     width: 100%;
 }
 
-.eventTitle {
+.eventHeader {
     padding-bottom: 20px;
+}
+
+.eventTitle {
     text-align: center;
     font-family: myriad pro, sans-serif;
     color: #DD2400;
+}
+
+.eventBasicInfo {
+    text-align: right;
+    padding-right: 10px;
 }
 
 .eventCard {
