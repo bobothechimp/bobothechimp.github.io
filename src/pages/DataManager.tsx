@@ -6,6 +6,8 @@ import SeasonsManager from "../components/admin/SeasonsManager";
 import TournamentsManager from "../components/admin/TournamentsManager";
 import EventsManager from "../components/admin/EventsManager";
 
+import * as ROUTES from "../global/routes";
+
 import "../styles/dataManager.css";
 
 const DataManager = () => {
@@ -15,7 +17,7 @@ const DataManager = () => {
   const [events, setEvents] = useState([]);
 
   const getData = (curTable) => {
-    fetch("http://localhost:5000/seasons")
+    fetch(ROUTES.SERVER_GET_SEASONS)
       .then((res) => res.json())
       .then((data) => {
         setSeasons(data);
@@ -30,7 +32,7 @@ const DataManager = () => {
           );
         }
       });
-    fetch("http://localhost:5000/tournaments")
+    fetch(ROUTES.SERVER_GET_TOURNAMENTS)
       .then((res) => res.json())
       .then((data) => {
         setTournaments(data);
@@ -46,7 +48,7 @@ const DataManager = () => {
           );
         }
       });
-    fetch("http://localhost:5000/events")
+    fetch(ROUTES.SERVER_GET_EVENTS)
       .then((res) => res.json())
       .then((data) => {
         setEvents(data);

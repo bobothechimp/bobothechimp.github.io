@@ -11,6 +11,8 @@ import {
 
 import EventCard from "./EventCard";
 
+import * as ROUTES from "../../global/routes";
+
 const TournamentList = () => {
   const [seasons, setSeasons] = useState([]);
   const [season, setSeason] = useState("-1");
@@ -21,7 +23,7 @@ const TournamentList = () => {
   const [winners, setWinners] = useState([[]]);
 
   useEffect(() => {
-    fetch("http://localhost:5000/seasons")
+    fetch(ROUTES.SERVER_GET_SEASONS)
       .then((res) => res.json())
       .then((data) => {
         setSeasons(data);
@@ -31,20 +33,20 @@ const TournamentList = () => {
   useEffect(() => {
     if (season === "-1") {
       resetTournaments();
-      fetch("http://localhost:5000/events")
+      fetch(ROUTES.SERVER_GET_EVENTS)
         .then((res) => res.json())
         .then((data) => {
           setEvents(data);
         });
     } else {
-      fetch("http://localhost:5000/seasons/" + season + "/tournaments")
+      fetch(ROUTES.SERVER_TOURNAMENTS_FROM_SEASON(season))
         .then((res) => res.json())
         .then((data) => {
           setTournaments(data);
           setTournament("-1");
           setDisableTournaments(false);
         });
-      fetch("http://localhost:5000/seasons/" + season + "/events")
+      fetch(ROUTES.SERVER_EVENTS_FROM_SEASON(season))
         .then((res) => res.json())
         .then((data) => {
           setEvents(data);
@@ -57,7 +59,7 @@ const TournamentList = () => {
       // setEvents([]);
       return;
     }
-    fetch("http://localhost:5000/tournaments/" + tournament + "/events")
+    fetch(ROUTES.SERVER_EVENTS_FROM_TOURNAMENT(tournament))
       .then((res) => res.json())
       .then((data) => {
         setEvents(data);
