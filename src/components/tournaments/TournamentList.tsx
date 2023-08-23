@@ -10,7 +10,7 @@ import {
 } from "react-bootstrap";
 
 import EventCard from "./EventCard";
-import PageSelect from "./PageSelect";
+import PageSelect from "../PageSelect";
 
 import * as ROUTES from "../../global/routes";
 
