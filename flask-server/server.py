@@ -29,15 +29,25 @@ def jsonResponse(jsonData):
     return resp
 
 # Return all seasons
-@app.route("/seasons")
+@app.route("/seasons", methods=["GET", "POST"])
 def seasons():
     connection = sqlite3.connect("busmash.db")
     cursor = connection.cursor()
     
     cursor.execute("SELECT id FROM seasons")
     rows = cursor.fetchall()
+
+    try:
+        data = request.get_json(force=True)
+        page = data["page"]
+        perPage = data["perPage"]
+    except:
+        page = 1
+        perPage = len(rows)
+    
     jsonData = []
-    for row in rows:
+    for i in range((page - 1) * perPage, min(len(rows), page * perPage)):
+        row = rows[i]
         season = Season()
         season.load_season(row[0])
         jsonData += [season.toJSON()]
@@ -45,7 +55,7 @@ def seasons():
     connection.commit()
     connection.close()
     
-    return jsonResponse(jsonData)
+    return jsonResponse({"total": len(rows), "seasons": jsonData})
 
 # Get particular season
 @app.route("/seasons/<int:season_id>")
@@ -72,17 +82,27 @@ def getSeasonTournaments(season_id):
     connection.commit()
     connection.close()
 
-    return jsonResponse(jsonData)
+    return jsonResponse({"total": len(tournament_ids), "tournaments": jsonData})
 
 # Get particular season's events
-@app.route("/seasons/<int:season_id>/events")
+@app.route("/seasons/<int:season_id>/events", methods=["GET", "POST"])
 def getSeasonEvents(season_id):
     connection = sqlite3.connect("busmash.db")
     cursor = connection.cursor()
 
     event_ids = Event.ofSeason(cursor, season_id)
+
+    try:
+        data = request.get_json(force=True)
+        page = data["page"]
+        perPage = data["perPage"]
+    except:
+        page = 1
+        perPage = len(event_ids)
+    
     jsonData = []
-    for id in event_ids:
+    for i in range((page - 1) * perPage, min(len(event_ids), page * perPage)):
+        id = event_ids[i]
         event = Event()
         event.load_event(id[0])
         jsonData += [event.toJSON()]
@@ -90,7 +110,7 @@ def getSeasonEvents(season_id):
     connection.commit()
     connection.close()
 
-    return jsonResponse(jsonData)
+    return jsonResponse({"total": len(event_ids), "events": jsonData})
 
 # Add a new season
 @app.route("/seasons/add", methods=["POST"])
@@ -130,15 +150,25 @@ def deleteSeason():
     return jsonResponse(jsonData)
 
 # Get all tournaments
-@app.route("/tournaments")
+@app.route("/tournaments", methods=["GET", "POST"])
 def tournaments():
     connection = sqlite3.connect("busmash.db")
     cursor = connection.cursor()
     
     cursor.execute("SELECT id FROM tournaments")
     rows = cursor.fetchall()
+
+    try:
+        data = request.get_json(force=True)
+        page = data["page"]
+        perPage = data["perPage"]
+    except:
+        page = 1
+        perPage = len(rows)
+    
     jsonData = []
-    for row in rows:
+    for i in range((page - 1) * perPage, min(len(rows), page * perPage)):
+        row = rows[i]
         tournament = Tournament()
         tournament.load_tournament(row[0])
         jsonData += [tournament.toJSON()]
@@ -146,7 +176,7 @@ def tournaments():
     connection.commit()
     connection.close()
     
-    return jsonResponse(jsonData)
+    return jsonResponse({"total": len(rows), "tournaments": jsonData})
 
 # Get particular tournament
 @app.route("/tournaments/<int:tournament_id>")
@@ -173,7 +203,7 @@ def getTournamentEvents(tournament_id):
     connection.commit()
     connection.close()
 
-    return jsonResponse(jsonData)
+    return jsonResponse({"total": len(event_ids), "events": jsonData})
 
 # Add a new tournament
 @app.route("/tournaments/add", methods=["POST"])
@@ -324,15 +354,25 @@ def deleteTournament():
     return jsonResponse(jsonData)
 
 # Get all events
-@app.route("/events")
+@app.route("/events", methods=["GET", "POST"])
 def events():
     connection = sqlite3.connect("busmash.db")
     cursor = connection.cursor()
-    
+
     cursor.execute("SELECT id FROM events")
     rows = cursor.fetchall()
+
+    try:
+        data = request.get_json(force=True)
+        page = data["page"]
+        perPage = data["perPage"]
+    except:
+        page = 1
+        perPage = len(rows)
+    
     jsonData = []
-    for row in rows:
+    for i in range((page - 1) * perPage, min(len(rows), page * perPage)):
+        row = rows[i]
         event = Event()
         event.load_event(row[0])
         jsonData += [event.toJSON()]
@@ -340,7 +380,7 @@ def events():
     connection.commit()
     connection.close()
     
-    return jsonResponse(jsonData)
+    return jsonResponse({"total": len(rows), "events": jsonData})
 
 # Get a particular event
 @app.route("/events/<int:event_id>")

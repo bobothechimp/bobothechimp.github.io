@@ -20,13 +20,13 @@ const DataManager = () => {
     fetch(ROUTES.SERVER_GET_SEASONS)
       .then((res) => res.json())
       .then((data) => {
-        setSeasons(data);
+        setSeasons(data["seasons"]);
 
         //Reloading component with new data
         if (curTable === SEASONS_KEY) {
           setActiveTable(
             <SeasonsManager
-              seasons={data}
+              seasons={data["seasons"]}
               getData={() => getData(SEASONS_KEY)}
             />
           );
@@ -35,14 +35,14 @@ const DataManager = () => {
     fetch(ROUTES.SERVER_GET_TOURNAMENTS)
       .then((res) => res.json())
       .then((data) => {
-        setTournaments(data);
+        setTournaments(data["tournaments"]);
 
         //Reloading component with new data
         if (curTable === TOURNAMENTS_KEY) {
           setActiveTable(
             <TournamentsManager
               seasons={seasons}
-              tournaments={data}
+              tournaments={data["tournaments"]}
               getData={() => getData(TOURNAMENTS_KEY)}
             />
           );
@@ -51,14 +51,14 @@ const DataManager = () => {
     fetch(ROUTES.SERVER_GET_EVENTS)
       .then((res) => res.json())
       .then((data) => {
-        setEvents(data);
+        setEvents(data["events"]);
 
         //Reloading component with new data
         if (curTable === EVENTS_KEY) {
           setActiveTable(
             <EventsManager
               tournaments={tournaments}
-              events={data}
+              events={data["events"]}
               getData={() => getData(EVENTS_KEY)}
             />
           );

@@ -106,39 +106,37 @@ const EventCard = ({
   }
 
   return (
-    <>
-      <Container className="eventCard">
-        <Row className="eventHeader">
-          <Col xs={{ span: 6, offset: 3 }} className="eventTitle">
-            <h2>{title}</h2>
-            <h5>@ {tournamentName}</h5>
-          </Col>
-          <Col xs={{ span: 3 }} className="eventBasicInfo">
-            <p className="text-muted">
-              {date} <br />
-              {entrants} Entrants <br />
-              <a href={link} target="_blank">
-                Start.gg Link
-              </a>
-            </p>
-          </Col>
-        </Row>
-        <Row>
-          <Col md={{ span: 4 }} className="eventItem">
-            <h4 className="eventItemTitle">Podium</h4>
-            <Container>{top3}</Container>
-          </Col>
-          <Col md={{ span: 4 }} className="eventItem">
-            <h4 className="eventItemTitle">Biggest Upset</h4>
-            {upsetText}
-          </Col>
-          <Col md={{ span: 4 }} className="eventItem">
-            <h4 className="eventItemTitle">Highest SPR</h4>
-            {sprText}
-          </Col>
-        </Row>
-      </Container>
-    </>
+    <Container className="eventCard">
+      <Row className="eventHeader">
+        <Col xs={{ span: 6, offset: 3 }} className="eventTitle">
+          <h2>{title}</h2>
+          <h5>@ {tournamentName}</h5>
+        </Col>
+        <Col xs={{ span: 3 }} className="eventBasicInfo">
+          <p className="text-muted">
+            {date} <br />
+            {entrants} Entrants <br />
+            <a href={link} target="_blank">
+              Start.gg Link
+            </a>
+          </p>
+        </Col>
+      </Row>
+      <Row>
+        <Col md={{ span: 4 }} className="eventItem">
+          <h4 className="eventItemTitle">Podium</h4>
+          <Container>{top3}</Container>
+        </Col>
+        <Col md={{ span: 4 }} className="eventItem">
+          <h4 className="eventItemTitle">Biggest Upset</h4>
+          {upsetText}
+        </Col>
+        <Col md={{ span: 4 }} className="eventItem">
+          <h4 className="eventItemTitle">Highest SPR</h4>
+          {sprText}
+        </Col>
+      </Row>
+    </Container>
   );
 };
 

@@ -3,7 +3,7 @@
 .dataSelectForm {
     width: 100%;
     margin-top: 20px;
-    padding-bottom: 200px;
+    padding-bottom: 30px;
 }
 
 .dataSelectForm form {
@@ -22,8 +22,14 @@
     margin-bottom: 20px;
 }
 
-.eventSelect {
+.pageSelect {
     width: 100%;
+    justify-content: end;
+    text-align: center;
+}
+
+.pageSelect Pagination {
+    size: "sm";
 }
 
 .eventHeader {
@@ -42,6 +48,7 @@
 }
 
 .eventCard {
+    width: 100%;
     background-color: #E8E8E8;
     padding: 20px;
     border-radius: 15px;

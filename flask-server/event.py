@@ -79,8 +79,8 @@ class Event:
             if(tournament[2] < 0):
                 week = "BM" + str(-1 * tournament[2])
             else:
-                week = tournament[2]
-            tournamentName = "{} {} Week {}".format(tournament[0], tournament[1], week)
+                week = "Week " + str(tournament[2])
+            tournamentName = "{} {} {}".format(tournament[0], tournament[1], week)
         if self.topUpset[3] == 0:
             #0 UF means no upsets
             tu = "No upsets"
