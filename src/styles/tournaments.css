@@ -24,12 +24,43 @@
 
 .pageSelect {
     width: 100%;
-    justify-content: end;
     text-align: center;
+    padding-bottom: 30px;
 }
 
 .pageSelect Pagination {
     size: "sm";
+}
+
+.pageSelect p {
+    text-align: center;
+}
+
+.pageSelect p+p {
+    width: 50%;
+    text-align: right;
+    padding-right: 0px;
+}
+
+.pageSelect form {
+    justify-content: left;
+    width: 80px;
+}
+
+.pageSelect form select {
+    padding: 4px;
+    padding-left: 6px;
+}
+
+.tournamentList {
+    height: 800px;
+    overflow: scroll;
+    margin-bottom: 50px;
+    border-width: 8px;
+    border-radius: 10px;
+    border-style: solid;
+    border-color: gray;
+    background-color: gray;
 }
 
 .eventHeader {
@@ -51,8 +82,12 @@
     width: 100%;
     background-color: #E8E8E8;
     padding: 20px;
-    border-radius: 15px;
-    margin-bottom: 30px;
+    border-radius: 4px;
+    margin-bottom: 6px;
+}
+
+.eventCardRow:last-child .eventCard {
+    margin-bottom: 0px;
 }
 
 .first {

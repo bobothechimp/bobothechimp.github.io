@@ -26,6 +26,8 @@ const TournamentList = () => {
   const [page, setPage] = useState(1);
   const [perPage, setPerPage] = useState(5);
 
+  const perPageOptions = [5, 10, 15, 20];
+
   useEffect(() => {
     fetch(ROUTES.SERVER_GET_SEASONS)
       .then((res) => res.json())
@@ -103,9 +105,13 @@ const TournamentList = () => {
     setTournament(selectedTournament.target.value);
   };
 
+  const updatePerPage = (selectedPerPage) => {
+    setPerPage(Number(selectedPerPage.target.value));
+  };
+
   useEffect(() => {
     setPage(1);
-  }, [season, tournament]);
+  }, [season, tournament, perPage]);
 
   const resetTournaments = () => {
     setTournament("-1");
@@ -176,12 +182,22 @@ const TournamentList = () => {
                 Displaying {(page - 1) * perPage + 1} to{" "}
                 {Math.min(totalEvents, page * perPage)} of {totalEvents} items.
               </p>
+              <p className="text-muted">Per page</p>
+              <Form>
+                <Form.Select size="sm" onChange={updatePerPage}>
+                  {perPageOptions.map((num) => (
+                    <option key={num} value={num}>
+                      {num}
+                    </option>
+                  ))}
+                </Form.Select>
+              </Form>
             </PageSelect>
           </div>
         </Col>
-        <Col lg={{ span: 8 }}>
+        <Col lg={{ span: 8 }} className="tournamentList">
           {events.map((event) => (
-            <Row key={event["id"]}>
+            <Row key={event["id"]} className="eventCardRow">
               <EventCard
                 title={event["title"]}
                 date={event["date"]}
