@@ -16,8 +16,8 @@ class Tournament:
     def load_tournament(self, id):
         self.cursor.execute("""
         SELECT * FROM tournaments
-        WHERE id = {}
-        """.format(id))
+        WHERE id = ?
+        """, (id,))
 
         row = self.cursor.fetchone()
         if row is None:
@@ -31,7 +31,7 @@ class Tournament:
         return True
     
     def insert_tournament(self):
-        self.cursor.execute("""SELECT * FROM tournaments WHERE id = {}""".format(self.id))
+        self.cursor.execute("""SELECT * FROM tournaments WHERE id = ?""", (self.id,))
         if(self.cursor.fetchone() is not None):
             return False
         
@@ -39,8 +39,8 @@ class Tournament:
         INSERT INTO tournaments
         (id, season_id, week, date, slug)
         VALUES
-        ({}, {}, {}, {}, \"{}\")
-        """.format(self.id, self.season_id, self.week, self.date, self.slug))
+        (?, ?, ?, ?, ?)
+        """, (self.id, self.season_id, self.week, self.date, self.slug))
         self.connection.commit()
         return True
     
@@ -49,7 +49,7 @@ class Tournament:
         self.cursor.execute("""
         SELECT semester, game FROM seasons
         WHERE id = {}
-        """.format(self.season_id))
+        """, (self.season_id,))
         season = self.cursor.fetchone()
         seasonName = "{} {}".format(season[0], season[1])
         if(self.week < 0):
@@ -69,12 +69,12 @@ class Tournament:
     @staticmethod
     def deleteTournament(cursor, tournament_id):
         sql = """DELETE FROM tournaments
-        WHERE id = {} ;""".format(tournament_id)
+        WHERE id = ? ;""", (tournament_id,)
         cursor.execute(sql)
     
     @staticmethod
     def ofSeason(cursor, season_id):
-        sql = """SELECT id FROM tournaments WHERE season_id = {}""".format(season_id)
+        sql = """SELECT id FROM tournaments WHERE season_id = {}""", (season_id,)
         cursor.execute(sql)
         return cursor.fetchall()
 

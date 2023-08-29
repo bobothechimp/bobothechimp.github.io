@@ -4,7 +4,7 @@ from datetime import datetime
 class Event:
 
     def __init__(self, id = -1, tournament_id = -1, title = "", entrants = 0,
-                 top3 = [], topUpset = ["", 0, 0, 0], topSPR = ["", 0, 0, 0],
+                 top3 = [], topUpset = [-1, 0, 0, 0], topSPR = [-1, 0, 0, 0],
                  slug = ""):
         self.id = id
         self.tournament_id = tournament_id
@@ -12,11 +12,11 @@ class Event:
         self.entrants = entrants
         self.top3 = top3
         self.topUpset = topUpset
-        #[set headline, upsetter seed, upsettee seed, upset factor]
-        #ex: ["John 3-1 Bob", 28, 8, 4]
+        #[set id, upsetter seed, upsettee seed, upset factor]
+        #ex: [120385, 28, 8, 4]
         self.topSPR = topSPR
-        #[player name, seeded placement, final placement, SPR]
-        #ex: ["John", 25, 3, 7]
+        #[player id, seeded placement, final placement, SPR]
+        #ex: [693829, 25, 3, 7]
         self.slug = slug
         self.connection = sqlite3.connect("busmash.db")
         self.cursor = self.connection.cursor()
@@ -24,8 +24,8 @@ class Event:
     def load_event(self, id):
         self.cursor.execute("""
         SELECT * FROM events
-        WHERE id = {}
-        """.format(id))
+        WHERE id = ?
+        """, (id,))
 
         row = self.cursor.fetchone()
         if row is None:
@@ -36,31 +36,25 @@ class Event:
         self.title = row[2]
         self.entrants = row[3]
         self.top3 = str(row[4]).split(",")
-        upsetInfo = str(row[5]).split(",")
-        self.topUpset = [upsetInfo[0], int(upsetInfo[1]),
-                         int(upsetInfo[2]), int(upsetInfo[3])]
-        sprInfo = str(row[6]).split(",")
-        self.topSPR = [sprInfo[0], int(sprInfo[1]),
-                       int(sprInfo[2]), int(sprInfo[3])]
+        self.topUpset = list(map(int, str(row[5]).split(",")))
+        self.topSPR = list(map(int, str(row[6]).split(",")))
         self.slug = row[7]
         return True
     
     def insert_event(self):
-        self.cursor.execute("""SELECT * FROM events WHERE id = {}""".format(self.id))
+        self.cursor.execute("""SELECT * FROM events WHERE id = {}""", (self.id,))
         if(self.cursor.fetchone() is not None):
             return False
 
-        top3 = "{},{},{}".format(self.top3[0], self.top3[1], self.top3[2])
-        upsetInfo = "{},{},{},{}".format(self.topUpset[0], self.topUpset[1], 
-                                         self.topUpset[2], self.topUpset[3])
-        sprInfo = "{},{},{},{}".format(self.topSPR[0], self.topSPR[1], 
-                                         self.topSPR[2], self.topSPR[3])
+        top3 = ",".join(self.top3)
+        upsetInfo = ",".join(map(str, self.topUpset))
+        sprInfo = ",".join(map(str, self.topSPR))
         self.cursor.execute("""
         INSERT INTO events
         (id, tournament_id, title, entrants, top3, upset, spr, slug)
         VALUES
-        ({}, {}, \"{}\", {}, \"{}\", \"{}\", \"{}\", \"{}\")
-        """.format(self.id, self.tournament_id, self.title, self.entrants,
+        (?, ?, ?, ?, ?, ?, ?, ?)
+        """, (self.id, self.tournament_id, self.title, self.entrants,
                    top3, upsetInfo, sprInfo, self.slug))
         self.connection.commit()
         return True
@@ -70,8 +64,8 @@ class Event:
         SELECT semester, game, week, date
         FROM seasons JOIN tournaments
         ON seasons.id = tournaments.season_id
-        WHERE tournaments.id = {};
-        """.format(self.tournament_id))
+        WHERE tournaments.id = ?;
+        """, (self.tournament_id,))
         tournament = self.cursor.fetchone()
         if tournament is None:
             tournamentName = "Tournament not in database"
@@ -85,7 +79,28 @@ class Event:
             #0 UF means no upsets
             tu = "No upsets"
         else:
-            tu = self.topUpset
+            self.cursor.execute(
+            """
+            SELECT winnerScore, name
+            FROM sets JOIN players
+            ON sets.winner_id = players.id
+            WHERE sets.id = ?
+            """, (self.topUpset[0],))
+            winner = self.cursor.fetchone()
+
+            self.cursor.execute(
+            """
+            SELECT loserScore, name
+            FROM sets JOIN players
+            ON sets.loser_id = players.id
+            WHERE sets.id = ?
+            """, (self.topUpset[0],))
+            loser = self.cursor.fetchone()
+
+            scoreHeadline = "{} {} - {} {}".format(
+                winner[1], winner[0], loser[0], loser[1]
+            )
+            tu = [scoreHeadline] + self.topUpset[1:4]
         if self.topSPR[3] == 0:
             #0 SPR means no overperformers
             tspr = "No overperformers"
@@ -109,27 +124,27 @@ class Event:
     @staticmethod
     def deleteEvent(cursor, event_id):
         sql = """DELETE FROM events
-        WHERE id = {} ;""".format(event_id)
+        WHERE id = ? ;""", (event_id,)
         cursor.execute(sql)
 
     @staticmethod
     def deleteFromTournament(cursor, tournament_id):
         # Delete every event from a tournament
         sql = """DELETE FROM events
-        WHERE tournament_id = {} ;""".format(tournament_id)
+        WHERE tournament_id = ? ;""", (tournament_id,)
         cursor.execute(sql)
     
     @staticmethod
     def ofSeason(cursor, season_id):
         sql = """SELECT events.id FROM
         events JOIN tournaments ON events.tournament_id = tournaments.id
-        WHERE tournaments.season_id = {};""".format(season_id)
+        WHERE tournaments.season_id = ?;""", (season_id,)
         cursor.execute(sql)
         return cursor.fetchall()
 
     @staticmethod
     def ofTournament(cursor, tournament_id):
-        sql = """SELECT id FROM events WHERE tournament_id = {}""".format(tournament_id)
+        sql = """SELECT id FROM events WHERE tournament_id = ?""", (tournament_id,)
         cursor.execute(sql)
         return cursor.fetchall()
     

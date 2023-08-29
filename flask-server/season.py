@@ -12,8 +12,8 @@ class Season:
     def load_season(self, id):
         self.cursor.execute("""
         SELECT * FROM seasons
-        WHERE id = {}
-        """.format(id))
+        WHERE id = ?
+        """, (id,))
 
         row = self.cursor.fetchone()
         if row is None:
@@ -30,13 +30,13 @@ class Season:
         INSERT INTO seasons
         (game, season, semester)
         VALUES
-        (\"{}\", {}, \"{}\")
-        """.format(self.game, self.season_num, self.semester))
+        (?, ?, ?)
+        """, (self.game, self.season_num, self.semester))
         self.connection.commit()
     
     def toJSON(self):
         self.cursor.execute(
-            """SELECT * FROM tournaments WHERE season_id = {}""".format(self.id)
+            """SELECT * FROM tournaments WHERE season_id = ?""", (self.id,)
         )
         weeks = self.cursor.fetchall()
         if(weeks is None):
@@ -55,7 +55,7 @@ class Season:
     @staticmethod
     def deleteSeason(cursor, season_id):
         sql = """DELETE FROM seasons
-        WHERE id = {} ;""".format(season_id)
+        WHERE id = ? ;""", (season_id,)
         cursor.execute(sql)
 
     @staticmethod
