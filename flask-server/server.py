@@ -5,15 +5,20 @@ import requests
 from season import Season
 from tournament import Tournament
 from event import Event
+from set import Set
+from player import Player
 import apikeys
 import calculations
 
 app = Flask(__name__)
 app.config["SERVER_NAME"] = "localhost:5000" # Change when deploying
+app.config["CLIENT_NAME"] = "http://localhost:5173" # Change when deploying
 
 Season.makeSeasonsTable()
 Tournament.makeTournamentsTable()
 Event.makeEventsTable()
+Set.makeSetsTable()
+Player.makePlayersTable()
 
 CODES = {
     "SUCCESS": 0,
@@ -25,7 +30,7 @@ CODES = {
 # Create standard json response with provided data
 def jsonResponse(jsonData):
     resp = Flask.response_class(json.dumps(jsonData, indent=2))
-    resp.headers['Access-Control-Allow-Origin'] = '*'
+    resp.headers['Access-Control-Allow-Origin'] = app.config["CLIENT_NAME"]
     return resp
 
 # Return all seasons
@@ -254,6 +259,13 @@ def addTournament():
         }
         sggResponse = requests.post("https://api.start.gg/gql/alpha",
                                headers=headers, json=data)
+        if(sggResponse.json()["data"]["tournament"] is None):
+            jsonData = {
+                "status_code" : CODES["ERROR"],
+                "message": "Tournament does not exist.",
+                "id": -1,
+            }
+            return jsonResponse(jsonData)
         tournament_id = (sggResponse.json())["data"]["tournament"]["id"]
     
 
@@ -468,6 +480,8 @@ def addEvent():
         "id": event_id
     }
 
+    if(status_code == CODES["SUCCESS"]):
+        jsonData["message"] = "Successfully added event"
     if(status_code == CODES["ALREADY_EXISTS"]):
         jsonData["message"] = "Event already exists in database."
     if(status_code == CODES["COULDNT_COMPLETE"]):
@@ -498,6 +512,13 @@ def createEvent(tournament_id, event_id):
                         initialSeedNum
                         standing {
                             placement
+                        }
+                        participants {
+                        player {
+                                id
+                                gamerTag
+                                prefix
+                            }
                         }
                     }
                 }
@@ -547,19 +568,24 @@ def createEvent(tournament_id, event_id):
 
     entrantsCount = eventData["event"]["entrants"]["pageInfo"]["total"]
     entrants = eventData["event"]["entrants"]["nodes"]
-    maxSPR, sprPlayer, sprSeed, sprPlacing = calculations.highestSPR(entrants)
 
     # ID table makes calculating upset factors easier
     entrantsIdTable = {}
     for entrant in entrants:
         entrantsIdTable[entrant["id"]] = {
-            "name": entrant["name"],
+            "playerId": entrant["participants"][0]["player"]["id"],
+            "name": entrant["name"], #Full name, team and gamer tag
+            "gamerTag": entrant["participants"][0]["player"]["gamerTag"],
+            "team": entrant["participants"][0]["player"]["prefix"],
             "seed": entrant["initialSeedNum"],
             "placing": entrant["standing"]["placement"]
         }
     sets = eventData["event"]["sets"]["nodes"]
-    maxUF, upsetScore, upsetterSeed, upsetteeSeed = calculations.highestUF(
-        sets, entrantsIdTable
+    setsStatusCode, [ufSetId, upsetterSeed, upsetteeSeed, maxUF] = addSets(
+        event_id, sets, entrantsIdTable
+    )
+    playersStatusCode, [sprPlayerId, sprSeed, sprPlacing, maxSPR] = addPlayers(
+        event_id, entrantsIdTable
     )
 
     podium = eventData["event"]["standings"]["nodes"]
@@ -568,12 +594,100 @@ def createEvent(tournament_id, event_id):
         top3 += [player["entrant"]["name"]]
     
     event = Event(event_id, tournament_id, title, entrantsCount, top3,
-                  [upsetScore, upsetterSeed, upsetteeSeed, maxUF],
-                  [sprPlayer, sprSeed, sprPlacing, maxSPR], slug)
+                  [ufSetId, upsetterSeed, upsetteeSeed, maxUF],
+                  [sprPlayerId, sprSeed, sprPlacing, maxSPR], slug)
     if(event.insert_event()):
         return CODES["SUCCESS"]
     else:
         return CODES["ALREADY_EXISTS"]
+
+# Add a list of new sets
+def addSets(event_id: int, sets: list, entrantsIdTable: dict):
+    maxUF = [0, -1, 0, 0] #set id, upsetter seed, upsettee seed, UF
+    status_code = CODES["SUCCESS"]
+    for setData in sets:
+        if(setData["displayScore"] == "DQ"):
+            continue
+        player1_id = setData["slots"][0]["entrant"]["id"]
+        player2_id = setData["slots"][1]["entrant"]["id"]
+        player1Won = setData["winnerId"] == player1_id
+        #True if P1 won, false if P2 won
+
+        if(player1Won):
+            winner_id = player1_id
+            loser_id = player2_id
+        else:
+            winner_id = player2_id
+            loser_id = player1_id
+        winnerName = entrantsIdTable[winner_id]["name"]
+        loserName = entrantsIdTable[loser_id]["name"]
+        winnerScore, loserScore = calculations.getScores(
+            setData["displayScore"], winnerName, loserName
+        )
+        uf = calculations.calculateUF(
+            entrantsIdTable[winner_id], entrantsIdTable[loser_id]
+        )
+        set = Set(
+            setData["id"], event_id, entrantsIdTable[winner_id]["playerId"],
+            entrantsIdTable[loser_id]["playerId"], winnerScore, loserScore, uf
+        )
+        if(not set.insert_set()):
+            status_code = CODES["ALREADY_EXISTS"]
+
+        if(uf > maxUF[3]):
+            upsetterSeed = entrantsIdTable[winner_id]["seed"]
+            upsetteeSeed = entrantsIdTable[loser_id]["seed"]
+            maxUF = [setData["id"], upsetterSeed, upsetteeSeed, uf]
+    return status_code, maxUF
+
+# Add a list of new players
+def addPlayers(event_id: int, players: dict):
+    maxSPR = [-1, 0, 0, 0] #player id, seed, placing, SPR
+    status_code = CODES["SUCCESS"]
+
+    connection = sqlite3.connect("busmash.db")
+    cursor = connection.cursor()
+    for entrant_id in players.keys():
+        playerData = players[entrant_id]
+        player_id = playerData["playerId"]
+        oldData = Player()
+        inDB = oldData.load_player(player_id)
+
+        cursor.execute("""
+        SELECT * FROM sets
+        WHERE winner_id = {}
+        """.format(player_id))
+        winningSets = cursor.fetchall()
+
+        cursor.execute("""
+        SELECT * FROM sets
+        WHERE loser_id = {}
+        """.format(player_id))
+        losingSets = cursor.fetchall()
+        
+        topPlacing = [event_id, playerData["placing"]]
+        if(inDB):
+            topPlacing = calculations.determineBetterPlacing(
+                topPlacing, oldData.topPlacing
+            )
+        demon, blessing = calculations.calculateDemonAndBlessing(
+            player_id, winningSets, losingSets
+        )
+
+        player = Player(player_id, playerData["gamerTag"], playerData["team"],
+                   len(winningSets), len(losingSets), topPlacing, demon, blessing)
+        if(not inDB):
+            if(not player.insert_player()):
+                status_code = CODES["ALREADY_EXISTS"]
+        else:
+            if(not player.update_player()):
+                status_code = CODES["ERROR"]
+        
+        spr = calculations.calculateSPR(playerData)
+        if(spr > maxSPR[3]):
+            maxSPR = [player_id, playerData["seed"], playerData["placing"], spr]
+    return status_code, maxSPR
+
 
 # Delete an existing event
 @app.route("/events/delete", methods=["POST"])

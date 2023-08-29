@@ -105,7 +105,11 @@ class Event:
             #0 SPR means no overperformers
             tspr = "No overperformers"
         else:
-            tspr = self.topSPR
+            self.cursor.execute(
+                """SELECT name FROM players WHERE id = ?""", (self.topSPR[0],)
+            )
+            name = self.cursor.fetchone()
+            tspr = [name] + self.topSPR[1:4]
         date = datetime.utcfromtimestamp(tournament[3]).strftime('%B %d, %Y')
 
         return {
