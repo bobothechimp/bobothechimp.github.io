@@ -53,7 +53,7 @@
 }
 
 .tournamentList {
-    height: 800px;
+    max-height: 800px;
     overflow: scroll;
     margin-bottom: 50px;
     border-width: 8px;

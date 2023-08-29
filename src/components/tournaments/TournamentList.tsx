@@ -1,15 +1,8 @@
 import { useState, useEffect } from "react";
-import {
-  ListGroup,
-  Form,
-  Container,
-  Row,
-  Col,
-  FormGroup,
-  FormLabel,
-} from "react-bootstrap";
+import { Form, Container, Row, Col } from "react-bootstrap";
 
 import EventCard from "./EventCard";
+import EventSelect from "./EventSelect";
 import PageSelect from "../PageSelect";
 
 import * as ROUTES from "../../global/routes";
@@ -125,52 +118,13 @@ const TournamentList = () => {
       <Row>
         <Col lg={{ span: 4 }}>
           <div className="dataSelectForm">
-            <Form>
-              <FormGroup className="seasonSelect">
-                <FormLabel>Select a season</FormLabel>
-                <Form.Select
-                  size="sm"
-                  defaultValue={-1}
-                  onChange={updateSeason}
-                >
-                  <option key={-1} value={-1}>
-                    Season
-                  </option>
-                  {seasons.map((season) => (
-                    <option key={season["id"]} value={season["id"]}>
-                      {season["game"]} Season {season["season"]}
-                    </option>
-                  ))}
-                </Form.Select>
-              </FormGroup>
-              <FormGroup className="tournamentSelect">
-                <FormLabel>Select a tournament</FormLabel>
-                <Form.Select
-                  disabled={disableTournaments}
-                  size="sm"
-                  defaultValue={-1}
-                  onChange={updateTournament}
-                >
-                  <option key={-1} value={-1}>
-                    Tournament
-                  </option>
-                  {tournaments.map((tournament) => {
-                    let tournamentName;
-                    let twString = "" + tournament["week"];
-                    if (twString.substring(0, 2) === "BM") {
-                      tournamentName = "Bimonthly " + twString.substring(2);
-                    } else {
-                      tournamentName = "Week " + twString;
-                    }
-                    return (
-                      <option key={tournament["id"]} value={tournament["id"]}>
-                        {tournamentName}
-                      </option>
-                    );
-                  })}
-                </Form.Select>
-              </FormGroup>
-            </Form>
+            <EventSelect
+              seasons={seasons}
+              tournaments={tournaments}
+              disableTournaments={disableTournaments}
+              updateSeason={updateSeason}
+              updateTournament={updateTournament}
+            />
           </div>
           <div className="pageSelect">
             <PageSelect
