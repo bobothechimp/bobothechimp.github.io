@@ -42,7 +42,7 @@ class Event:
         return True
     
     def insert_event(self):
-        self.cursor.execute("""SELECT * FROM events WHERE id = {}""", (self.id,))
+        self.cursor.execute("""SELECT * FROM events WHERE id = ?""", (self.id,))
         if(self.cursor.fetchone() is not None):
             return False
 

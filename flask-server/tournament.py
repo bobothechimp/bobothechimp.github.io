@@ -48,7 +48,7 @@ class Tournament:
         date = datetime.utcfromtimestamp(self.date).strftime('%B %d, %Y')
         self.cursor.execute("""
         SELECT semester, game FROM seasons
-        WHERE id = {}
+        WHERE id = ?
         """, (self.season_id,))
         season = self.cursor.fetchone()
         seasonName = "{} {}".format(season[0], season[1])
@@ -74,7 +74,7 @@ class Tournament:
     
     @staticmethod
     def ofSeason(cursor, season_id):
-        sql = """SELECT id FROM tournaments WHERE season_id = {}""", (season_id,)
+        sql = """SELECT id FROM tournaments WHERE season_id = ?""", (season_id,)
         cursor.execute(sql)
         return cursor.fetchall()
 
