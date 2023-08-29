@@ -62,8 +62,8 @@ class Set:
     @staticmethod
     def deleteSet(cursor, set_id):
         sql = """DELETE FROM sets
-        WHERE id = ? ;""", (set_id,)
-        cursor.execute(sql)
+        WHERE id = ? ;"""
+        cursor.execute(sql, (set_id,))
     
     @staticmethod
     def makeSetsTable():

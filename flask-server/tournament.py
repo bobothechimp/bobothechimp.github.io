@@ -69,13 +69,13 @@ class Tournament:
     @staticmethod
     def deleteTournament(cursor, tournament_id):
         sql = """DELETE FROM tournaments
-        WHERE id = ? ;""", (tournament_id,)
-        cursor.execute(sql)
+        WHERE id = ? ;"""
+        cursor.execute(sql, (tournament_id,))
     
     @staticmethod
     def ofSeason(cursor, season_id):
-        sql = """SELECT id FROM tournaments WHERE season_id = ?""", (season_id,)
-        cursor.execute(sql)
+        sql = """SELECT id FROM tournaments WHERE season_id = ?"""
+        cursor.execute(sql, (season_id,))
         return cursor.fetchall()
 
     @staticmethod

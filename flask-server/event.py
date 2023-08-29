@@ -124,28 +124,28 @@ class Event:
     @staticmethod
     def deleteEvent(cursor, event_id):
         sql = """DELETE FROM events
-        WHERE id = ? ;""", (event_id,)
-        cursor.execute(sql)
+        WHERE id = ? ;"""
+        cursor.execute(sql, (event_id,))
 
     @staticmethod
     def deleteFromTournament(cursor, tournament_id):
         # Delete every event from a tournament
         sql = """DELETE FROM events
-        WHERE tournament_id = ? ;""", (tournament_id,)
-        cursor.execute(sql)
+        WHERE tournament_id = ? ;"""
+        cursor.execute(sql, (tournament_id,))
     
     @staticmethod
     def ofSeason(cursor, season_id):
         sql = """SELECT events.id FROM
         events JOIN tournaments ON events.tournament_id = tournaments.id
-        WHERE tournaments.season_id = ?;""", (season_id,)
-        cursor.execute(sql)
+        WHERE tournaments.season_id = ?;"""
+        cursor.execute(sql, (season_id,))
         return cursor.fetchall()
 
     @staticmethod
     def ofTournament(cursor, tournament_id):
-        sql = """SELECT id FROM events WHERE tournament_id = ?""", (tournament_id,)
-        cursor.execute(sql)
+        sql = """SELECT id FROM events WHERE tournament_id = ?"""
+        cursor.execute(sql, (tournament_id,))
         return cursor.fetchall()
     
     @staticmethod

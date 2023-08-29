@@ -55,8 +55,8 @@ class Season:
     @staticmethod
     def deleteSeason(cursor, season_id):
         sql = """DELETE FROM seasons
-        WHERE id = ? ;""", (season_id,)
-        cursor.execute(sql)
+        WHERE id = ? ;"""
+        cursor.execute(sql, (season_id,))
 
     @staticmethod
     def makeSeasonsTable():

@@ -108,8 +108,8 @@ class Player:
     @staticmethod
     def deletePlayer(cursor, player_id):
         sql = """DELETE FROM players
-        WHERE id = ? ;""", (player_id,)
-        cursor.execute(sql)
+        WHERE id = ? ;"""
+        cursor.execute(sql, (player_id,))
 
     @staticmethod
     def makePlayersTable():
