@@ -26,3 +26,4 @@ export const SERVER_EVENTS_FROM_TOURNAMENT = (tournament) =>
   SERVER_URL + "/tournaments/" + tournament + "/events";
 export const SERVER_ADD_EVENT = SERVER_URL + "/events/add";
 export const SERVER_DELETE_EVENT = SERVER_URL + "/events/delete";
+export const SERVER_GET_PLAYERS = SERVER_URL + "/players";

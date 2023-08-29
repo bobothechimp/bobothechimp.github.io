@@ -1,2 +1,3 @@
 src/global/apikeys.tsx
 flask-server/apikeys.py
+.vscode

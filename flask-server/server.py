@@ -11,8 +11,8 @@ import apikeys
 import calculations
 
 app = Flask(__name__)
-app.config["SERVER_NAME"] = "localhost:5000" # Change when deploying
-app.config["CLIENT_NAME"] = "http://localhost:5173" # Change when deploying
+app.config["SERVER_NAME"] = "localhost:5000"  # Change when deploying
+app.config["CLIENT_NAME"] = "http://localhost:5173"  # Change when deploying
 
 Season.makeSeasonsTable()
 Tournament.makeTournamentsTable()
@@ -27,18 +27,20 @@ CODES = {
     "ERROR": 3,
 }
 
+
 # Create standard json response with provided data
 def jsonResponse(jsonData):
     resp = Flask.response_class(json.dumps(jsonData, indent=2))
-    resp.headers['Access-Control-Allow-Origin'] = app.config["CLIENT_NAME"]
+    resp.headers["Access-Control-Allow-Origin"] = app.config["CLIENT_NAME"]
     return resp
 
-# Return all seasons
+
+# Get all seasons
 @app.route("/seasons", methods=["GET", "POST"])
 def seasons():
     connection = sqlite3.connect("busmash.db")
     cursor = connection.cursor()
-    
+
     cursor.execute("SELECT id FROM seasons")
     rows = cursor.fetchall()
 
@@ -49,7 +51,7 @@ def seasons():
     except:
         page = 1
         perPage = len(rows)
-    
+
     jsonData = []
     for i in range((page - 1) * perPage, min(len(rows), page * perPage)):
         row = rows[i]
@@ -59,8 +61,9 @@ def seasons():
 
     connection.commit()
     connection.close()
-    
+
     return jsonResponse({"total": len(rows), "seasons": jsonData})
+
 
 # Get particular season
 @app.route("/seasons/<int:season_id>")
@@ -70,6 +73,7 @@ def getSeason(season_id):
     jsonData = season.toJSON()
 
     return jsonResponse(jsonData)
+
 
 # Get particular season's tournaments
 @app.route("/seasons/<int:season_id>/tournaments")
@@ -83,11 +87,12 @@ def getSeasonTournaments(season_id):
         tournament = Tournament()
         tournament.load_tournament(id[0])
         jsonData += [tournament.toJSON()]
-    
+
     connection.commit()
     connection.close()
 
     return jsonResponse({"total": len(tournament_ids), "tournaments": jsonData})
+
 
 # Get particular season's events
 @app.route("/seasons/<int:season_id>/events", methods=["GET", "POST"])
@@ -104,18 +109,19 @@ def getSeasonEvents(season_id):
     except:
         page = 1
         perPage = len(event_ids)
-    
+
     jsonData = []
     for i in range((page - 1) * perPage, min(len(event_ids), page * perPage)):
         id = event_ids[i]
         event = Event()
         event.load_event(id[0])
         jsonData += [event.toJSON()]
-    
+
     connection.commit()
     connection.close()
 
     return jsonResponse({"total": len(event_ids), "events": jsonData})
+
 
 # Add a new season
 @app.route("/seasons/add", methods=["POST"])
@@ -131,10 +137,11 @@ def addSeason():
     jsonData = {
         "status_code": CODES["SUCCESS"],
         "message": "Successfully added season.",
-        "id": season.id
+        "id": season.id,
     }
 
     return jsonResponse(jsonData)
+
 
 # Delete an existing season
 @app.route("/seasons/delete", methods=["POST"])
@@ -147,19 +154,17 @@ def deleteSeason():
     connection.commit()
     connection.close()
 
-    jsonData = {
-        "status_code": CODES["SUCCESS"],
-        "id": season_id
-    }
+    jsonData = {"status_code": CODES["SUCCESS"], "id": season_id}
 
     return jsonResponse(jsonData)
+
 
 # Get all tournaments
 @app.route("/tournaments", methods=["GET", "POST"])
 def tournaments():
     connection = sqlite3.connect("busmash.db")
     cursor = connection.cursor()
-    
+
     cursor.execute("SELECT id FROM tournaments")
     rows = cursor.fetchall()
 
@@ -170,7 +175,7 @@ def tournaments():
     except:
         page = 1
         perPage = len(rows)
-    
+
     jsonData = []
     for i in range((page - 1) * perPage, min(len(rows), page * perPage)):
         row = rows[i]
@@ -180,8 +185,9 @@ def tournaments():
 
     connection.commit()
     connection.close()
-    
+
     return jsonResponse({"total": len(rows), "tournaments": jsonData})
+
 
 # Get particular tournament
 @app.route("/tournaments/<int:tournament_id>")
@@ -191,6 +197,7 @@ def getTournament(tournament_id):
     jsonData = tournament.toJSON()
 
     return jsonResponse(jsonData)
+
 
 # Get particular tournament's events
 @app.route("/tournaments/<int:tournament_id>/events")
@@ -204,11 +211,12 @@ def getTournamentEvents(tournament_id):
         event = Event()
         event.load_event(id[0])
         jsonData += [event.toJSON()]
-    
+
     connection.commit()
     connection.close()
 
     return jsonResponse({"total": len(event_ids), "events": jsonData})
+
 
 # Add a new tournament
 @app.route("/tournaments/add", methods=["POST"])
@@ -218,7 +226,7 @@ def addTournament():
     # url or id of tournament, don't know which one yet
     week_num = request.form.get("week_num")
     auto_add_events = request.form.get("auto_add_events")
-    if(auto_add_events == "on"):
+    if auto_add_events == "on":
         eventsQuery = """
         events {
             id
@@ -242,7 +250,7 @@ def addTournament():
             end = url_id[start:].index("/")
         except:
             end = len(url_id[start:])
-        slug = url_id[start:start+end]
+        slug = url_id[start : start + end]
 
         headers = {"Authorization": "Bearer {}".format(apikeys.STARTGG_KEY)}
         data = {
@@ -253,21 +261,19 @@ def addTournament():
                 }
             }
             """,
-            "variables": {
-                "slug": slug
-            }
+            "variables": {"slug": slug},
         }
-        sggResponse = requests.post("https://api.start.gg/gql/alpha",
-                               headers=headers, json=data)
-        if(sggResponse.json()["data"]["tournament"] is None):
+        sggResponse = requests.post(
+            "https://api.start.gg/gql/alpha", headers=headers, json=data
+        )
+        if sggResponse.json()["data"]["tournament"] is None:
             jsonData = {
-                "status_code" : CODES["ERROR"],
+                "status_code": CODES["ERROR"],
                 "message": "Tournament does not exist.",
                 "id": -1,
             }
             return jsonResponse(jsonData)
         tournament_id = (sggResponse.json())["data"]["tournament"]["id"]
-    
 
     # Calling start.gg API
     headers = {"Authorization": "Bearer {}".format(apikeys.STARTGG_KEY)}
@@ -281,19 +287,20 @@ def addTournament():
                 slug
                 {}
             }}
-        }}""".format(eventsQuery),
-        "variables": {
-            "id": tournament_id
-        }
+        }}""".format(
+            eventsQuery
+        ),
+        "variables": {"id": tournament_id},
     }
-    sggResponse = requests.post("https://api.start.gg/gql/alpha",
-                               headers=headers, json=data)
+    sggResponse = requests.post(
+        "https://api.start.gg/gql/alpha", headers=headers, json=data
+    )
     tournamentData = (sggResponse.json())["data"]
-    if(tournamentData["tournament"] is None):
+    if tournamentData["tournament"] is None:
         jsonData = {
             "status_code": CODES["ERROR"],
             "message": "Tournament does not exist.",
-            "id": -1
+            "id": -1,
         }
         return jsonResponse(jsonData)
 
@@ -301,14 +308,14 @@ def addTournament():
     date = tournamentData["tournament"]["startAt"]
     slug = tournamentData["tournament"]["slug"]
     failures = False
-    if(auto_add_events == "on"):
+    if auto_add_events == "on":
         events = tournamentData["tournament"]["events"]
         for event in events:
             status_code = createEvent(tournament_id, event["id"])
             failures = failures or status_code > 0
 
     # Checking if inserting a bimonthly
-    if(week_num[0:2].lower() == "bm"):
+    if week_num[0:2].lower() == "bm":
         inserted_wn = -1 * int(week_num[2:])
     else:
         inserted_wn = week_num
@@ -316,32 +323,33 @@ def addTournament():
     inserted = tournament.insert_tournament()
 
     # Determining success of operation
-    if(inserted and not failures):
+    if inserted and not failures:
         jsonData = {
             "status_code": CODES["SUCCESS"],
             "message": "Successfully added tournament.",
-            "id": tournament_id
+            "id": tournament_id,
         }
-    elif(inserted and failures):
+    elif inserted and failures:
         jsonData = {
             "status_code": CODES["COULDNT_COMPLETE"],
             "message": "One or more events couldn't be added.",
-            "id": tournament_id
+            "id": tournament_id,
         }
-    elif(not inserted and not failures and auto_add_events):
+    elif not inserted and not failures and auto_add_events:
         jsonData = {
             "status_code": CODES["ALREADY_EXISTS"],
             "message": "Tournament already exists in database. Tournament events successfully added.",
-            "id": tournament_id
+            "id": tournament_id,
         }
     else:
         jsonData = {
             "status_code": CODES["ALREADY_EXISTS"],
             "message": "Tournament already exists in database.",
-            "id": tournament_id
+            "id": tournament_id,
         }
 
     return jsonResponse(jsonData)
+
 
 # Delete an existing tournament
 @app.route("/tournaments/delete", methods=["POST"])
@@ -360,10 +368,11 @@ def deleteTournament():
     jsonData = {
         "status_code": CODES["SUCCESS"],
         "message": "Successfully deleted tournament.",
-        "id": tournament_id
+        "id": tournament_id,
     }
 
     return jsonResponse(jsonData)
+
 
 # Get all events
 @app.route("/events", methods=["GET", "POST"])
@@ -381,7 +390,7 @@ def events():
     except:
         page = 1
         perPage = len(rows)
-    
+
     jsonData = []
     for i in range((page - 1) * perPage, min(len(rows), page * perPage)):
         row = rows[i]
@@ -391,8 +400,9 @@ def events():
 
     connection.commit()
     connection.close()
-    
+
     return jsonResponse({"total": len(rows), "events": jsonData})
+
 
 # Get a particular event
 @app.route("/events/<int:event_id>")
@@ -402,6 +412,7 @@ def getEvent(event_id):
     jsonData = event.toJSON()
 
     return jsonResponse(jsonData)
+
 
 # Add a new event
 @app.route("/events/add", methods=["POST"])
@@ -424,9 +435,7 @@ def addEvent():
                     }
                 }
             }""",
-            "variables": {
-                "eventId": event_id
-            }
+            "variables": {"eventId": event_id},
         }
     except:
         # An error in the try block means url_id is not an id, so it's a url
@@ -434,10 +443,10 @@ def addEvent():
         start = url_id.index("tournament/")
         eventIndex = url_id[start:].index("/event/") + 7
         try:
-            end = url_id[start+eventIndex:].index("/")
+            end = url_id[start + eventIndex :].index("/")
         except:
-            end = len(url_id[start+eventIndex:])
-        slug = url_id[start:start+eventIndex+end]
+            end = len(url_id[start + eventIndex :])
+        slug = url_id[start : start + eventIndex + end]
 
         data = {
             "query": """
@@ -450,53 +459,51 @@ def addEvent():
                 }
             }
             """,
-            "variables": {
-                "slug": slug
-            }
+            "variables": {"slug": slug},
         }
-    
+
     # Call start.gg API
     headers = {"Authorization": "Bearer {}".format(apikeys.STARTGG_KEY)}
-    sggResponse = requests.post("https://api.start.gg/gql/alpha",
-                               headers=headers, json=data)
+    sggResponse = requests.post(
+        "https://api.start.gg/gql/alpha", headers=headers, json=data
+    )
     eventData = (sggResponse.json())["data"]
-    if(eventData["event"] is None):
+    if eventData["event"] is None:
         jsonData = {
             "status_code": CODES["ERROR"],
             "message": "Event does not exist.",
-            "id": -1
+            "id": -1,
         }
 
         return jsonResponse(jsonData)
 
     # Get basic tournament info
-    event_id = eventData["event"]["id"] #In case url_id was the url
+    event_id = eventData["event"]["id"]  # In case url_id was the url
     tournament_id = eventData["event"]["tournament"]["id"]
 
     status_code = createEvent(tournament_id, event_id)
 
-    jsonData = {
-        "status_code": status_code,
-        "id": event_id
-    }
+    jsonData = {"status_code": status_code, "id": event_id}
 
-    if(status_code == CODES["SUCCESS"]):
+    if status_code == CODES["SUCCESS"]:
         jsonData["message"] = "Successfully added event"
-    if(status_code == CODES["ALREADY_EXISTS"]):
+    if status_code == CODES["ALREADY_EXISTS"]:
         jsonData["message"] = "Event already exists in database."
-    if(status_code == CODES["COULDNT_COMPLETE"]):
+    if status_code == CODES["COULDNT_COMPLETE"]:
         jsonData["message"] = "Event could not be added."
-    if(status_code == CODES["ERROR"]):
+    if status_code == CODES["ERROR"]:
         jsonData["message"] = "Event does not exist."
 
     return jsonResponse(jsonData)
+
 
 # Helper function to allow both addEvent() and
 # addTournament() to insert events
 def createEvent(tournament_id, event_id):
     headers = {"Authorization": "Bearer {}".format(apikeys.STARTGG_KEY)}
     data = {
-        "query": ("""
+        "query": (
+            """
         query EventEntrants($eventId: ID!) {
             event(id: $eventId) {
                 name
@@ -548,21 +555,21 @@ def createEvent(tournament_id, event_id):
                     }
                 }
             }
-        }"""),
-        "variables": {
-            "eventId": event_id
-        }
+        }"""
+        ),
+        "variables": {"eventId": event_id},
     }
-    sggResponse = requests.post("https://api.start.gg/gql/alpha",
-                               headers=headers, json=data)
+    sggResponse = requests.post(
+        "https://api.start.gg/gql/alpha", headers=headers, json=data
+    )
     eventData = (sggResponse.json())["data"]
 
-    if(eventData["event"]["sets"]["pageInfo"]["total"] == 0):
-        #Some events were never published, so they won't be inserted
+    if eventData["event"]["sets"]["pageInfo"]["total"] == 0:
+        # Some events were never published, so they won't be inserted
         return CODES["COULDNT_COMPLETE"]
-    if(eventData["event"] is None):
+    if eventData["event"] is None:
         return CODES["ERROR"]
-    
+
     title = eventData["event"]["name"]
     slug = eventData["event"]["slug"]
 
@@ -574,11 +581,11 @@ def createEvent(tournament_id, event_id):
     for entrant in entrants:
         entrantsIdTable[entrant["id"]] = {
             "playerId": entrant["participants"][0]["player"]["id"],
-            "name": entrant["name"], #Full name, team and gamer tag
+            "name": entrant["name"],  # Full name, team and gamer tag
             "gamerTag": entrant["participants"][0]["player"]["gamerTag"],
             "team": entrant["participants"][0]["player"]["prefix"],
             "seed": entrant["initialSeedNum"],
-            "placing": entrant["standing"]["placement"]
+            "placing": entrant["standing"]["placement"],
         }
     sets = eventData["event"]["sets"]["nodes"]
     setsStatusCode, [ufSetId, upsetterSeed, upsetteeSeed, maxUF] = addSets(
@@ -592,28 +599,36 @@ def createEvent(tournament_id, event_id):
     top3 = []
     for player in podium:
         top3 += [player["entrant"]["name"]]
-    
-    event = Event(event_id, tournament_id, title, entrantsCount, top3,
-                  [ufSetId, upsetterSeed, upsetteeSeed, maxUF],
-                  [sprPlayerId, sprSeed, sprPlacing, maxSPR], slug)
-    if(event.insert_event()):
+
+    event = Event(
+        event_id,
+        tournament_id,
+        title,
+        entrantsCount,
+        top3,
+        [ufSetId, upsetterSeed, upsetteeSeed, maxUF],
+        [sprPlayerId, sprSeed, sprPlacing, maxSPR],
+        slug,
+    )
+    if event.insert_event():
         return CODES["SUCCESS"]
     else:
         return CODES["ALREADY_EXISTS"]
 
+
 # Add a list of new sets
 def addSets(event_id: int, sets: list, entrantsIdTable: dict):
-    maxUF = [0, -1, 0, 0] #set id, upsetter seed, upsettee seed, UF
+    maxUF = [0, -1, 0, 0]  # set id, upsetter seed, upsettee seed, UF
     status_code = CODES["SUCCESS"]
     for setData in sets:
-        if(setData["displayScore"] == "DQ"):
+        if setData["displayScore"] == "DQ":
             continue
         player1_id = setData["slots"][0]["entrant"]["id"]
         player2_id = setData["slots"][1]["entrant"]["id"]
         player1Won = setData["winnerId"] == player1_id
-        #True if P1 won, false if P2 won
+        # True if P1 won, false if P2 won
 
-        if(player1Won):
+        if player1Won:
             winner_id = player1_id
             loser_id = player2_id
         else:
@@ -628,21 +643,27 @@ def addSets(event_id: int, sets: list, entrantsIdTable: dict):
             entrantsIdTable[winner_id], entrantsIdTable[loser_id]
         )
         set = Set(
-            setData["id"], event_id, entrantsIdTable[winner_id]["playerId"],
-            entrantsIdTable[loser_id]["playerId"], winnerScore, loserScore, uf
+            setData["id"],
+            event_id,
+            entrantsIdTable[winner_id]["playerId"],
+            entrantsIdTable[loser_id]["playerId"],
+            winnerScore,
+            loserScore,
+            uf,
         )
-        if(not set.insert_set()):
+        if not set.insert_set():
             status_code = CODES["ALREADY_EXISTS"]
 
-        if(uf > maxUF[3]):
+        if uf > maxUF[3]:
             upsetterSeed = entrantsIdTable[winner_id]["seed"]
             upsetteeSeed = entrantsIdTable[loser_id]["seed"]
             maxUF = [setData["id"], upsetterSeed, upsetteeSeed, uf]
     return status_code, maxUF
 
+
 # Add a list of new players
 def addPlayers(event_id: int, players: dict):
-    maxSPR = [-1, 0, 0, 0] #player id, seed, placing, SPR
+    maxSPR = [-1, 0, 0, 0]  # player id, seed, placing, SPR
     status_code = CODES["SUCCESS"]
 
     connection = sqlite3.connect("busmash.db")
@@ -653,20 +674,28 @@ def addPlayers(event_id: int, players: dict):
         oldData = Player()
         inDB = oldData.load_player(player_id)
 
-        cursor.execute("""
+        cursor.execute(
+            """
         SELECT * FROM sets
         WHERE winner_id = {}
-        """.format(player_id))
+        """.format(
+                player_id
+            )
+        )
         winningSets = cursor.fetchall()
 
-        cursor.execute("""
+        cursor.execute(
+            """
         SELECT * FROM sets
         WHERE loser_id = {}
-        """.format(player_id))
+        """.format(
+                player_id
+            )
+        )
         losingSets = cursor.fetchall()
-        
+
         topPlacing = [event_id, playerData["placing"]]
-        if(inDB):
+        if inDB:
             topPlacing = calculations.determineBetterPlacing(
                 topPlacing, oldData.topPlacing
             )
@@ -674,17 +703,25 @@ def addPlayers(event_id: int, players: dict):
             player_id, winningSets, losingSets
         )
 
-        player = Player(player_id, playerData["gamerTag"], playerData["team"],
-                   len(winningSets), len(losingSets), topPlacing, demon, blessing)
-        if(not inDB):
-            if(not player.insert_player()):
+        player = Player(
+            player_id,
+            playerData["gamerTag"],
+            playerData["team"],
+            len(winningSets),
+            len(losingSets),
+            topPlacing,
+            demon,
+            blessing,
+        )
+        if not inDB:
+            if not player.insert_player():
                 status_code = CODES["ALREADY_EXISTS"]
         else:
-            if(not player.update_player()):
+            if not player.update_player():
                 status_code = CODES["ERROR"]
-        
+
         spr = calculations.calculateSPR(playerData)
-        if(spr > maxSPR[3]):
+        if spr > maxSPR[3]:
             maxSPR = [player_id, playerData["seed"], playerData["placing"], spr]
     return status_code, maxSPR
 
@@ -703,10 +740,43 @@ def deleteEvent():
     jsonData = {
         "status_code": CODES["SUCCESS"],
         "message": "Successfully deleted event.",
-        "id": event_id
+        "id": event_id,
     }
 
     return jsonResponse(jsonData)
 
+
+# Get all players
+@app.route("/players", methods=["GET", "POST"])
+def getPlayers():
+    connection = sqlite3.connect("busmash.db")
+    cursor = connection.cursor()
+
+    cursor.execute("SELECT id, numWins, numLosses FROM players")
+    rows = cursor.fetchall()
+    # Sort rows by most sets played
+    rows = sorted(rows, key=lambda row: -(row[1] + row[2]))
+
+    try:
+        data = request.get_json(force=True)
+        page = data["page"]
+        perPage = data["perPage"]
+    except:
+        page = 1
+        perPage = len(rows)
+
+    jsonData = []
+    for i in range((page - 1) * perPage, min(len(rows), page * perPage)):
+        row = rows[i]
+        player = Player()
+        player.load_player(row[0])
+        jsonData += [player.toJSON()]
+
+    connection.commit()
+    connection.close()
+
+    return jsonResponse({"total": len(rows), "players": jsonData})
+
+
 if __name__ == "__main__":
-    app.run(debug = True)
+    app.run(debug=True)

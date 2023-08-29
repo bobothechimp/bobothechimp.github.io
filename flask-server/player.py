@@ -1,35 +1,48 @@
 import sqlite3
+from event import Event
+
 
 class Player:
-
-    def __init__(self, id = -1, name = "", team = "", numWins = 0, numLosses = 0,
-                 topPlacing = [-1, -1], demon = ["", 0, 0], blessing = ["", 0, 0]):
+    def __init__(
+        self,
+        id=-1,
+        name="",
+        team="",
+        numWins=0,
+        numLosses=0,
+        topPlacing=[-1, -1],
+        demon=["", 0, 0],
+        blessing=["", 0, 0],
+    ):
         self.id = id
         self.name = name
         self.team = team
         self.numWins = numWins
         self.numLosses = numLosses
         self.topPlacing = topPlacing
-        #[event id, placing at event]
+        # [event id, placing at event]
         self.demon = demon
-        #[demon name, num wins, num losses]
-        #ex: ["Bob", 2, 11]
+        # [demon name, num wins, num losses]
+        # ex: ["Bob", 2, 11]
         self.blessing = blessing
-        #[blessing name, num wins, num losses]
-        #ex: ["Billy", 8, 1]
+        # [blessing name, num wins, num losses]
+        # ex: ["Billy", 8, 1]
         self.connection = sqlite3.connect("busmash.db")
         self.cursor = self.connection.cursor()
 
     def load_player(self, id):
-        self.cursor.execute("""
+        self.cursor.execute(
+            """
         SELECT * FROM players
         WHERE id = ?
-        """, (id,))
+        """,
+            (id,),
+        )
 
         row = self.cursor.fetchone()
         if row is None:
             return False
-        
+
         self.id = row[0]
         self.name = row[1]
         self.team = row[2]
@@ -45,30 +58,41 @@ class Player:
 
     def insert_player(self):
         self.cursor.execute("""SELECT * FROM players WHERE id = ?""", (self.id,))
-        if(self.cursor.fetchone() is not None):
+        if self.cursor.fetchone() is not None:
             return False
-        if(self.team is None):
+        if self.team is None:
             team = ""
         else:
             team = self.team
         topPlacingInfo = ",".join(map(str, self.topPlacing))
         demonInfo = ",".join(map(str, self.demon))
         blessingInfo = ",".join(map(str, self.blessing))
-        self.cursor.execute("""
+        self.cursor.execute(
+            """
         INSERT INTO players
         (id, name, team, numWins, numLosses, topPlacing, demon, blessing)
         VALUES
         (?, ?, ?, ?, ?, ?, ?, ?)
-        """, (self.id, self.name, team, self.numWins, self.numLosses,
-                   topPlacingInfo, demonInfo, blessingInfo))
+        """,
+            (
+                self.id,
+                self.name,
+                team,
+                self.numWins,
+                self.numLosses,
+                topPlacingInfo,
+                demonInfo,
+                blessingInfo,
+            ),
+        )
         self.connection.commit()
         return True
-    
+
     def update_player(self):
         self.cursor.execute("""SELECT * FROM players WHERE id = ?""", (self.id,))
-        if(self.cursor.fetchone() is None):
+        if self.cursor.fetchone() is None:
             return False
-        
+
         if self.team is None:
             team = ""
         else:
@@ -78,7 +102,7 @@ class Player:
         blessingInfo = ",".join(map(str, self.blessing))
 
         self.cursor.execute(
-        """
+            """
         UPDATE players SET
         name = ?,
         team = ?,
@@ -88,23 +112,53 @@ class Player:
         demon = ?,
         blessing = ?
         WHERE id = ?
-        """, (self.name, team, self.numWins, self.numLosses, topPlacingInfo,
-              demonInfo, blessingInfo, self.id))
+        """,
+            (
+                self.name,
+                team,
+                self.numWins,
+                self.numLosses,
+                topPlacingInfo,
+                demonInfo,
+                blessingInfo,
+                self.id,
+            ),
+        )
         self.connection.commit()
         return True
-    
+
     def toJSON(self):
+        tpEvent = Event()
+        if tpEvent.load_event(self.topPlacing[0]):
+            eventJson = tpEvent.toJSON()
+            eventName = "{} @ {}".format(
+                eventJson["tournamentName"], eventJson["title"]
+            )
+            topPlacing = [eventName] + self.topPlacing[1:2]
+        else:
+            topPlacing = [None] + self.topPlacing[1:2]
+        demonPlayer = Player()
+        if demonPlayer.load_player(self.demon[0]):
+            demon = [demonPlayer.name] + self.demon[1:3]
+        else:
+            demon = ["Unknown"] + self.demon[1:3]
+        blessingPlayer = Player()
+        if blessingPlayer.load_player(self.blessing[0]):
+            blessing = [blessingPlayer.name] + self.blessing[1:3]
+        else:
+            blessing = ["Unknown"] + self.blessing[1:3]
+
         return {
             "id": self.id,
             "name": self.name,
             "team": self.team,
             "numWins": self.numWins,
             "numLosses": self.numLosses,
-            "topPlacing": self.topPlacing,
-            "demon": self.demon,
-            "blessing": self.blessing
+            "topPlacing": topPlacing,
+            "demon": demon,
+            "blessing": blessing,
         }
-    
+
     @staticmethod
     def deletePlayer(cursor, player_id):
         sql = """DELETE FROM players
