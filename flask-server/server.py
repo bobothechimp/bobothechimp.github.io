@@ -753,18 +753,41 @@ def getPlayers():
     connection = sqlite3.connect("busmash.db")
     cursor = connection.cursor()
 
-    cursor.execute("SELECT id, numWins, numLosses FROM players")
+    cursor.execute("SELECT id, name, numWins, numLosses FROM players")
     rows = cursor.fetchall()
-    # Sort rows by most sets played
-    rows = sorted(rows, key=lambda row: -(row[1] + row[2]))
 
     try:
         data = request.get_json(force=True)
         page = data["page"]
         perPage = data["perPage"]
+        search = data["search"]
+        print("test1")
+        cursor.execute(
+            "SELECT id, name, numWins, numLosses FROM players WHERE name LIKE ? ;",
+            ("%" + search + "%",),
+        )
+        rows = cursor.fetchall()
+        print("test2")
+        sort = data["sort"]
     except:
         page = 1
         perPage = len(rows)
+        search = ""
+        sort = "id"
+
+    if sort == "alph":
+        sortKey = lambda row: row[1]
+    elif sort == "sets":
+        sortKey = lambda row: -(row[2] + row[3])
+    elif sort == "wins":
+        sortKey = lambda row: -row[2]
+    elif sort == "winrate":
+        # Add the max function to prevent division by zero
+        sortKey = lambda row: -(row[2] / max(1, row[2] + row[3]))
+    else:
+        sortKey = lambda row: row[0]
+    # Sort rows by most sets played
+    rows = sorted(rows, key=sortKey)
 
     jsonData = []
     for i in range((page - 1) * perPage, min(len(rows), page * perPage)):
@@ -797,6 +820,21 @@ def recalculatePlayerStats():
 
         # Limiting the loop to at most 80 iterations per minute
         time.sleep(max(60.0 / 80 - (time.time() - start), 0))
+
+    cursor.execute("SELECT id FROM players ;")
+    player_ids = cursor.fetchall()
+    for row in player_ids:
+        player_id = row[0]
+        player = Player()
+        player.load_player(player_id)
+        # Remove this player if they have played no sets
+        # (most likely because they DQed from the only events
+        # for which they registered)
+        if player.numWins == 0 and player.numLosses == 0:
+            Player.deletePlayer(cursor, player_id)
+
+    connection.commit()
+    connection.close()
 
     jsonData = {"status_code": status_code}
 

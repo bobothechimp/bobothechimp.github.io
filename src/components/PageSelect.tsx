@@ -6,8 +6,8 @@ interface Props {
   perPage: number;
   totalPages: number;
   totalItems: number;
-  onChangePage: (page: number) => void;
-  onChangePerPage: (perPage: number) => void;
+  onChangePage: (selectedPage: any) => void;
+  onChangePerPage: (selectedPerPage: any) => void;
 }
 
 const PageSelect = ({
@@ -159,10 +159,7 @@ const PageSelect = ({
           </p>
           <p className="text-muted">Per page</p>
           <Form>
-            <Form.Select
-              size="sm"
-              onChange={(e) => onChangePerPage(Number(e.target.value))}
-            >
+            <Form.Select size="sm" onChange={(e) => onChangePerPage(e)}>
               {perPageOptions.map((num) => (
                 <option key={num} value={num}>
                   {num}

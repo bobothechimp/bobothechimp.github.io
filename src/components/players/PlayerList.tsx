@@ -13,8 +13,39 @@ const PlayerList = () => {
   const [totalPlayers, setTotalPlayers] = useState(0);
   const [page, setPage] = useState(1);
   const [perPage, setPerPage] = useState(5);
+  const [searchName, setSearchName] = useState("");
+  const [sort, setSort] = useState("alph");
 
-  const perPageOptions = [5, 10, 15, 20];
+  const sortTypes = [
+    {
+      id: 1,
+      sort: "alph",
+      text: "Alphabetical",
+    },
+    {
+      id: 2,
+      sort: "sets",
+      text: "Most sets played",
+    },
+    {
+      id: 3,
+      sort: "wins",
+      text: "Most wins",
+    },
+    {
+      id: 4,
+      sort: "winrate",
+      text: "Highest win rate",
+    },
+  ];
+
+  const onChangeSearch = (event) => {
+    setSearchName(event.target.value);
+  };
+
+  const onChangeSort = (event) => {
+    setSort(event.target.value);
+  };
 
   useEffect(() => {
     fetch(ROUTES.SERVER_GET_PLAYERS, {
@@ -22,6 +53,8 @@ const PlayerList = () => {
       body: JSON.stringify({
         page: page,
         perPage: perPage,
+        search: searchName,
+        sort: sort,
       }),
     })
       .then((res) => res.json())
@@ -29,10 +62,11 @@ const PlayerList = () => {
         setPlayers(data["players"]);
         setTotalPlayers(data["total"]);
       });
-  }, []);
+  }, [page, searchName, sort]);
 
   const updatePerPage = (selectedPerPage) => {
-    setPerPage(selectedPerPage.target.value);
+    setPerPage(Number(selectedPerPage.target.value));
+    setPage(1);
   };
 
   return (
@@ -42,15 +76,21 @@ const PlayerList = () => {
         <Row>
           <Col lg={{ span: 4 }}>
             <div className="dataSelectForm">
-              <PlayerSearch />
+              <PlayerSearch
+                sortTypes={sortTypes}
+                onChangeSearch={onChangeSearch}
+                onChangeSort={onChangeSort}
+              />
             </div>
             <PageSelect
               current={page}
               perPage={perPage}
               totalPages={Math.ceil((1.0 * totalPlayers) / perPage)}
               totalItems={totalPlayers}
-              onChangePage={(newPage) => setPage(newPage)}
-              onChangePerPage={(newPerPage) => setPerPage(newPerPage)}
+              onChangePage={(selectedPage) => setPage(selectedPage)}
+              onChangePerPage={(selectedPerPage) =>
+                updatePerPage(selectedPerPage)
+              }
             />
           </Col>
           <Col lg={{ span: 8 }}>

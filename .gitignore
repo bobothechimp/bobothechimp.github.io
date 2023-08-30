@@ -1,3 +1,4 @@
 src/global/apikeys.tsx
 flask-server/apikeys.py
 .vscode
+flask-server/__pycache__
