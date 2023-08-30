@@ -134,6 +134,7 @@ class Player:
             topPlacing = [
                 eventJson["title"],
                 eventJson["tournamentName"],
+                eventJson["entrants"],
             ] + self.topPlacing[1:2]
         else:
             topPlacing = [None] + self.topPlacing[1:2]

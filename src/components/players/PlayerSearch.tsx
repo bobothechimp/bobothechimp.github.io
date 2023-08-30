@@ -18,7 +18,11 @@ const PlayerSearch = ({ sortTypes, onChangeSearch, onChangeSort }: Props) => {
           <InputGroup.Text>
             <FontAwesomeIcon icon={faSearch} />
           </InputGroup.Text>
-          <Form.Control onChange={onChangeSearch} type="text"></Form.Control>
+          <Form.Control
+            placeholder="Start typing..."
+            onChange={onChangeSearch}
+            type="text"
+          ></Form.Control>
         </InputGroup>
       </Form.Group>
       <Form.Group>

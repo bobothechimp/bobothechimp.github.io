@@ -13,3 +13,44 @@
 .dataSelectForm form > div {
     margin-bottom: 20px;
 }
+
+.playerList {
+    max-height: 800px;
+    overflow: scroll;
+    margin-bottom: 50px;
+    border-width: 8px;
+    border-radius: 10px;
+    border-style: solid;
+    border-color: gray;
+    background-color: gray;
+}
+
+.playerHeader {
+    padding-bottom: 20px;
+}
+
+.playerTitle {
+    text-align: center;
+    font-family: myriad pro, sans-serif;
+}
+
+.playerTitle h2 {
+    display: inline;
+}
+
+.playerBasicInfo {
+    text-align: right;
+    padding-right: 10px;
+}
+
+.playerCard {
+    width: 100%;
+    background-color: #E8E8E8;
+    padding: 20px;
+    border-radius: 4px;
+    margin-bottom: 6px;
+}
+
+.playerCard row:last-child .playerCard {
+    margin-bottom: 0px;
+}

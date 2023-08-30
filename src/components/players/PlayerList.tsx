@@ -93,7 +93,7 @@ const PlayerList = () => {
               }
             />
           </Col>
-          <Col lg={{ span: 8 }}>
+          <Col lg={{ span: 8 }} className="playerList">
             {players.map((player) => (
               <Row key={player["id"]}>
                 <PlayerCard
