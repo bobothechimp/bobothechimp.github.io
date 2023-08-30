@@ -141,6 +141,14 @@ const SeasonsManager = ({ seasons, getData }: Props) => {
             />
           </Col>
           <Col md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 4, offset: 1 }}>
+            <div className="addDataForm">
+              <AddDataForm
+                handleSubmit={handleSubmit}
+                onChange={onChange}
+                inputs={inputs}
+                objectName="Season"
+              />
+            </div>
             {errorMessage.show && (
               <Alert
                 onClose={() =>
@@ -150,14 +158,6 @@ const SeasonsManager = ({ seasons, getData }: Props) => {
                 {errorMessage.message}
               </Alert>
             )}
-            <div className="addDataForm">
-              <AddDataForm
-                handleSubmit={handleSubmit}
-                onChange={onChange}
-                inputs={inputs}
-                objectName="Season"
-              />
-            </div>
           </Col>
         </Row>
       </Container>

@@ -1,0 +1,15 @@
+.dataSelectForm {
+    width: 100%;
+    margin-top: 20px;
+    padding-bottom: 30px;
+}
+
+.dataSelectForm form {
+    padding: 20px;
+    border-radius: 10px;
+    background-color: lightgray;
+}
+
+.dataSelectForm form > div {
+    margin-bottom: 20px;
+}

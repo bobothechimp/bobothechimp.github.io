@@ -43,7 +43,7 @@ const EventsManager = ({ events, tournaments, getData }: Props) => {
     setValues({ ...values, [event.target.name]: event.target.value });
   };
 
-  // Posting entered data for new tournament to backend
+  // Posting entered data for new event to backend
   const handleSubmit = (e) => {
     e.preventDefault();
     const xhr = new XMLHttpRequest();
@@ -76,13 +76,13 @@ const EventsManager = ({ events, tournaments, getData }: Props) => {
     xhr.send(info);
   };
 
-  // Making delete modal appear and display the tournament to delete
+  // Making delete modal appear and display the event to delete
   const handleDeleteButton = (event) => {
     setEventToDelete(event);
     setShowDeleteModal(true);
   };
 
-  // Posting ID for deleted tournament to backend
+  // Posting ID for deleted event to backend
   const handleDelete = (event) => {
     const xhr = new XMLHttpRequest();
     const info = new FormData();
@@ -100,7 +100,7 @@ const EventsManager = ({ events, tournaments, getData }: Props) => {
     <>
       <Container>
         <Row>
-          <Col md={{ span: 7 }} lg={{ span: 6 }} xl={{ span: 8 }}>
+          <Col md={{ span: 7 }} lg={{ span: 6 }} xl={{ span: 7 }}>
             <DataTable
               rows={events}
               titles={[
@@ -119,7 +119,15 @@ const EventsManager = ({ events, tournaments, getData }: Props) => {
               handleDeleteButton={handleDeleteButton}
             />
           </Col>
-          <Col md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 4 }}>
+          <Col md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 4, offset: 1 }}>
+            <div className="addDataForm">
+              <AddDataForm
+                handleSubmit={handleSubmit}
+                onChange={onChange}
+                inputs={inputs}
+                objectName="Event"
+              />
+            </div>
             {statusMessage.show && (
               <Alert
                 onClose={() =>
@@ -130,14 +138,6 @@ const EventsManager = ({ events, tournaments, getData }: Props) => {
                 {statusMessage.message}
               </Alert>
             )}
-            <div className="addDataForm">
-              <AddDataForm
-                handleSubmit={handleSubmit}
-                onChange={onChange}
-                inputs={inputs}
-                objectName="Event"
-              />
-            </div>
           </Col>
         </Row>
       </Container>

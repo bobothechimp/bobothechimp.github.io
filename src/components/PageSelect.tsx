@@ -1,23 +1,32 @@
 import React, { ReactNode, useEffect, useState } from "react";
-import { Pagination, Container, Row } from "react-bootstrap";
+import { Pagination, Container, Row, Form } from "react-bootstrap";
 
 interface Props {
-  children?: ReactNode;
   current: number;
-  total: number;
-  onChange: (page: number) => void;
+  perPage: number;
+  totalPages: number;
+  totalItems: number;
+  onChangePage: (page: number) => void;
+  onChangePerPage: (perPage: number) => void;
 }
 
-const PageSelect = ({ children, current, total, onChange }: Props) => {
+const PageSelect = ({
+  current,
+  perPage,
+  totalPages,
+  totalItems,
+  onChangePage,
+  onChangePerPage,
+}: Props) => {
   let pageButtons: JSX.Element[] = [];
   //No need for any ellipses
-  if (total <= 7) {
-    for (let i = 1; i <= total; i++) {
+  if (totalPages <= 7) {
+    for (let i = 1; i <= totalPages; i++) {
       pageButtons.push(
         <Pagination.Item
           key={i}
           active={i === current}
-          onClick={() => onChange(i)}
+          onClick={() => onChangePage(i)}
         >
           {i}
         </Pagination.Item>
@@ -29,7 +38,7 @@ const PageSelect = ({ children, current, total, onChange }: Props) => {
       <Pagination.Item
         key={1}
         active={1 === current}
-        onClick={() => onChange(1)}
+        onClick={() => onChangePage(1)}
       >
         {1}
       </Pagination.Item>
@@ -41,7 +50,7 @@ const PageSelect = ({ children, current, total, onChange }: Props) => {
           <Pagination.Item
             key={i}
             active={i === current}
-            onClick={() => onChange(i)}
+            onClick={() => onChangePage(i)}
           >
             {i}
           </Pagination.Item>
@@ -52,13 +61,13 @@ const PageSelect = ({ children, current, total, onChange }: Props) => {
       pageButtons.push(<Pagination.Ellipsis key={"lell"} />);
     }
     //Somewhere in the middle of the page numbers, both ellipses needed
-    if (current > 4 && current < total - 3) {
+    if (current > 4 && current < totalPages - 3) {
       for (let i = current - 1; i <= current + 1; i++) {
         pageButtons.push(
           <Pagination.Item
             key={i}
             active={i === current}
-            onClick={() => onChange(i)}
+            onClick={() => onChangePage(i)}
           >
             {i}
           </Pagination.Item>
@@ -66,13 +75,13 @@ const PageSelect = ({ children, current, total, onChange }: Props) => {
       }
     }
     //No need for right ellipsis
-    if (current >= total - 3) {
-      for (let i = total - 4; i <= total - 1; i++) {
+    if (current >= totalPages - 3) {
+      for (let i = totalPages - 4; i <= totalPages - 1; i++) {
         pageButtons.push(
           <Pagination.Item
             key={i}
             active={i === current}
-            onClick={() => onChange(i)}
+            onClick={() => onChangePage(i)}
           >
             {i}
           </Pagination.Item>
@@ -85,11 +94,11 @@ const PageSelect = ({ children, current, total, onChange }: Props) => {
     //Always need last page button
     pageButtons.push(
       <Pagination.Item
-        key={total}
-        active={total === current}
-        onClick={() => onChange(total)}
+        key={totalPages}
+        active={totalPages === current}
+        onClick={() => onChangePage(totalPages)}
       >
-        {total}
+        {totalPages}
       </Pagination.Item>
     );
   }
@@ -113,35 +122,57 @@ const PageSelect = ({ children, current, total, onChange }: Props) => {
     };
   }, []);
 
+  const perPageOptions = [5, 10, 15, 20];
+
   return (
-    <Container>
-      <Row>
-        <Pagination size={buttonSize} style={{ justifyContent: "center" }}>
-          <Pagination.First
-            key={"toFirst"}
-            disabled={current === 1}
-            onClick={() => onChange(1)}
-          />
-          <Pagination.Prev
-            key={"toPrev"}
-            disabled={current === 1}
-            onClick={() => onChange(current - 1)}
-          />
-          {pageButtons}
-          <Pagination.Next
-            key={"toNext"}
-            disabled={current === total}
-            onClick={() => onChange(current + 1)}
-          />
-          <Pagination.Last
-            key={"toLast"}
-            disabled={current === total}
-            onClick={() => onChange(total)}
-          />
-        </Pagination>
-      </Row>
-      <Row>{children}</Row>
-    </Container>
+    <div className="pageSelect">
+      <Container>
+        <Row>
+          <Pagination size={buttonSize} style={{ justifyContent: "center" }}>
+            <Pagination.First
+              key={"toFirst"}
+              disabled={current === 1}
+              onClick={() => onChangePage(1)}
+            />
+            <Pagination.Prev
+              key={"toPrev"}
+              disabled={current === 1}
+              onClick={() => onChangePage(current - 1)}
+            />
+            {pageButtons}
+            <Pagination.Next
+              key={"toNext"}
+              disabled={current === totalPages}
+              onClick={() => onChangePage(current + 1)}
+            />
+            <Pagination.Last
+              key={"toLast"}
+              disabled={current === totalPages}
+              onClick={() => onChangePage(totalPages)}
+            />
+          </Pagination>
+        </Row>
+        <Row>
+          <p className="text-muted">
+            Displaying {(current - 1) * perPage + 1} to{" "}
+            {Math.min(totalItems, current * perPage)} of {totalItems} items.
+          </p>
+          <p className="text-muted">Per page</p>
+          <Form>
+            <Form.Select
+              size="sm"
+              onChange={(e) => onChangePerPage(Number(e.target.value))}
+            >
+              {perPageOptions.map((num) => (
+                <option key={num} value={num}>
+                  {num}
+                </option>
+              ))}
+            </Form.Select>
+          </Form>
+        </Row>
+      </Container>
+    </div>
   );
 };
 

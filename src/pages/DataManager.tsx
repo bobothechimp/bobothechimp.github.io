@@ -5,16 +5,23 @@ import Footer from "../components/Footer";
 import SeasonsManager from "../components/admin/SeasonsManager";
 import TournamentsManager from "../components/admin/TournamentsManager";
 import EventsManager from "../components/admin/EventsManager";
+import PlayersManager from "../components/admin/PlayersManager";
 
 import * as ROUTES from "../global/routes";
 
 import "../styles/dataManager.css";
 
 const DataManager = () => {
-  const [SEASONS_KEY, TOURNAMENTS_KEY, EVENTS_KEY] = ["0", "1", "2"];
+  const [SEASONS_KEY, TOURNAMENTS_KEY, EVENTS_KEY, PLAYERS_KEY] = [
+    "0",
+    "1",
+    "2",
+    "3",
+  ];
   const [seasons, setSeasons] = useState([]);
   const [tournaments, setTournaments] = useState([]);
   const [events, setEvents] = useState([]);
+  const [players, setPlayers] = useState([]);
 
   const getData = (curTable) => {
     fetch(ROUTES.SERVER_GET_SEASONS)
@@ -64,6 +71,22 @@ const DataManager = () => {
           );
         }
       });
+    fetch(ROUTES.SERVER_GET_PLAYERS)
+      .then((res) => res.json())
+      .then((data) => {
+        setPlayers(data["players"]);
+
+        //Reloading component with new data
+        if (curTable === PLAYERS_KEY) {
+          setActiveTable(
+            <PlayersManager
+              players={data["players"]}
+              events={events}
+              getData={() => getData(PLAYERS_KEY)}
+            />
+          );
+        }
+      });
   };
 
   const [activeTable, setActiveTable] = useState(
@@ -102,6 +125,14 @@ const DataManager = () => {
           />
         );
         break;
+      case PLAYERS_KEY:
+        setActiveTable(
+          <PlayersManager
+            players={players}
+            events={events}
+            getData={() => getData(PLAYERS_KEY)}
+          />
+        );
     }
   };
 
@@ -122,6 +153,9 @@ const DataManager = () => {
           </Nav.Item>
           <Nav.Item>
             <Nav.Link eventKey={EVENTS_KEY}>Events</Nav.Link>
+          </Nav.Item>
+          <Nav.Item>
+            <Nav.Link eventKey={PLAYERS_KEY}>Players</Nav.Link>
           </Nav.Item>
         </Nav>
         {activeTable}

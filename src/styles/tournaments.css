@@ -22,36 +22,6 @@
     margin-bottom: 20px;
 }
 
-.pageSelect {
-    width: 100%;
-    text-align: center;
-    padding-bottom: 30px;
-}
-
-.pageSelect Pagination {
-    size: "sm";
-}
-
-.pageSelect p {
-    text-align: center;
-}
-
-.pageSelect p+p {
-    width: 50%;
-    text-align: right;
-    padding-right: 0px;
-}
-
-.pageSelect form {
-    justify-content: left;
-    width: 80px;
-}
-
-.pageSelect form select {
-    padding: 4px;
-    padding-left: 6px;
-}
-
 .tournamentList {
     max-height: 800px;
     overflow: scroll;

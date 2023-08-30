@@ -9,6 +9,8 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 
 import * as ROUTES from "./global/routes";
 
+import "./App.css";
+
 function App() {
   const [message, setMessage] = useState("Welcome!");
   const [showAlert, setShowAlert] = useState(false);
