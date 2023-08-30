@@ -761,13 +761,11 @@ def getPlayers():
         page = data["page"]
         perPage = data["perPage"]
         search = data["search"]
-        print("test1")
         cursor.execute(
             "SELECT id, name, numWins, numLosses FROM players WHERE name LIKE ? ;",
             ("%" + search + "%",),
         )
         rows = cursor.fetchall()
-        print("test2")
         sort = data["sort"]
     except:
         page = 1
