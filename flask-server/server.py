@@ -1,5 +1,6 @@
 from flask import Flask, request
 import json
+import time
 import sqlite3
 import requests
 from season import Season
@@ -576,7 +577,7 @@ def createEvent(tournament_id, event_id):
     entrantsCount = eventData["event"]["entrants"]["pageInfo"]["total"]
     entrants = eventData["event"]["entrants"]["nodes"]
 
-    # ID table makes calculating upset factors easier
+    # ID table makes calculating upset factors and SPRs easier
     entrantsIdTable = {}
     for entrant in entrants:
         entrantsIdTable[entrant["id"]] = {
@@ -776,6 +777,93 @@ def getPlayers():
     connection.close()
 
     return jsonResponse({"total": len(rows), "players": jsonData})
+
+
+# Recalculate players' stats
+@app.route("/players/recalculate", methods=["POST"])
+def recalculatePlayerStats():
+    connection = sqlite3.connect("busmash.db")
+    cursor = connection.cursor()
+
+    cursor.execute("SELECT id FROM events ;")
+    event_ids = cursor.fetchall()
+
+    status_code = CODES["SUCCESS"]
+    for row in event_ids:
+        start = time.time()
+        event_id = row[0]
+        newSC = updatePlayersInEvent(event_id)
+        status_code = max(status_code, newSC)
+
+        # Limiting the loop to at most 80 iterations per minute
+        time.sleep(max(60.0 / 80 - (time.time() - start), 0))
+
+    jsonData = {"status_code": status_code}
+
+    if status_code == CODES["SUCCESS"]:
+        jsonData["message"] = "Successfully recalculated stats."
+    if status_code == CODES["COULDNT_COMPLETE"]:
+        jsonData["message"] = "Could not recalculate some stats."
+    if status_code == CODES["ERROR"]:
+        jsonData["message"] = "Error while recalculating stats."
+
+    return jsonResponse(jsonData)
+
+
+# Update info of players from a particular event
+def updatePlayersInEvent(event_id):
+    headers = {"Authorization": "Bearer {}".format(apikeys.STARTGG_KEY)}
+    data = {
+        "query": (
+            """
+        query EventEntrants($eventId: ID!) {
+            event(id: $eventId) {
+                entrants(query: {perPage: 60, page: 1}) {
+                    pageInfo {
+                        total
+                        totalPages
+                    }
+                    nodes {
+                        id
+                        name
+                        initialSeedNum
+                        standing {
+                            placement
+                        }
+                        participants {
+                            player {
+                                id
+                                gamerTag
+                                prefix
+                            }
+                        }
+                    }
+                }
+            }
+        }"""
+        ),
+        "variables": {"eventId": event_id},
+    }
+    sggResponse = requests.post(
+        "https://api.start.gg/gql/alpha", headers=headers, json=data
+    )
+    eventData = (sggResponse.json())["data"]
+    entrants = eventData["event"]["entrants"]["nodes"]
+
+    # ID table makes calculating upset factors and SPRs easier
+    entrantsIdTable = {}
+    for entrant in entrants:
+        entrantsIdTable[entrant["id"]] = {
+            "playerId": entrant["participants"][0]["player"]["id"],
+            "name": entrant["name"],  # Full name, team and gamer tag
+            "gamerTag": entrant["participants"][0]["player"]["gamerTag"],
+            "team": entrant["participants"][0]["player"]["prefix"],
+            "seed": entrant["initialSeedNum"],
+            "placing": entrant["standing"]["placement"],
+        }
+    # Not actually adding players; it'll just update each one
+    status_code, spr = addPlayers(event_id, entrantsIdTable)
+    return status_code
 
 
 if __name__ == "__main__":

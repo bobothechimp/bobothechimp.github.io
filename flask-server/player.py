@@ -131,10 +131,10 @@ class Player:
         tpEvent = Event()
         if tpEvent.load_event(self.topPlacing[0]):
             eventJson = tpEvent.toJSON()
-            eventName = "{} @ {}".format(
-                eventJson["tournamentName"], eventJson["title"]
-            )
-            topPlacing = [eventName] + self.topPlacing[1:2]
+            topPlacing = [
+                eventJson["title"],
+                eventJson["tournamentName"],
+            ] + self.topPlacing[1:2]
         else:
             topPlacing = [None] + self.topPlacing[1:2]
         demonPlayer = Player()

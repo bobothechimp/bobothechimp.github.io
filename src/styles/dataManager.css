@@ -2,6 +2,11 @@
     padding: 20px;
 }
 
+.dataTable {
+    max-height: 800px;
+    overflow: scroll;
+}
+
 .longTable {
     white-space: nowrap;
     overflow: hidden;
@@ -72,6 +77,20 @@
     padding: 20px;
     border-radius: 10px;
     background-color: lightgray;
+}
+
+.recalculatePlayers {
+    width: 100%;
+    float: right;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.recalculatePlayers form {
+    padding: 20px;
+    border-radius: 10px;
+    background-color: lightgray;
+    justify-content: center;
 }
 
 .errorMessage {
