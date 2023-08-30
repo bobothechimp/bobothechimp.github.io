@@ -133,7 +133,7 @@ const TournamentList = () => {
             onChangePerPage={updatePerPage}
           />
         </Col>
-        <Col lg={{ span: 8 }} className="tournamentList">
+        <Col lg={{ span: 8 }} className="eventList">
           {events.map((event) => (
             <Row key={event["id"]} className="eventCardRow">
               <EventCard

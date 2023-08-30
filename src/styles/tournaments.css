@@ -22,7 +22,7 @@
     margin-bottom: 20px;
 }
 
-.tournamentList {
+.eventList {
     max-height: 800px;
     overflow: scroll;
     margin-bottom: 50px;
@@ -56,7 +56,7 @@
     margin-bottom: 6px;
 }
 
-.eventCardRow:last-child .eventCard {
+.eventList row:last-child .eventCard {
     margin-bottom: 0px;
 }
 
