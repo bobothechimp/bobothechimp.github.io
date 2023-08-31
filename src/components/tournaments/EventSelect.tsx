@@ -20,7 +20,7 @@ const EventSelect = ({
     <Form>
       <Form.Group className="seasonSelect">
         <Form.Label>Select a season</Form.Label>
-        <Form.Select size="sm" defaultValue={-1} onChange={updateSeason}>
+        <Form.Select defaultValue={-1} onChange={updateSeason}>
           <option key={-1} value={-1}>
             Season
           </option>
@@ -35,7 +35,6 @@ const EventSelect = ({
         <Form.Label>Select a tournament</Form.Label>
         <Form.Select
           disabled={disableTournaments}
-          size="sm"
           defaultValue={-1}
           onChange={updateTournament}
         >

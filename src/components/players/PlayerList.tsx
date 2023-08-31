@@ -107,6 +107,11 @@ const PlayerList = () => {
                 />
               </Row>
             ))}
+            {players.length == 0 && (
+              <div className="playerNotFound">
+                <p>No players found</p>
+              </div>
+            )}
           </Col>
         </Row>
       </Container>

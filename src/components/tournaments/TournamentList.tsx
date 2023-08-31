@@ -148,6 +148,11 @@ const TournamentList = () => {
               />
             </Row>
           ))}
+          {events.length == 0 && (
+            <div className="eventNotFound">
+              <p>No events found</p>
+            </div>
+          )}
         </Col>
       </Row>
     </Container>

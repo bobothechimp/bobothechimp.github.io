@@ -54,3 +54,13 @@
 .playerCard row:last-child .playerCard {
     margin-bottom: 0px;
 }
+
+.playerNotFound {
+    display: flex;
+    height: 100%;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    font-family: myriad pro, sans-serif;
+    font-size: 50px;
+}
