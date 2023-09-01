@@ -200,6 +200,26 @@ def getTournament(tournament_id):
     return jsonResponse(jsonData)
 
 
+# Get most recent tournament
+@app.route("/tournaments/latest")
+def latestTournament():
+    connection = sqlite3.connect("busmash.db")
+    cursor = connection.cursor()
+
+    cursor.execute("SELECT id, date FROM tournaments")
+    rows = cursor.fetchall()
+    latest_id, latestTime = -1, 0
+    for row in rows:
+        if row[1] > latestTime:
+            latestTime = row[1]
+            latest_id = row[0]
+
+    tournament = Tournament()
+    tournament.load_tournament(latest_id)
+
+    return jsonResponse(tournament.toJSON())
+
+
 # Get particular tournament's events
 @app.route("/tournaments/<int:tournament_id>/events")
 def getTournamentEvents(tournament_id):

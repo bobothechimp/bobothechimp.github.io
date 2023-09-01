@@ -1,25 +1,158 @@
 @import url("https://fonts.cdnfonts.com/css/myriad-pro");
 
-.sectionTitle {
-    padding: 20px;
-    padding-top: 40px;
+#titleOverlay {
+    display: flex;
+    opacity: 100%;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    justify-content: center;
+    align-items: center;
     font-family: myriad pro, sans-serif;
+    color: #FF2400;
+    font-size: 150px;
     text-align: center;
-    color: #DD2400;
 }
 
-.stdButton {
+#fade {
+    display: flex;
+    background: linear-gradient(to left,
+        rgba(255, 255, 255, 1) 0%,
+        rgba(255, 255, 255, 0.7) 10%,
+        rgba(0, 0, 0, 0) 20%,
+        rgba(0, 0, 0, 0) 80%,
+        rgba(255, 255, 255, 0.7) 90%,
+        rgba(255, 255, 255, 1) 100%);
+    width: 100%;
+    height: 100%;
+    position: absolute;
+}
+
+#titleOverlay p {
+    padding: 0;
+    margin: 0;
+    letter-spacing: 15px;
+    -webkit-text-stroke: 3px;
+    -webkit-text-stroke-color: white;
+}
+
+.banner {
+    position: relative;
+    overflow: hidden;
+    white-space: nowrap;
+    margin-bottom: 50px;
+}
+
+.banner div {
+    display: inline-block;
+    padding: 0;
+}
+
+.banner img {
+    object-fit: cover;
+    width: 100%;
+    height: 100px;
+}
+
+#ultBanner img {
+    object-position: center;
+}
+
+#melBanner img {
+    object-position: 50% 50%;
+}
+
+#brlBanner img {
+    object-position: 50% 80%;
+}
+
+.banner .oddBanner {
+    animation: slide-left 40000ms linear infinite;
+}
+
+.banner .evenBanner {
+    animation: slide-right 40000ms linear infinite;
+}
+
+@keyframes slide-left {
+    0% {
+        transform: translateX(0%);
+    }
+    100% {
+        transform: translateX(-100%);
+    }
+}
+
+@keyframes slide-right {
+    0% {
+        transform: translateX(-100%);
+    }
+    100% {
+        transform: translateX(0);
+    }
+}
+
+.btn-container {
+    width: 100%;
+    margin-bottom: 30px;
+    display: flex;
+    justify-content: center;
+}
+
+.btn-container button {
     background-color: #FF2400;
     border-color: #EE1400;
-    margin-bottom: 30px;
 }
 
-.btn-primary:hover {
+.btn-container button:hover {
     background-color: #ed2100;
     border-color: #dd1300
 }
 
-.btn-primary:focus,
-.btn-primary.focus {
-    box-shadow: 0 0 0 .2rem rgba(91, 194, 194, 0.5)
+.btn-container button:active {
+    background-color: #ed2100;
+    border-color: #dd1300
+}
+
+.tournamentCard {
+    width: 100%;
+    background-color: #E8E8E8;
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 6px;
+}
+
+.tournamentTitle {
+    font-family: myriad pro, sans-serif;
+    text-align: center;
+}
+
+.tournamentDate {
+    padding-bottom: 20px;
+    text-align: center;
+}
+
+.tournamentEvent {
+    padding-bottom: 15px;
+}
+
+.tournamentCard:last-child {
+    padding-bottom: 0px;
+}
+
+.tournamentEvent p {
+    display: inline;
+}
+
+.tournamentEventTitle {
+    font-family: myriad pro, sans-serif;
+    font-size: large;
+}
+
+.middleColumn {
+    border-width: 0;
+    border-left: 6px;
+    border-right: 6px;
+    border-color: rgba(255, 36, 0, 1);
+    border-style: solid;
 }

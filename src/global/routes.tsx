@@ -15,6 +15,7 @@ export const SERVER_GET_SEASONS = SERVER_URL + "/seasons";
 export const SERVER_ADD_SEASON = SERVER_URL + "/seasons/add";
 export const SERVER_DELETE_SEASON = SERVER_URL + "/seasons/delete";
 export const SERVER_GET_TOURNAMENTS = SERVER_URL + "/tournaments";
+export const SERVER_GET_LATEST_TOURNAMENT = SERVER_URL + "/tournaments/latest";
 export const SERVER_TOURNAMENTS_FROM_SEASON = (season) =>
   SERVER_URL + "/seasons/" + season + "/tournaments";
 export const SERVER_ADD_TOURNAMENT = SERVER_URL + "/tournaments/add";

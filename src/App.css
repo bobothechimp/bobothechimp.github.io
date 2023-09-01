@@ -34,3 +34,24 @@
     padding: 4px;
     padding-left: 6px;
 }
+
+.first {
+    font: 600 25px var(--bs-body-font-family);
+    -webkit-text-fill-color: gold;
+    -webkit-text-stroke: 1px;
+    -webkit-text-stroke-color: goldenrod;
+}
+
+.second {
+    font: 600 25px var(--bs-body-font-family);
+    -webkit-text-fill-color: silver;
+    -webkit-text-stroke: 1px;
+    -webkit-text-stroke-color: gray;
+}
+
+.third {
+    font: 600 25px var(--bs-body-font-family);
+    -webkit-text-fill-color: #CD7F32;
+    -webkit-text-stroke: 1px;
+    -webkit-text-stroke-color: brown;
+}
