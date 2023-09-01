@@ -1,5 +1,4 @@
-import React from "react";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Container, Row, Col } from "react-bootstrap";
 import DataTable from "./DataTable";
 import DeleteModal from "./DeleteModal";
@@ -9,11 +8,12 @@ import Alert from "../Alert";
 
 import * as ROUTES from "../../global/routes";
 interface Props {
-  seasons: object[];
-  getData: () => void;
+  seasons: object[]; // seasons to display
+  getData: () => void; // how to handle refreshing the data
 }
 
 const SeasonsManager = ({ seasons, getData }: Props) => {
+  // Keep track of which season is selected for deleting
   const [seasonToDelete, setSeasonToDelete] = useState({});
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [errorMessage, setErrorMessage] = useState({
@@ -29,13 +29,15 @@ const SeasonsManager = ({ seasons, getData }: Props) => {
     years.push(y);
   }
 
+  // Initial values for the add season form
   const [values, setValues] = useState({
     game: "Ultimate/Brawl",
     fallOrSpring: "Fall",
-    year: "" + curYear,
+    year: String(curYear),
     season_num: "",
   });
 
+  // List of fields for the add season form
   const inputs: Input[] = [
     {
       id: 1,
@@ -68,6 +70,7 @@ const SeasonsManager = ({ seasons, getData }: Props) => {
     setValues({ ...values, [event.target.name]: event.target.value });
   };
 
+  // Check if inputs are valid on client side before requesting from server
   const validInputs = () => {
     if (values.season_num === "") {
       return false;

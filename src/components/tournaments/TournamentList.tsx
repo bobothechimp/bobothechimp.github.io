@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Form, Container, Row, Col } from "react-bootstrap";
+import { Container, Row, Col } from "react-bootstrap";
 
 import EventCard from "./EventCard";
 import EventSelect from "./EventSelect";
@@ -8,17 +8,25 @@ import PageSelect from "../PageSelect";
 import * as ROUTES from "../../global/routes";
 
 const TournamentList = () => {
+  // Seasons from which to choose
   const [seasons, setSeasons] = useState([]);
   const [season, setSeason] = useState("-1");
+
+  // Tournaments from which to choose
   const [tournaments, setTournaments] = useState([]);
-  const [disableTournaments, setDisableTournaments] = useState(true);
   const [tournament, setTournament] = useState("-1");
+  // Whether or not to disable the tournaments selector
+  const [disableTournaments, setDisableTournaments] = useState(true);
+
+  // Events to display
   const [events, setEvents] = useState([]);
 
+  // Keeping track of items and pages for pagination
   const [totalEvents, setTotalEvents] = useState(0);
   const [page, setPage] = useState(1);
   const [perPage, setPerPage] = useState(5);
 
+  // Initial fetch for all seasons
   useEffect(() => {
     fetch(ROUTES.SERVER_GET_SEASONS)
       .then((res) => res.json())
@@ -27,8 +35,10 @@ const TournamentList = () => {
       });
   }, []);
 
+  // Getting new list of events if season or page ever changes
   useEffect(() => {
     if (season === "-1") {
+      // If no season is selected, fetch all seasons
       resetTournaments();
       fetch(ROUTES.SERVER_GET_EVENTS, {
         method: "POST",
@@ -43,6 +53,7 @@ const TournamentList = () => {
           setTotalEvents(data["total"]);
         });
     } else {
+      // If a season is selected, grab only the tournaments and events from that season
       fetch(ROUTES.SERVER_TOURNAMENTS_FROM_SEASON(season))
         .then((res) => res.json())
         .then((data) => {
@@ -65,8 +76,10 @@ const TournamentList = () => {
     }
   }, [season, page]);
 
+  // Get a new list of events if the tournament ever changes
   useEffect(() => {
     if (season != "-1" && tournament === "-1") {
+      // If a season is selected but a tournament isn't, fetch all events from that season
       fetch(ROUTES.SERVER_EVENTS_FROM_SEASON(season), {
         method: "POST",
         body: JSON.stringify({
@@ -80,6 +93,7 @@ const TournamentList = () => {
           setTotalEvents(data["total"]);
         });
     } else if (season != "-1") {
+      // If both a season and tournament are selected, fetch only events from that tournament
       fetch(ROUTES.SERVER_EVENTS_FROM_TOURNAMENT(tournament))
         .then((res) => res.json())
         .then((data) => {
@@ -100,6 +114,7 @@ const TournamentList = () => {
     setPerPage(Number(selectedPerPage.target.value));
   };
 
+  // Selecting a new season, tournament, or perPage value resets the list to page 1
   useEffect(() => {
     setPage(1);
   }, [season, tournament, perPage]);

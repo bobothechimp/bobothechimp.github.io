@@ -1,4 +1,3 @@
-import React, { ReactNode } from "react";
 import { Container, Row, Col } from "react-bootstrap";
 
 import { createOrdinalIndicator as createOI } from "../../global/tools";
@@ -6,14 +5,14 @@ import { createOrdinalIndicator as createOI } from "../../global/tools";
 import "../../styles/tournaments.css";
 
 interface Props {
-  title: string;
-  date: string;
-  tournamentName: string;
-  entrants: number;
-  link: string;
-  winners: string[];
-  upset: any[] | string;
-  spr: any[] | string;
+  title: string; // title of the event
+  date: string; // date of the event
+  tournamentName: string; // name of the event's tournament
+  entrants: number; // number of entrants at the event
+  link: string; // URL to the start.gg page for the event
+  winners: string[]; // list of the top 3 finishers of the event
+  upset: any[] | string; // [score headline of biggest upset, upsetter seed, upsettee seed, UF] | string stating there were no upsets
+  spr: any[] | string; // [name of player with highest SPR, seed, placing, SPR] | string stating there were no overperformers
 }
 
 const EventCard = ({

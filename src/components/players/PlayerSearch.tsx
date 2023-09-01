@@ -1,12 +1,11 @@
-import React from "react";
 import { Form, InputGroup } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
 
 interface Props {
-  sortTypes: any[];
-  onChangeSearch: (e) => void;
-  onChangeSort: (e) => void;
+  sortTypes: object[]; // types of sorting methods from which to choose
+  onChangeSearch: (e) => void; // how to handle changing the search text
+  onChangeSort: (e) => void; // how to handle changing the sort option
 }
 
 const PlayerSearch = ({ sortTypes, onChangeSearch, onChangeSort }: Props) => {

@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Container, Nav } from "react-bootstrap";
+
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import SeasonsManager from "../components/admin/SeasonsManager";
@@ -12,6 +13,7 @@ import * as ROUTES from "../global/routes";
 import "../styles/dataManager.css";
 
 const DataManager = () => {
+  // IDs for each data tab
   const [SEASONS_KEY, TOURNAMENTS_KEY, EVENTS_KEY, PLAYERS_KEY] = [
     "0",
     "1",
@@ -23,6 +25,7 @@ const DataManager = () => {
   const [events, setEvents] = useState([]);
   const [players, setPlayers] = useState([]);
 
+  // Fetch all data (and reload the current tab with its new data)
   const getData = (curTable) => {
     fetch(ROUTES.SERVER_GET_SEASONS)
       .then((res) => res.json())
@@ -64,7 +67,6 @@ const DataManager = () => {
         if (curTable === EVENTS_KEY) {
           setActiveTable(
             <EventsManager
-              tournaments={tournaments}
               events={data["events"]}
               getData={() => getData(EVENTS_KEY)}
             />
@@ -81,7 +83,6 @@ const DataManager = () => {
           setActiveTable(
             <PlayersManager
               players={data["players"]}
-              events={events}
               getData={() => getData(PLAYERS_KEY)}
             />
           );
@@ -118,18 +119,13 @@ const DataManager = () => {
         break;
       case EVENTS_KEY:
         setActiveTable(
-          <EventsManager
-            tournaments={tournaments}
-            events={events}
-            getData={() => getData(EVENTS_KEY)}
-          />
+          <EventsManager events={events} getData={() => getData(EVENTS_KEY)} />
         );
         break;
       case PLAYERS_KEY:
         setActiveTable(
           <PlayersManager
             players={players}
-            events={events}
             getData={() => getData(PLAYERS_KEY)}
           />
         );

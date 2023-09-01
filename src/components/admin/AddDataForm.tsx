@@ -28,10 +28,10 @@ export interface Input {
 }
 
 interface Props {
-  handleSubmit: (any) => void;
-  onChange: (any) => void;
-  inputs: Input[];
-  objectName: string;
+  handleSubmit: (any) => void; // how to handle submission of this form's data
+  onChange: (any) => void; // how to handle a field's value being changed
+  inputs: Input[]; // list of input fields for the form
+  objectName: string; // name of object to be added
 }
 
 const AddDataForm = ({ handleSubmit, onChange, inputs, objectName }: Props) => {
@@ -39,6 +39,7 @@ const AddDataForm = ({ handleSubmit, onChange, inputs, objectName }: Props) => {
     <Form onSubmit={handleSubmit} method="POST">
       {inputs.map((input) => {
         let field;
+        // Selector input field
         if (input.type === "select" && input.options && input.defaultValues) {
           if (input.preBuiltOptions) {
             field = (
@@ -65,6 +66,7 @@ const AddDataForm = ({ handleSubmit, onChange, inputs, objectName }: Props) => {
               </Form.Select>
             );
           }
+          // Double selector input field
         } else if (
           input.type === "doubleSelect" &&
           input.options &&
@@ -95,6 +97,7 @@ const AddDataForm = ({ handleSubmit, onChange, inputs, objectName }: Props) => {
               ))}
             </InputGroup>
           );
+          // Checkbox for automatically adding a tournament's events
         } else if (input.type === "eventsCheckbox") {
           field = (
             <Form.Check
@@ -116,6 +119,7 @@ const AddDataForm = ({ handleSubmit, onChange, inputs, objectName }: Props) => {
               }
             />
           );
+          // Default input field type
         } else {
           field = (
             <>
@@ -128,6 +132,7 @@ const AddDataForm = ({ handleSubmit, onChange, inputs, objectName }: Props) => {
             </>
           );
         }
+
         return (
           <Row key={input.id}>
             <FormGroup className={input.cssClass} controlId={"" + input.id}>

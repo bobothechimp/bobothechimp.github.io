@@ -1,11 +1,4 @@
-import React from "react";
-import { Link } from "react-router-dom";
-
 import { Container, Row, Col } from "react-bootstrap";
-import Navbar from "react-bootstrap/Navbar";
-import Nav from "react-bootstrap/Nav";
-import NavDropdown from "react-bootstrap/NavDropdown";
-
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faTwitter,
@@ -15,11 +8,9 @@ import {
   faTwitch,
 } from "@fortawesome/free-brands-svg-icons";
 
-import "../styles/footer.css";
-
 import * as ROUTES from "../global/routes";
 
-import logo from "../assets/buss-logo.png";
+import "../styles/footer.css";
 
 function Footer() {
   return (
@@ -33,16 +24,13 @@ function Footer() {
                   <small className="footerIconLabel">Ultimate/Brawl</small>
                 </Col>
                 <Col xl={{ span: 4 }}>
-                  <a target="_blank" href="https://twitter.com/Smash_BU">
+                  <a target="_blank" href={ROUTES.ULTBRAWL_TWITTER}>
                     <FontAwesomeIcon icon={faTwitter} className="footerIcon" />
                   </a>
-                  <a
-                    target="_blank"
-                    href="https://www.youtube.com/@busmash9476"
-                  >
+                  <a target="_blank" href={ROUTES.ULTBRAWL_YOUTUBE}>
                     <FontAwesomeIcon icon={faYoutube} className="footerIcon" />
                   </a>
-                  <a target="_blank" href="https://www.twitch.tv/busmash">
+                  <a target="_blank" href={ROUTES.ULTBRAWL_TWITCH}>
                     <FontAwesomeIcon icon={faTwitch} className="footerIcon" />
                   </a>
                 </Col>
@@ -52,16 +40,13 @@ function Footer() {
                   <small className="footerIconLabel">Melee</small>
                 </Col>
                 <Col xl={{ span: 4 }}>
-                  <a target="_blank" href="https://twitter.com/bu_melee">
+                  <a target="_blank" href={ROUTES.MELEE_TWITTER}>
                     <FontAwesomeIcon icon={faTwitter} className="footerIcon" />
                   </a>
-                  <a
-                    target="_blank"
-                    href="https://www.youtube.com/@bumelee1202"
-                  >
+                  <a target="_blank" href={ROUTES.MELEE_YOUTUBE}>
                     <FontAwesomeIcon icon={faYoutube} className="footerIcon" />
                   </a>
-                  <a target="_blank" href="https://www.twitch.tv/bu_melee">
+                  <a target="_blank" href={ROUTES.MELEE_TWITCH}>
                     <FontAwesomeIcon icon={faTwitch} className="footerIcon" />
                   </a>
                 </Col>
@@ -71,14 +56,11 @@ function Footer() {
                   <small className="footerIconLabel">Shared</small>
                 </Col>
                 <Col xl={{ span: 4 }}>
-                  <a target="_blank" href="https://discord.gg/VNUuZNRR">
+                  <a target="_blank" href={ROUTES.DISCORD}>
                     <FontAwesomeIcon icon={faDiscord} className="footerIcon" />
                   </a>
 
-                  <a
-                    target="_blank"
-                    href="https://github.com/bobothechimp/buss_website"
-                  >
+                  <a target="_blank" href={ROUTES.GITHUB}>
                     <FontAwesomeIcon icon={faGithub} className="footerIcon" />
                   </a>
                 </Col>

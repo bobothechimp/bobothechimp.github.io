@@ -7,6 +7,7 @@ import Footer from "../components/Footer";
 import TournamentCard from "../components/tournaments/TournamentCard";
 
 import * as ROUTES from "../global/routes";
+
 import UltimateBanner from "../assets/home-banner/ultimate_banner.png";
 import MeleeBanner from "../assets/home-banner/melee_banner.jpg";
 import BrawlBanner from "../assets/home-banner/brawl_banner.jpg";
@@ -17,11 +18,14 @@ function Home() {
   const [latestTournament, setLatestTournament] = useState({});
   const [latestEvents, setLatestEvents] = useState([]);
 
+  // Get most recent tournament
   useEffect(() => {
     fetch(ROUTES.SERVER_GET_LATEST_TOURNAMENT)
       .then((res) => res.json())
       .then((data) => setLatestTournament(data));
   }, []);
+
+  // Get events of most recent tournament once it's loaded
   useEffect(() => {
     if (latestTournament["id"] != null) {
       fetch(ROUTES.SERVER_EVENTS_FROM_TOURNAMENT(latestTournament["id"]))

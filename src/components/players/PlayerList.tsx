@@ -1,6 +1,5 @@
-import React from "react";
 import { useState, useEffect } from "react";
-import { Container, Row, Col, Form } from "react-bootstrap";
+import { Container, Row, Col } from "react-bootstrap";
 
 import PlayerCard from "./PlayerCard";
 import PlayerSearch from "./PlayerSearch";
@@ -9,13 +8,20 @@ import PageSelect from "../PageSelect";
 import * as ROUTES from "../../global/routes";
 
 const PlayerList = () => {
+  // Players currently displaying
   const [players, setPlayers] = useState([]);
+  // Total number of players, whether displayed or not
   const [totalPlayers, setTotalPlayers] = useState(0);
+
+  // Keeping track of items and pages for pagination
   const [page, setPage] = useState(1);
   const [perPage, setPerPage] = useState(5);
+
+  // Search parameters
   const [searchName, setSearchName] = useState("");
   const [sort, setSort] = useState("alph");
 
+  // Options for sort selector
   const sortTypes = [
     {
       id: 1,
@@ -47,6 +53,7 @@ const PlayerList = () => {
     setSort(event.target.value);
   };
 
+  // Get players initially and whenever page or search parameters change
   useEffect(() => {
     fetch(ROUTES.SERVER_GET_PLAYERS, {
       method: "POST",

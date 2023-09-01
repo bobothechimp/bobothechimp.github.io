@@ -1,5 +1,4 @@
-import React from "react";
-import { useState, useEffect, useRef } from "react";
+import { useState, useRef } from "react";
 import { Container, Row, Col } from "react-bootstrap";
 import DataTable from "./DataTable";
 import DeleteModal from "./DeleteModal";
@@ -10,12 +9,13 @@ import Alert from "../Alert";
 import * as ROUTES from "../../global/routes";
 
 interface Props {
-  tournaments: object[];
-  seasons: object[];
-  getData: () => void;
+  tournaments: object[]; // tournaments to display
+  seasons: object[]; // seasons from which to choose in the add tournament form
+  getData: () => void; // how to handle refreshing the data
 }
 
 const TournamentsManager = ({ tournaments, seasons, getData }: Props) => {
+  // Keep track of which tournament is selected for deleting
   const [tournamentToDelete, setTournamentToDelete] = useState({});
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [statusMessage, setStatusMessage] = useState({
@@ -25,12 +25,14 @@ const TournamentsManager = ({ tournaments, seasons, getData }: Props) => {
   });
   const deleteEvents = useRef(false);
 
+  // List of options for seasons selector in add tournament form
   const seasonsOptions = seasons.map((season) => (
     <option value={season["id"]} key={season["id"]}>
       {season["semester"]} {season["game"]} (ID: {season["id"]})
     </option>
   ));
 
+  // Initial values for the add tournament form
   const [values, setValues] = useState({
     season_id: seasons[0]["id"],
     week_num: "",
@@ -38,6 +40,7 @@ const TournamentsManager = ({ tournaments, seasons, getData }: Props) => {
     auto_add_events: "off",
   });
 
+  // List of fields for the add tournament form
   const inputs: Input[] = [
     {
       id: 1,
@@ -77,6 +80,7 @@ const TournamentsManager = ({ tournaments, seasons, getData }: Props) => {
     setValues({ ...values, [event.target.name]: event.target.value });
   };
 
+  // Check if inputs are valid on client side before requesting from server
   const validInputs = () => {
     if (values.week_num === "" || values.tournament_url_id === "") {
       return false;

@@ -1,13 +1,13 @@
-import React, { ReactNode, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Pagination, Container, Row, Form } from "react-bootstrap";
 
 interface Props {
-  current: number;
-  perPage: number;
-  totalPages: number;
-  totalItems: number;
-  onChangePage: (selectedPage: any) => void;
-  onChangePerPage: (selectedPerPage: any) => void;
+  current: number; // current page selected
+  perPage: number; // number of items per page
+  totalPages: number; // total number of pages
+  totalItems: number; // total number of items across all pages
+  onChangePage: (selectedPage: any) => void; // how to handle changing pages
+  onChangePerPage: (selectedPerPage: any) => void; // how to handle changing per page value
 }
 
 const PageSelect = ({

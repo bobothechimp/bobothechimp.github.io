@@ -1,20 +1,14 @@
-import React from "react";
-import { Link } from "react-router-dom";
-
-import Container from "react-bootstrap/Container";
-import Navbar from "react-bootstrap/Navbar";
-import Nav from "react-bootstrap/Nav";
-import NavDropdown from "react-bootstrap/NavDropdown";
-
-import "../styles/header.css";
+import { Container, Navbar, Nav, NavDropdown } from "react-bootstrap";
 
 import * as ROUTES from "../global/routes";
 
 import logo from "../assets/logos/buss-logo.png";
 
+import "../styles/header.css";
+
 function Header() {
   return (
-    <Navbar expand="sm" className="bg-body-secondary">
+    <Navbar expand="sm" className="header">
       <Container>
         <Navbar.Brand href={ROUTES.HOME}>
           <img src={logo} className="logo" />

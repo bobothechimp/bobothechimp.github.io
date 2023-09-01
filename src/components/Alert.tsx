@@ -1,9 +1,9 @@
-import React, { ReactNode } from "react";
+import { ReactNode } from "react";
 
 interface Props {
-  children: ReactNode;
-  color?: string;
-  onClose: () => void;
+  children: ReactNode; // children of Alert component, most-likely the alert message
+  color?: string; // color of alert, defaulted to "danger"
+  onClose: () => void; // how to handle closing the alert
 }
 
 const Alert = ({ children, color = "danger", onClose }: Props) => {

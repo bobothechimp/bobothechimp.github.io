@@ -1,19 +1,16 @@
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+
 import Home from "./pages/Home";
 import About from "./pages/About";
 import Tournaments from "./pages/Tournaments";
 import Players from "./pages/Players";
 import DataManager from "./pages/DataManager";
-import { useState } from "react";
-
-import { BrowserRouter, Route, Routes } from "react-router-dom";
 
 import * as ROUTES from "./global/routes";
 
 import "./App.css";
 
 function App() {
-  const [message, setMessage] = useState("Welcome!");
-  const [showAlert, setShowAlert] = useState(false);
   return (
     <BrowserRouter>
       <div>

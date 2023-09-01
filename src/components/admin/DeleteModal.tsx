@@ -1,14 +1,12 @@
-import React from "react";
-import { useState } from "react";
 import { Modal, Button, Form } from "react-bootstrap";
 
 interface Props {
-  data: object;
-  show: boolean;
-  handleClose: () => void;
-  handleDelete: () => void;
-  deleteEventsPrompt?: boolean;
-  handleCheckboxChange?: () => void;
+  data: object; // data of object to delete
+  show: boolean; // whether or not to display this modal
+  handleClose: () => void; // how to handle closing the modal
+  handleDelete: () => void; // how to handle confirming deletion of the object
+  deleteEventsPrompt?: boolean; // whether or not to display the "Delete this tournament's events?" prompt
+  handleCheckboxChange?: () => void; // how to handle checking or unchecking the delete events prompt
 }
 
 const DeleteModal = ({
@@ -16,7 +14,7 @@ const DeleteModal = ({
   show,
   handleClose,
   handleDelete,
-  deleteEventsPrompt,
+  deleteEventsPrompt = false,
   handleCheckboxChange,
 }: Props) => {
   return (

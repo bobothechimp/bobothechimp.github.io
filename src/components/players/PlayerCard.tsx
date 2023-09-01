@@ -1,16 +1,15 @@
-import React from "react";
 import { Col, Container, Row } from "react-bootstrap";
 
 import { createOrdinalIndicator as createOI } from "../../global/tools";
 
 interface Props {
-  name: string;
-  team: string;
-  numWins: number;
-  numLosses: number;
-  topPlacing: any[];
-  demon: any[];
-  blessing: any[];
+  name: string; // name of player
+  team: string; // player's team
+  numWins: number; // number of wins
+  numLosses: number; // number of losses
+  topPlacing: any[]; // [name of event of their highest placing, name of that event's tournament, number of entrants at event, player's placing]
+  demon: any[]; // [name of bracket demon, number of wins this player has against them, number of losses this player has against them]
+  blessing: any[]; // [name of bracket blessing, number of wins this player has against them, number of losses this player has against them]
 }
 
 const PlayerCard = ({

@@ -1,5 +1,6 @@
 import { Container, Row, Col, Table } from "react-bootstrap";
 
+import { MAPS_EMBED_CAS } from "../../global/routes";
 import { MAPS_KEY } from "../../global/apikeys";
 
 import "../../styles/about.css";
@@ -30,11 +31,8 @@ const WhereWhen = () => {
           <iframe
             className="mapsEmbed"
             loading="lazy"
-            src={
-              "https://www.google.com/maps/embed/v1/place?q=place_id:ChIJ0YVyj_B544kR3tGFwmE0yz4&key=" +
-              MAPS_KEY
-            }
-          ></iframe>
+            src={MAPS_EMBED_CAS + MAPS_KEY}
+          />
         </Col>
       </Row>
       <Row>

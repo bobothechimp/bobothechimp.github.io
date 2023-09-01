@@ -1,11 +1,10 @@
-import React from "react";
 import { Table, CloseButton } from "react-bootstrap";
 
 interface Props {
-  rows: object[];
-  titles: string[];
-  responsive: boolean;
-  handleDeleteButton?: (object) => void;
+  rows: object[]; // list of all objects to display
+  titles: string[]; // list of titles for each column
+  responsive: boolean; // whether or not to enable horizontal scrolling for the table
+  handleDeleteButton?: (object) => void; // how to handle clicking on a row's delete button
 }
 
 const DataTable = ({ rows, titles, handleDeleteButton, responsive }: Props) => {

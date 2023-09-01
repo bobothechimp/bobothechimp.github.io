@@ -1,12 +1,11 @@
-import React from "react";
 import { Form } from "react-bootstrap";
 
 interface Props {
-  seasons: any[];
-  tournaments: any[];
-  disableTournaments: boolean;
-  updateSeason: (Event) => void;
-  updateTournament: (Event) => void;
+  seasons: object[]; // all seasons from which to choose
+  tournaments: object[]; // all tournaments from which to choose
+  disableTournaments: boolean; // whether or not to disable the tournaments selector
+  updateSeason: (e) => void; // how to handle changing the season
+  updateTournament: (e) => void; // how to handle changing the tournament
 }
 
 const EventSelect = ({

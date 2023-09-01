@@ -1,7 +1,13 @@
+.header {
+    background: rgba(0, 0, 0, 0.1);
+}
+
 .logo {
     width: 80px;
+    transition: all 0.2s linear;
 }
 
 .logo:hover {
     opacity: 0.8;
+    transition: all 0.2s linear;
 }

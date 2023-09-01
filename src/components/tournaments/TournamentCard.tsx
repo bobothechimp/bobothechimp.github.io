@@ -1,12 +1,11 @@
-import React from "react";
-import { Container, Row, Col } from "react-bootstrap";
+import { Container, Row } from "react-bootstrap";
 
 import { createOrdinalIndicator as createOI } from "../../global/tools";
 
 interface Props {
-  title: string;
-  date: string;
-  events: object[];
+  title: string; // title of the tournament
+  date: string; // date of the tournament
+  events: object[]; // JSON objects of the tournament's events
 }
 
 const TournamentCard = ({ title, date, events }: Props) => {

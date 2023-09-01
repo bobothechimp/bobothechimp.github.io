@@ -1,5 +1,4 @@
-import React from "react";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Container, Row, Col } from "react-bootstrap";
 import DataTable from "./DataTable";
 import DeleteModal from "./DeleteModal";
@@ -10,12 +9,12 @@ import Alert from "../Alert";
 import * as ROUTES from "../../global/routes";
 
 interface Props {
-  events: object[];
-  tournaments: object[];
-  getData: () => void;
+  events: object[]; // events to display
+  getData: () => void; // how to handle refreshing the data
 }
 
-const EventsManager = ({ events, tournaments, getData }: Props) => {
+const EventsManager = ({ events, getData }: Props) => {
+  // Keep track of which event is selected for deleting
   const [eventToDelete, setEventToDelete] = useState({});
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [statusMessage, setStatusMessage] = useState({
@@ -24,10 +23,12 @@ const EventsManager = ({ events, tournaments, getData }: Props) => {
     message: "",
   });
 
+  // Initial values for the add event form
   const [values, setValues] = useState({
     event_url_id: "",
   });
 
+  // List of fields for the add event form
   let inputs: Input[] = [
     {
       id: 1,

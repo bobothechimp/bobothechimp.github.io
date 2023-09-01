@@ -1,12 +1,4 @@
-import {
-  Container,
-  Row,
-  Col,
-  Table,
-  Image,
-  Tooltip,
-  OverlayTrigger,
-} from "react-bootstrap";
+import { Container, Table, Image, OverlayTrigger } from "react-bootstrap";
 
 import { renderDSRTooltip } from "../../global/tooltips";
 

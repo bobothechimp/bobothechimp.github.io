@@ -1,4 +1,3 @@
-import React from "react";
 import { useState } from "react";
 import { Container, Row, Col, Button, Form } from "react-bootstrap";
 
@@ -8,12 +7,11 @@ import DataTable from "./DataTable";
 import * as ROUTES from "../../global/routes";
 
 interface Props {
-  players: object[];
-  events: object[];
-  getData: () => void;
+  players: object[]; // players to display
+  getData: () => void; // how to handle refreshing the data
 }
 
-const PlayersManager = ({ players, events, getData }: Props) => {
+const PlayersManager = ({ players, getData }: Props) => {
   const [statusMessage, setStatusMessage] = useState({
     show: false,
     color: "danger",
@@ -52,6 +50,7 @@ const PlayersManager = ({ players, events, getData }: Props) => {
     xhr.open("POST", ROUTES.SERVER_RECALCULATE_PLAYERS);
     xhr.send(info);
   };
+
   return (
     <Container>
       <Row>
