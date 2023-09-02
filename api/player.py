@@ -5,32 +5,46 @@ from event import Event
 class Player:
     def __init__(
         self,
-        id=-1,
-        name="",
-        team="",
-        numWins=0,
-        numLosses=0,
-        topPlacing=[-1, -1],
-        demon=["", 0, 0],
-        blessing=["", 0, 0],
+        id: int = -1,
+        name: str = "",
+        team: str = "",
+        numWins: int = 0,
+        numLosses: int = 0,
+        topPlacing: list = [-1, -1],
+        demon: list = ["", 0, 0],
+        blessing: list = ["", 0, 0],
     ):
         self.id = id
-        self.name = name
-        self.team = team
-        self.numWins = numWins
-        self.numLosses = numLosses
-        self.topPlacing = topPlacing
+        self.name = name  # name of the player
+        self.team = team  # player's team, if any
+        self.numWins = numWins  # number of wins for the player
+        self.numLosses = numLosses  # number of losses for the player
+        self.topPlacing = topPlacing  # information about the player's highest placing
         # [event id, placing at event]
-        self.demon = demon
+        self.demon = demon  # information about the player's bracket demon
         # [demon name, num wins, num losses]
         # ex: ["Bob", 2, 11]
-        self.blessing = blessing
+        self.blessing = blessing  # information about the player's bracket blessing
         # [blessing name, num wins, num losses]
         # ex: ["Billy", 8, 1]
         self.connection = sqlite3.connect("busmash.db")
         self.cursor = self.connection.cursor()
 
-    def load_player(self, id):
+    def load_player(self, id: int):
+        """
+        Load a player from the database using the provided ID.
+
+        Parameters
+        ----------
+        id: int
+            ID of the player to load
+
+        Returns
+        -------
+        bool
+            Whether or not a player with the provided ID exists and was loaded
+        """
+
         self.cursor.execute(
             """
         SELECT * FROM players
@@ -57,6 +71,19 @@ class Player:
         return True
 
     def insert_player(self):
+        """
+        Insert this player into the database.
+
+        Parameters
+        ----------
+        None
+
+        Returns
+        -------
+        bool
+            Whether or not this player was inserted (possibly already exists)
+        """
+
         self.cursor.execute("""SELECT * FROM players WHERE id = ?""", (self.id,))
         if self.cursor.fetchone() is not None:
             return False
@@ -89,6 +116,19 @@ class Player:
         return True
 
     def update_player(self):
+        """
+        Update this player's entries in the database.
+
+        Parameters
+        ----------
+        None
+
+        Returns
+        -------
+        bool
+            Whether or not this player was updated (possibly doesn't exist)
+        """
+
         self.cursor.execute("""SELECT * FROM players WHERE id = ?""", (self.id,))
         if self.cursor.fetchone() is None:
             return False
@@ -128,6 +168,19 @@ class Player:
         return True
 
     def toJSON(self):
+        """
+        Create a JSON object for this player's data.
+
+        Parameters
+        ----------
+        None
+
+        Returns
+        -------
+        dict
+            JSON object representation of this player's data.
+        """
+
         tpEvent = Event()
         if tpEvent.load_event(self.topPlacing[0]):
             eventJson = tpEvent.toJSON()
@@ -161,13 +214,38 @@ class Player:
         }
 
     @staticmethod
-    def deletePlayer(cursor, player_id):
+    def deletePlayer(cursor: sqlite3.Cursor, player_id: int):
+        """
+        Delete a player with the provided ID (if it exists) from the database.
+
+        Parameters
+        ----------
+        id: int
+            ID of the player to delete
+
+        Returns
+        -------
+        None
+        """
+
         sql = """DELETE FROM players
         WHERE id = ? ;"""
         cursor.execute(sql, (player_id,))
 
     @staticmethod
     def makePlayersTable():
+        """
+        Create the players table in busmash.db if it doesn't yet exist.
+
+        Parameters
+        ----------
+        None
+
+        Returns
+        -------
+        None
+        """
+
         connection = sqlite3.connect("busmash.db")
         cursor = connection.cursor()
         sql = """CREATE TABLE IF NOT EXISTS players (

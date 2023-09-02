@@ -5,31 +5,46 @@ from datetime import datetime
 class Event:
     def __init__(
         self,
-        id=-1,
-        tournament_id=-1,
-        title="",
-        entrants=0,
-        top3=[],
-        topUpset=[-1, 0, 0, 0],
-        topSPR=[-1, 0, 0, 0],
-        slug="",
+        id: int = -1,
+        tournament_id: int = -1,
+        title: str = "",
+        entrants: int = 0,
+        top3: list = [],
+        topUpset: list = [-1, 0, 0, 0],
+        topSPR: list = [-1, 0, 0, 0],
+        slug: str = "",
     ):
-        self.id = id
+        self.id = id  # id of the event in the database
         self.tournament_id = tournament_id
-        self.title = title
-        self.entrants = entrants
-        self.top3 = top3
-        self.topUpset = topUpset
+        # id of the tournament to which this event belongs
+        self.title = title  # title of the event
+        self.entrants = entrants  # number of entrants at the event
+        self.top3 = top3  # ids of top 3 finishers for the event
+        self.topUpset = topUpset  # information about the event's biggest upset
         # [set id, upsetter seed, upsettee seed, upset factor]
         # ex: [120385, 28, 8, 4]
-        self.topSPR = topSPR
+        self.topSPR = topSPR  # information about the event's biggest SPR
         # [player id, seeded placement, final placement, SPR]
         # ex: [693829, 25, 3, 7]
-        self.slug = slug
+        self.slug = slug  # start.gg slug for this event
         self.connection = sqlite3.connect("busmash.db")
         self.cursor = self.connection.cursor()
 
-    def load_event(self, id):
+    def load_event(self, id: int):
+        """
+        Load an event from the database using the provided ID.
+
+        Parameters
+        ----------
+        id: int
+            ID of the event to load
+
+        Returns
+        -------
+        bool
+            Whether or not an event with the provided ID exists and was loaded
+        """
+
         self.cursor.execute(
             """
         SELECT * FROM events
@@ -53,6 +68,19 @@ class Event:
         return True
 
     def insert_event(self):
+        """
+        Insert this event into the database.
+
+        Parameters
+        ----------
+        None
+
+        Returns
+        -------
+        bool
+            Whether or not this event was inserted (possibly already exists)
+        """
+
         self.cursor.execute("""SELECT * FROM events WHERE id = ?""", (self.id,))
         if self.cursor.fetchone() is not None:
             return False
@@ -82,6 +110,19 @@ class Event:
         return True
 
     def toJSON(self):
+        """
+        Create a JSON object for this event's data.
+
+        Parameters
+        ----------
+        None
+
+        Returns
+        -------
+        dict
+            JSON object representation of this event's data.
+        """
+
         self.cursor.execute(
             """
         SELECT semester, game, week, date
@@ -158,20 +199,60 @@ class Event:
         }
 
     @staticmethod
-    def deleteEvent(cursor, event_id):
+    def deleteEvent(cursor: sqlite3.Cursor, event_id: int):
+        """
+        Delete an event with the provided ID (if it exists) from the database.
+
+        Parameters
+        ----------
+        id: int
+            ID of the event to delete
+
+        Returns
+        -------
+        None
+        """
+
         sql = """DELETE FROM events
         WHERE id = ? ;"""
         cursor.execute(sql, (event_id,))
 
     @staticmethod
     def deleteFromTournament(cursor, tournament_id):
-        # Delete every event from a tournament
+        """
+        Delete all events of the tournament with the provided ID (if it exists) from the database.
+
+        Parameters
+        ----------
+        id: int
+            ID of the tournament whose events to delete
+
+        Returns
+        -------
+        None
+        """
+
         sql = """DELETE FROM events
         WHERE tournament_id = ? ;"""
         cursor.execute(sql, (tournament_id,))
 
     @staticmethod
-    def ofSeason(cursor, season_id):
+    def ofSeason(cursor: sqlite3.Cursor, season_id: int):
+        """
+        Return a list of all event IDs in the database which belong to the provided season.
+
+        Parameters
+        ----------
+        id: int
+            ID of the season from which to gather events
+
+        Returns
+        -------
+        list
+            List of rows of all events which belong to the provided season\n
+            Each row is a list which only contains the ID
+        """
+
         sql = """SELECT events.id FROM
         events JOIN tournaments ON events.tournament_id = tournaments.id
         WHERE tournaments.season_id = ?;"""
@@ -179,13 +260,25 @@ class Event:
         return cursor.fetchall()
 
     @staticmethod
-    def ofTournament(cursor, tournament_id):
+    def ofTournament(cursor: sqlite3.Cursor, tournament_id: int):
         sql = """SELECT id FROM events WHERE tournament_id = ?"""
         cursor.execute(sql, (tournament_id,))
         return cursor.fetchall()
 
     @staticmethod
     def makeEventsTable():
+        """
+        Create the events table in busmash.db if it doesn't yet exist.
+
+        Parameters
+        ----------
+        None
+
+        Returns
+        -------
+        None
+        """
+
         connection = sqlite3.connect("busmash.db")
         cursor = connection.cursor()
         sql = """CREATE TABLE IF NOT EXISTS events (
