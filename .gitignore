@@ -1,3 +1,4 @@
+node_modules
 src/global/apikeys.tsx
 src/global/firebaseConfig.tsx
 api/apikeys.py
