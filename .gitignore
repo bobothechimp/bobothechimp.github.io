@@ -1,4 +1,6 @@
 src/global/apikeys.tsx
+src/global/firebaseConfig.tsx
 api/apikeys.py
 .vscode
 api/__pycache__
+.env.local
