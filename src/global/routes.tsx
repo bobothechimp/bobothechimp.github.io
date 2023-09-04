@@ -7,6 +7,8 @@ export const TOURNAMENTS = "/tournaments";
 export const PLAYERS = "/players";
 
 // CLIENT SIDE - ADMIN
+export const ADMIN_LOGIN = "/admin/login";
+export const ADMIN_DASHBOARD = "/admin/dashboard";
 export const DATA_MANAGER = "/admin/datamanager";
 
 // CLIENT SIDE - SOCIAL MEDIA

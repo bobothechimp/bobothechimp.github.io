@@ -1,0 +1,22 @@
+.loginContainer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+}
+
+.loginContainer > div {
+    padding: 10px;
+    margin: 40px;
+    background: #E8E8E8;
+    width: 80%;
+    max-width: 400px;
+}
+
+.loginContainer input {
+    margin-bottom: 10px;
+}
+
+.loginContainer button {
+    margin-top: 10px;
+}

@@ -53,17 +53,18 @@ function Home() {
             <img src={BrawlBanner} />
             <img src={BrawlBanner} />
           </div>
+          <div id="shade" />
           <div id="fade" />
           <div id="titleOverlay">
             <p>BU SMASH</p>
           </div>
         </Row>
-        <Row>
-          <Col md={{ span: 3 }}>
-            <Tweet tweetId="1676630703344156676" options={{ width: "100%" }} />
-            <Tweet tweetId="1654911485586427907" options={{ width: "100%" }} />
+        <Row id="infoRow">
+          <Col lg={{ span: 3 }} id="tweetsCol">
+            <Tweet tweetId="1676630703344156676" options={{ width: "auto" }} />
+            <Tweet tweetId="1654911485586427907" options={{ width: "auto" }} />
           </Col>
-          <Col md={{ span: 6 }} className="middleColumn">
+          <Col lg={{ span: 6 }} md={{ span: 7 }} id="welcomeCol">
             <h1 className="sectionTitle">Welcome</h1>
             <p>
               The Boston University Smash Society (BUSS) holds the biggest{" "}
@@ -94,7 +95,7 @@ function Home() {
               <Button>Players</Button>
             </div>
           </Col>
-          <Col md={{ span: 3 }}>
+          <Col lg={{ span: 3 }} md={{ span: 5 }} id="latestTournamentsCol">
             <h1 className="sectionTitle">Latest Tournaments</h1>
             {latestEvents.length > 0 && (
               <TournamentCard
