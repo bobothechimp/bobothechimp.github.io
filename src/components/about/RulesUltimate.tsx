@@ -14,8 +14,6 @@ import FD from "../../assets/stages/ultimate/final-destination.png";
 import KPL from "../../assets/stages/ultimate/kalos-pokemon-league.png";
 import HB from "../../assets/stages/ultimate/hollow-bastion.png";
 
-import "../../styles/about.css";
-
 const Rules = () => {
   return (
     <>

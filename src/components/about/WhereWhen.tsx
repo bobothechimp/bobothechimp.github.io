@@ -3,8 +3,6 @@ import { Container, Row, Col, Table } from "react-bootstrap";
 import { MAPS_EMBED_CAS } from "../../global/routes";
 import { MAPS_KEY } from "../../global/apikeys";
 
-import "../../styles/about.css";
-
 const WhereWhen = () => {
   return (
     <Container>
@@ -37,7 +35,7 @@ const WhereWhen = () => {
       </Row>
       <Row>
         <Col lg={{ span: 4, offset: 0 }}>
-          <h3>Melee</h3>
+          <h3 className="sectionTitle">Melee</h3>
           <p>Fridays, CAS Room 227</p>
           <Table bordered size="md">
             <thead>
@@ -59,7 +57,7 @@ const WhereWhen = () => {
           </Table>
         </Col>
         <Col lg={{ span: 4, offset: 0 }}>
-          <h3>Ultimate & Brawl</h3>
+          <h3 className="sectionTitle">Ultimate & Brawl</h3>
           <p>Saturdays, CAS Room 426</p>
           <Table bordered size="md">
             <thead>
@@ -85,7 +83,7 @@ const WhereWhen = () => {
           </Table>
         </Col>
         <Col lg={{ span: 4, offset: 0 }}>
-          <h3>Bimonthly</h3>
+          <h3 className="sectionTitle">Bimonthly</h3>
           <p>Date varies, PHO 9th Floor Colloquium Room</p>
           <Table bordered size="md">
             <thead>

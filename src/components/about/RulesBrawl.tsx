@@ -12,8 +12,6 @@ import SV from "../../assets/stages/brawl/smashville.png";
 import YI from "../../assets/stages/brawl/yoshis-island.png";
 import PS from "../../assets/stages/brawl/pokemon-stadium.png";
 
-import "../../styles/about.css";
-
 const Rules = () => {
   return (
     <>

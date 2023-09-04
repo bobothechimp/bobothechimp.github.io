@@ -12,8 +12,6 @@ import DL from "../../assets/stages/melee/dream-land.png";
 import FD from "../../assets/stages/melee/final-destination.png";
 import PS from "../../assets/stages/melee/pokemon-stadium.png";
 
-import "../../styles/about.css";
-
 const Rules = () => {
   return (
     <>

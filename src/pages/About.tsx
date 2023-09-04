@@ -4,6 +4,8 @@ import AboutUs from "../components/about/AboutUs";
 import WhereWhen from "../components/about/WhereWhen";
 import Rules from "../components/about/Rules";
 
+import "../styles/about.css";
+
 const About = () => {
   return (
     <>
