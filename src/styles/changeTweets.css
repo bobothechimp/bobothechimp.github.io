@@ -1,0 +1,65 @@
+#tweetRow {
+    margin-top: 40px;
+    margin-bottom: 40px;
+}
+
+.tweetPreview {
+    display: flex;
+    justify-content: center;
+    overflow: hidden;
+}
+
+#ultBrawlTweet {
+    border-width: 0;
+    border-right: 4px;
+    border-color: #CCC;
+    border-style: solid;
+}
+
+.invalidTweet {
+    display: flex;
+    align-items: center;
+    font-family: myriad pro, sans-serif;
+    text-align: center;
+}
+
+#changeTweetsForm {
+    display: flex;
+    justify-content: left;
+    height: min-content;
+}
+
+#changeTweetsForm > div {
+    padding: 10px;
+    margin: 40px;
+    background: #E8E8E8;
+    width: 80%;
+    max-width: 400px;
+}
+
+#changeTweetsForm h4 {
+    text-align: center;
+    padding-bottom: 20px;
+}
+
+#changeTweetsForm form > div {
+    margin-bottom: 15px;
+}
+
+#changeTweetsForm button {
+    margin-top: 10px;
+}
+
+/* sm, md */
+@media (max-width: 991px) {
+    #changeTweetsForm {
+        justify-content: center;
+    }
+}
+
+/* xs */
+@media (max-width: 565px) {
+    #ultBrawlTweet {
+        border-width: 0;
+    }
+}

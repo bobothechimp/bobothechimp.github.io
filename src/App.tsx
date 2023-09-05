@@ -5,7 +5,9 @@ import About from "./pages/About";
 import Tournaments from "./pages/Tournaments";
 import Players from "./pages/Players";
 import Login from "./pages/Login";
+import Dashboard from "./pages/Dashboard";
 import DataManager from "./pages/DataManager";
+import ChangeTweets from "./pages/ChangeTweets";
 
 import { AuthProvider } from "./contexts/AuthContext";
 import PrivateRoute from "./components/PrivateRoute";
@@ -26,10 +28,26 @@ function App() {
             <Route path={ROUTES.PLAYERS} element={<Players />} />
             <Route path={ROUTES.ADMIN_LOGIN} element={<Login />} />
             <Route
-              path={ROUTES.DATA_MANAGER}
+              path={ROUTES.ADMIN_DASHBOARD}
+              element={
+                <PrivateRoute>
+                  <Dashboard />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path={ROUTES.ADMIN_DATA_MANAGER}
               element={
                 <PrivateRoute>
                   <DataManager />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path={ROUTES.ADMIN_CHANGE_TWEETS}
+              element={
+                <PrivateRoute>
+                  <ChangeTweets />
                 </PrivateRoute>
               }
             />

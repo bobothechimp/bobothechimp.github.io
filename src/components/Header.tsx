@@ -51,7 +51,7 @@ function Header() {
                 <NavDropdown.Item href={ROUTES.ADMIN_DASHBOARD}>
                   Dashboard
                 </NavDropdown.Item>
-                <NavDropdown.Item href={ROUTES.DATA_MANAGER}>
+                <NavDropdown.Item href={ROUTES.ADMIN_DATA_MANAGER}>
                   Data Manager
                 </NavDropdown.Item>
                 <NavDropdown.Divider />

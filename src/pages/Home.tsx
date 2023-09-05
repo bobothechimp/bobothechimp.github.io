@@ -1,10 +1,13 @@
 import { useEffect, useState } from "react";
 import { Container, Row, Col, Button } from "react-bootstrap";
 import { Tweet } from "react-twitter-widgets";
+import { ref, get } from "firebase/database";
 
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import TournamentCard from "../components/tournaments/TournamentCard";
+
+import { database } from "../firebase";
 
 import * as ROUTES from "../global/routes";
 
@@ -17,12 +20,24 @@ import "../styles/home.css";
 function Home() {
   const [latestTournament, setLatestTournament] = useState({});
   const [latestEvents, setLatestEvents] = useState([]);
+  const [ultBrawlTweetId, setUltBrawlTweetId] = useState<string>("");
+  const [meleeTweetId, setMeleeTweetId] = useState<string>("");
 
   // Get most recent tournament
   useEffect(() => {
     fetch(ROUTES.SERVER_GET_LATEST_TOURNAMENT)
       .then((res) => res.json())
       .then((data) => setLatestTournament(data));
+    let reference = ref(database, "tweets/ultbrawl");
+    get(reference)
+      .then((res) => res.toJSON())
+      .then((data) => {
+        setUltBrawlTweetId(data ? data["tweetId"] : "");
+      });
+    reference = ref(database, "tweets/melee");
+    get(reference)
+      .then((res) => res.toJSON())
+      .then((data) => setMeleeTweetId(data ? data["tweetId"] : ""));
   }, []);
 
   // Get events of most recent tournament once it's loaded
@@ -61,8 +76,8 @@ function Home() {
         </Row>
         <Row id="infoRow">
           <Col lg={{ span: 3 }} id="tweetsCol">
-            <Tweet tweetId="1676630703344156676" options={{ width: "auto" }} />
-            <Tweet tweetId="1654911485586427907" options={{ width: "auto" }} />
+            <Tweet tweetId={ultBrawlTweetId} options={{ width: "auto" }} />
+            <Tweet tweetId={meleeTweetId} options={{ width: "auto" }} />
           </Col>
           <Col lg={{ span: 6 }} md={{ span: 7 }} id="welcomeCol">
             <h1 className="sectionTitle">Welcome</h1>

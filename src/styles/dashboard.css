@@ -1,0 +1,17 @@
+#currentLogin {
+    padding-bottom: 30px;
+}
+
+.adminPageCard {
+    padding: 10px;
+    margin-bottom: 30px;
+    min-height: 250px;
+}
+
+.adminPageCard h4 {
+    padding-bottom: 20px;
+}
+
+#adminPageCardList {
+    padding-bottom: 50px;
+}

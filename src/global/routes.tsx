@@ -5,11 +5,12 @@ export const WHERE_WHEN = "/about#wherewhen";
 export const RULES = "/about#rules";
 export const TOURNAMENTS = "/tournaments";
 export const PLAYERS = "/players";
+export const ADMIN_LOGIN = "/admin/login";
 
 // CLIENT SIDE - ADMIN
-export const ADMIN_LOGIN = "/admin/login";
 export const ADMIN_DASHBOARD = "/admin/dashboard";
-export const DATA_MANAGER = "/admin/datamanager";
+export const ADMIN_DATA_MANAGER = "/admin/datamanager";
+export const ADMIN_CHANGE_TWEETS = "/admin/changetweets";
 
 // CLIENT SIDE - SOCIAL MEDIA
 export const ULTBRAWL_TWITTER = "https://twitter.com/Smash_BU";
