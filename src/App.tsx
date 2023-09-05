@@ -8,6 +8,7 @@ import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import DataManager from "./pages/DataManager";
 import ChangeTweets from "./pages/ChangeTweets";
+import NotFound from "./pages/NotFound";
 
 import { AuthProvider } from "./contexts/AuthContext";
 import PrivateRoute from "./components/PrivateRoute";
@@ -51,6 +52,7 @@ function App() {
                 </PrivateRoute>
               }
             />
+            <Route path="*" element={<NotFound />} />
           </Routes>
         </AuthProvider>
       </div>
