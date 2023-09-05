@@ -6,6 +6,18 @@ Website for the Boston University Smash Society club.
 
 In the folder `src/global`, create a file named `apikeys.tsx`. In it, you should export two string consts: a Google Maps embed API key named `MAPS_KEY` and a start.gg API key named `STARTGG_KEY`.
 
+In the folder `src/global`, create a file named `firebaseConfig.tsx`. In it, you should export six strings:
+
+- API_KEY
+- AUTH_DOMAIN
+- DATABASE_URL
+- PROJECT_ID
+- STORAGE_BUCKET
+- MESSAGING_SENDER_ID
+- APP_ID
+
+These should take on the values supplied to you by your Firebase project app.
+
 In the file `src/global/routes.tsx`, change the const `SERVER_URL` to the URL of your development or production server.
 
 In the folder `api`, create a file named `apikeys.py` and initialize a single string variable named `STARTGG_KEY` which contains your start.gg API key.
