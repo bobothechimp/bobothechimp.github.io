@@ -73,10 +73,9 @@
     margin-bottom: 20px;
 }
 
-.addDataForm form {
+.addDataForm > div {
     padding: 20px;
-    border-radius: 10px;
-    background-color: lightgray;
+    background-color: #E8E8E8;
 }
 
 .recalculatePlayers {

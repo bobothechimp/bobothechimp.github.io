@@ -26,7 +26,6 @@ const Login = () => {
       setError("");
       setLoading(true);
       await login(emailRef.current?.value, passwordRef.current?.value);
-      console.log("Logged in (or at least would have)");
       navigate(ROUTES.ADMIN_DASHBOARD);
     } catch (error) {
       console.log(error);

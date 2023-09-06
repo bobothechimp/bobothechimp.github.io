@@ -4,10 +4,11 @@
     padding-bottom: 30px;
 }
 
-.dataSelectForm form {
+.dataSelectForm > div {
     padding: 20px;
-    border-radius: 10px;
-    background-color: lightgray;
+    background: #E8E8E8;
+    width: 100%;
+    max-width: 400px;
 }
 
 .dataSelectForm form > div {

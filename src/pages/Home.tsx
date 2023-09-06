@@ -90,7 +90,7 @@ function Home() {
               semester, and we look forward to seeing you at our next event!
             </p>
             <div className="btn-container">
-              <Button>Read More</Button>
+              <Button href={ROUTES.ABOUT}>Read More</Button>
             </div>
             <h1 className="sectionTitle">Tournaments</h1>
             <p>
@@ -99,7 +99,7 @@ function Home() {
               links to their bracket pages.
             </p>
             <div className="btn-container">
-              <Button>Tournaments</Button>
+              <Button href={ROUTES.TOURNAMENTS}>Tournaments</Button>
             </div>
             <h1 className="sectionTitle">Players</h1>
             <p>
@@ -107,7 +107,7 @@ function Home() {
               entered one of our events. Check them out below.
             </p>
             <div className="btn-container">
-              <Button>Players</Button>
+              <Button href={ROUTES.PLAYERS}>Players</Button>
             </div>
           </Col>
           <Col lg={{ span: 3 }} md={{ span: 5 }} id="latestTournamentsCol">
