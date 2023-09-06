@@ -4,7 +4,7 @@
     padding-bottom: 30px;
 }
 
-.dataSelectForm > div {
+.dataSelectForm .dataFormCard {
     padding: 20px;
     background: #E8E8E8;
     width: 100%;

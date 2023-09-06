@@ -16,7 +16,7 @@ const EventSelect = ({
   updateTournament,
 }: Props) => {
   return (
-    <Card>
+    <Card className="dataFormCard">
       <Form>
         <Form.Group className="seasonSelect">
           <Form.Label>Select a season</Form.Label>

@@ -10,7 +10,7 @@ interface Props {
 
 const PlayerSearch = ({ sortTypes, onChangeSearch, onChangeSort }: Props) => {
   return (
-    <Card>
+    <Card className="dataFormCard">
       <Form>
         <Form.Group className="searchBar">
           <Form.Label>Search by name</Form.Label>

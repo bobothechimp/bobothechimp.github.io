@@ -37,7 +37,7 @@ interface Props {
 
 const AddDataForm = ({ handleSubmit, onChange, inputs, objectName }: Props) => {
   return (
-    <Card>
+    <Card className="dataFormCard">
       <Form onSubmit={handleSubmit} method="POST">
         {inputs.map((input) => {
           let field;
